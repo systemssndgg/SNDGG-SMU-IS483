@@ -1,0 +1,35 @@
+{
+    "types": {
+        "Device": {
+            "active": [
+                {
+                    "name": "temperature",
+                    "type": "Double"
+                }
+            ],
+            "lazy": [],
+            "commands": []
+        }
+    },
+    "contexts": [
+        {
+            "id": "TemperatureSensor001",
+            "type": "Device",
+            "mappings": [
+                {
+                    "ocb_id": "temperature",
+                    "opcua_id": "ns=2;i=2",
+                    "object_id": null,
+                    "inputArguments": []
+                }
+            ]
+        }
+    ],
+    "contextSubscriptions": [
+        {
+            "id": "TemperatureSensor001",
+            "type": "Device",
+            "mappings": []
+        }
+    ]
+}

@@ -1,0 +1,88 @@
+version: "3.5"
+
+volumes:
+    mongodb: ~
+    timescale-db: ~
+
+services:
+  ################
+  # Applications #
+  ################
+
+  # Context Broker
+  orion:
+    image: quay.io/fiware/orion-ld:1.5.1
+    hostname: orion
+    container_name: fiware-orion
+    # sometimes the initial startup fails due to a weird timescale behaviour
+    restart: always
+    environment:
+      - ORIONLD_TROE=TRUE
+      - ORIONLD_TROE_USER=orion
+      - ORIONLD_TROE_PWD=orion
+      - ORIONLD_TROE_HOST=timescale
+      - ORIONLD_MONGO_HOST=mongodb
+      - ORIONLD_CORS_ALLOWED_ORIGIN=__ALL
+    depends_on:
+      - mongodb
+      - timescale
+    ports:
+      - "1026:1026"
+    command: -logLevel DEBUG -forwarding -experimental
+    healthcheck:
+      test: curl --fail -s http://orion:1026/version || exit 1
+      interval: 5s
+
+  # Open-Source component for Temporal Representation of Entities (TROE)
+  mintaka:
+    image: fiware/mintaka:0.4.3
+    hostname: mintaka
+    restart: always
+    container_name: mintaka
+    environment:
+      - DATASOURCES_DEFAULT_HOST=timescale
+      - DATASOURCES_DEFAULT_USERNAME=orion
+      - DATASOURCES_DEFAULT_PASSWORD=orion
+      - DATASOURCES_DEFAULT_DATABSE=orion
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+
+  #############
+  # Databases #
+  #############
+
+  # Storage of context data from context brokers and IOT agent
+  mongodb:
+      image: mongo:4.2
+      hostname: mongodb
+      container_name: db-mongo
+      ports:
+          - "27017:27017"
+      command: --bind_ip_all
+      volumes:
+          - mongodb:/data
+
+  # Time series database for TROE (Temporal data)
+  timescale:
+    image: timescale/timescaledb-postgis:1.7.5-pg12
+    hostname: timescale
+    container_name: timescale
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U orion" ]
+      interval: 15s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
+    environment:
+      - POSTGRES_USER=orion
+      - POSTGRES_PASSWORD=orion
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale-db:/var/lib/postgresql/data
+

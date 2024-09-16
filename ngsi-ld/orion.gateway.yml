@@ -1,0 +1,10 @@
+version: "3.5"
+services:
+  # API Gateway for various services
+  proxy:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile.orion
+    restart: always
+    ports:
+      - "80:80"

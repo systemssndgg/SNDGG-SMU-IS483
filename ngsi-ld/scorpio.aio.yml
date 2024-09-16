@@ -1,0 +1,150 @@
+version: "3.5"
+
+volumes:
+    mongodb: ~
+    data-models:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: datamodels
+
+services:
+  ################
+  # Applications #
+  ################
+
+  # API Gateway for various services
+  proxy:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile.scorpio.aio
+    restart: always
+    ports:
+      - "80:80"
+
+  # @context file is served from here
+  ld-context:
+      labels:
+        org.fiware: 'tutorial'
+      image: httpd:alpine
+      hostname: context
+      container_name: fiware-ld-context
+      ports:
+          - "3004:80"
+      volumes:
+          - data-models:/usr/local/apache2/htdocs/
+          - type: bind
+            source: conf/mime.types
+            target: /usr/local/apache2/conf/mime.types
+            read_only: true
+      healthcheck:
+        test: (wget --server-response --spider --quiet  http://ld-context/ngsi-context.jsonld 2>&1 | awk 'NR==1{print $$2}'|  grep -q -e "200") || exit 1
+
+
+  # Context Broker
+  scorpio:
+    image: scorpiobroker/all-in-one-runner:java-kafka-latest
+    hostname: scorpio
+    ports:
+      - "9090:9090"
+    environment:
+      DBHOST: postgres
+      BUSHOST: kafka
+    depends_on:
+      - postgres
+      - kafka
+
+  # Kafka Management
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181"
+  
+  # Kafka for Scorpio
+  kafka:
+    image: bitnami/kafka:3.5.1-debian-11-r6
+    ports:
+      - "9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_LOG_RETENTION_MS: 10000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+
+  # MQTT Broker for IOT Agent
+  mosquitto:
+      image: eclipse-mosquitto:latest
+      container_name: mosquitto
+      ports:
+        - "1883:1883"
+        - "9001:9001"  # Optional: for WebSocket support
+      restart: always
+      volumes:
+        - ./mosquitto:/mosquitto
+
+  #JSON IOT Agent that supports HTTP, MQTT and AMQP
+  iot-agent:
+      image: quay.io/fiware/iotagent-json:3.1.0-distroless
+      hostname: iot-agent
+      container_name: fiware-iot-agent
+      depends_on:
+          - mongodb
+          - mosquitto
+          - ld-context
+      expose:
+          - "4041"
+          - "7896"
+      ports:
+          - "4041:4041"
+          - "7896:7896"
+      environment:
+          - "IOTA_CB_HOST=scorpio" # Locally hosted broker
+          - "IOTA_CB_PORT=9090"
+          - "IOTA_NORTH_PORT=4041"
+          - "IOTA_REGISTRY_TYPE=mongodb"
+          - "IOTA_MONGO_HOST=mongodb"
+          - "IOTA_MONGO_PORT=27017"
+          - "IOTA_MONGO_DB=iotagent-json"
+          - "IOTA_HTTP_PORT=7896"
+          - "IOTA_PROVIDER_URL=http://iot-agent:4041"
+          - "IOTA_CB_NGSI_VERSION=ld"         # To work with NGSI-LD brokers
+          - "IOTA_TIMESTAMP=true"
+          - "IOTA_FALLBACK_TENANT=openiot"
+          - "IOTA_FALLBACK_PATH=/"
+          - "IOTA_MQTT_HOST=mosquitto"        # MQTT broker service
+          - "IOTA_MQTT_PORT=1883"             # MQTT service port
+          - "IOTA_JSON_LD_CONTEXT=http://ld-context:80/context.jsonld"
+          - "IOTA_LOG_LEVEL=DEBUG" # The log level of the IoT Agent
+          - "IOTA_AUTOCAST=true" # Ensure number values are read as numbers not strings
+
+  #############
+  # Databases #
+  #############
+
+  # Storage of context data of IOT agent
+  mongodb:
+      image: mongo:4.2
+      hostname: mongodb
+      container_name: db-mongo
+      ports:
+          - "27017:27017"
+      command: --bind_ip_all
+      volumes:
+          - mongodb:/data
+
+  # Database for Scorpio
+  postgres:
+    image: postgis/postgis
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_USER: ngb
+      POSTGRES_PASSWORD: ngb
+      POSTGRES_DB: ngb

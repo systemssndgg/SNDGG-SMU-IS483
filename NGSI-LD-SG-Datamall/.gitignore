@@ -1,0 +1,5 @@
+myenv/
+mylibs/constants.py
+notes.txt
+*_draft.py
+airflow_requirements.txt

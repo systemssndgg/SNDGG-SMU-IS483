@@ -1,0 +1,11 @@
+{
+    "locatedIn": "The entity, typically a physical space such as a Building or Room, within which this entity is contained or housed. It indicates a hierarchical geographic or spatial containment relationship.",
+    "attachedTo": "An entity, often a physical object or system component, to which this entity is physically connected or functionally dependent. This property denotes a relationship where the entity is a part of, relies on, or is an accessory to the referenced entity.",
+    "roomName": "The name of the room corresponding to this observation.",
+    "providedBy": "The device that sent this reading.",
+    "x1": "The x coordinate of the first pair of points.",
+    "x2": "The x coordinate of the second pair of points.",
+    "y1": "The y coordinate of the first pair of points.",
+    "y2": "The y coordinate of the second pair of points.",
+    "t1": "Downlink for temp"
+}

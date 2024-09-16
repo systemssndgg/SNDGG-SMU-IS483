@@ -1,0 +1,534 @@
+[
+  {
+    "id": "urn:ngsi-ld:Carpark:SuntecCity1",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "1"
+    },
+    "Region": {
+      "type": "Property",
+      "value": "Marina"
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "Suntec City"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.85718,
+          1.29375
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 370
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "LTA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:MarinaSquare2",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "2"
+    },
+    "Region": {
+      "type": "Property",
+      "value": "Marina"
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "Marina Square"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.85728,
+          1.29115
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 1264
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "LTA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:RafflesCity3",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "3"
+    },
+    "Region": {
+      "type": "Property",
+      "value": "Marina"
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "Raffles City"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.85319,
+          1.29382
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 459
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "LTA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:TheEsplanade4",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "4"
+    },
+    "Region": {
+      "type": "Property",
+      "value": "Marina"
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "The Esplanade"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.85561,
+          1.29011
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 591
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "LTA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:NationalGallery56",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "56"
+    },
+    "Region": {
+      "type": "Property",
+      "value": "Marina"
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "National Gallery"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.85167,
+          1.29027
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 143
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "LTA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ClarkeQuay59",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "59"
+    },
+    "Region": {
+      "type": "Property",
+      "value": "Others"
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "Clarke Quay"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.84648,
+          1.290678
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 107
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "LTA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:FunanMall66",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "66"
+    },
+    "Region": {
+      "type": "Property",
+      "value": "Others"
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "Funan Mall"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.8502,
+          1.2911
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 202
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "LTA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ARMENIANSTREETOFFSTREETA0011",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "A0011"
+    },
+    "Region": {
+      "type": "Property",
+      "value": ""
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "ARMENIAN STREET OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.848866,
+          1.293926
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 0
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "URA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:CARPENTERSTREETOFFSTREETC0133",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "C0133"
+    },
+    "Region": {
+      "type": "Property",
+      "value": ""
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "CARPENTER STREET OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.848183,
+          1.288266
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 0
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "URA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:CLEMENCEAUAVENUEOFFSTREETC0162",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "C0162"
+    },
+    "Region": {
+      "type": "Property",
+      "value": ""
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "CLEMENCEAU AVENUE OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.844517,
+          1.293973
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 0
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "Y"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "URA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:HONGLIMPARKOFFSTREETH0024",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "H0024"
+    },
+    "Region": {
+      "type": "Property",
+      "value": ""
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "HONG LIM PARK OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.847327,
+          1.286401
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 1
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "URA"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BLK231BRASBASAHBASEMENTCARPARKBBB",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "BBB"
+    },
+    "Region": {
+      "type": "Property",
+      "value": ""
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "BLK 231 BRAS BASAH BASEMENT CAR PARK"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.853663,
+          1.29658
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 45
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "HDB"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BLK533AHONGLIMMSCPHLM",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "HLM"
+    },
+    "Region": {
+      "type": "Property",
+      "value": ""
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "BLK 533A HONG LIM MSCP"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.845491,
+          1.284758
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 0
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "HDB"
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BLK261/262/264WATERLOOBASEMENTCARPARKWCB",
+    "type": "Carpark",
+    "CarParkID": {
+      "type": "Property",
+      "value": "WCB"
+    },
+    "Region": {
+      "type": "Property",
+      "value": ""
+    },
+    "DevelopmentName": {
+      "type": "Property",
+      "value": "BLK 261/262/264 WATERLOO BASEMENT CAR PARK"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.851938,
+          1.298808
+        ]
+      }
+    },
+    "ParkingAvalibility": {
+      "type": "Property",
+      "value": 14
+    },
+    "LotType": {
+      "type": "Property",
+      "value": "C"
+    },
+    "ParkingSiteOwner": {
+      "type": "Property",
+      "value": "HDB"
+    }
+  }
+]

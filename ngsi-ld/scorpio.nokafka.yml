@@ -1,0 +1,33 @@
+version: "3.5"
+
+volumes:
+    mongodb: ~
+
+services:
+  ################
+  # Applications #
+  ################
+
+  # Context Broker
+  scorpio:
+    image: scorpiobroker/all-in-one-runner:java-latest
+    ports:
+      - "1026:9090"
+    environment:
+      DBHOST: postgres
+    depends_on:
+      - postgres
+
+  #############
+  # Databases #
+  #############
+
+  # Database for Scorpio
+  postgres:
+    image: postgis/postgis
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_USER: ngb
+      POSTGRES_PASSWORD: ngb
+      POSTGRES_DB: ngb

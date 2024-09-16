@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  # @context file is served from here
+  ld-context:
+    labels:
+      org.fiware: 'tutorial'
+    image: httpd:alpine
+    hostname: context
+    container_name: fiware-ld-context
+    ports:
+        - "80:80"
+    volumes:
+        - data-models:/usr/local/apache2/htdocs/
+        - type: bind
+          source: conf/mime.types
+          target: /usr/local/apache2/conf/mime.types
+          read_only: true
+    healthcheck:
+      test: (wget --server-response --spider --quiet  http://ld-context/ngsi-context.jsonld 2>&1 | awk 'NR==1{print $$2}'|  grep -q -e "200") || exit 1
+
+volumes:
+  data-models:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: datamodels
