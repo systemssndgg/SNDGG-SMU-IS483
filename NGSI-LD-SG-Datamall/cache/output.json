@@ -1,282 +1,554 @@
 [
   {
-    "id": "urn:ngsi-ld:Carpark:SuntecCity1",
+    "id": "urn:ngsi-ld:Carpark:ALIWALSTREETA0004",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "1"
-    },
-    "Region": {
-      "type": "Property",
-      "value": "Marina"
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "Suntec City"
+      "value": "ALIWAL STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.85718,
-          1.29375
+          103.860841,
+          1.302642
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 370
+      "value": 69
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 0
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "LTA"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$0.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "weekdayMin": "810 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "satdayMin": "810 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "sunPHMin": "810 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:MarinaSquare2",
+    "id": "urn:ngsi-ld:Carpark:ALLENBYROADA0005",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "2"
-    },
-    "Region": {
-      "type": "Property",
-      "value": "Marina"
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "Marina Square"
+      "value": "ALLENBY ROAD"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.85728,
-          1.29115
+          103.859134,
+          1.310497
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 1264
+      "value": 16
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 0
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "LTA"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$0.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:RafflesCity3",
+    "id": "urn:ngsi-ld:Carpark:AMOYSTREETA0006",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "3"
-    },
-    "Region": {
-      "type": "Property",
-      "value": "Marina"
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "Raffles City"
+      "value": "AMOY STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.85319,
-          1.29382
+          103.847231,
+          1.281185
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 459
+      "value": 81
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 0
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "LTA"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$0.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "weekdayMin": "810 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "satdayMin": "810 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "sunPHMin": "810 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$1.20"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$1.20"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$1.20"
+          }
+        }
+      }
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:TheEsplanade4",
+    "id": "urn:ngsi-ld:Carpark:ANGULLIAPARKOFFSTREETA0007",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "4"
-    },
-    "Region": {
-      "type": "Property",
-      "value": "Marina"
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "The Esplanade"
+      "value": "ANGULLIA PARK OFF STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.85561,
-          1.29011
+          103.82957,
+          1.305327
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 591
+      "value": 268
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 72
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "LTA"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.60"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.60"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:NationalGallery56",
+    "id": "urn:ngsi-ld:Carpark:ANNSIANGROADA0008",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "56"
-    },
-    "Region": {
-      "type": "Property",
-      "value": "Marina"
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "National Gallery"
+      "value": "ANN SIANG ROAD"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.85167,
-          1.29027
+          103.845853,
+          1.280881
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 143
+      "value": 26
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 0
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "LTA"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$0.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$1.20"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$1.20"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$1.20"
+          }
+        }
+      }
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:ClarkeQuay59",
+    "id": "urn:ngsi-ld:Carpark:ARABSTREETA0010",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "59"
-    },
-    "Region": {
-      "type": "Property",
-      "value": "Others"
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "Clarke Quay"
+      "value": "ARAB STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.84648,
-          1.290678
+          103.858208,
+          1.302259
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 107
+      "value": 86
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 0
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "LTA"
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:FunanMall66",
-    "type": "Carpark",
-    "CarParkID": {
-      "type": "Property",
-      "value": "66"
-    },
-    "Region": {
-      "type": "Property",
-      "value": "Others"
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "Funan Mall"
-    },
-    "location": {
-      "type": "GeoProperty",
       "value": {
-        "type": "Point",
-        "coordinates": [
-          103.8502,
-          1.2911
-        ]
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$0.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "weekdayMin": "810 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "satdayMin": "810 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "sunPHMin": "810 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$1.20"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$1.20"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$1.20"
+          }
+        }
       }
-    },
-    "ParkingAvalibility": {
-      "type": "Property",
-      "value": 202
-    },
-    "LotType": {
-      "type": "Property",
-      "value": "C"
-    },
-    "ParkingSiteOwner": {
-      "type": "Property",
-      "value": "LTA"
     }
   },
   {
     "id": "urn:ngsi-ld:Carpark:ARMENIANSTREETOFFSTREETA0011",
     "type": "Carpark",
-    "CarParkID": {
-      "type": "Property",
-      "value": "A0011"
-    },
-    "Region": {
-      "type": "Property",
-      "value": ""
-    },
-    "DevelopmentName": {
+    "CarparkName": {
       "type": "Property",
       "value": "ARMENIAN STREET OFF STREET"
     },
@@ -286,249 +558,355 @@
         "type": "Point",
         "coordinates": [
           103.848866,
-          1.293926
+          1.293925
         ]
       }
     },
-    "ParkingAvalibility": {
-      "type": "Property",
-      "value": 0
-    },
-    "LotType": {
-      "type": "Property",
-      "value": "C"
-    },
-    "ParkingSiteOwner": {
-      "type": "Property",
-      "value": "URA"
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CARPENTERSTREETOFFSTREETC0133",
-    "type": "Carpark",
-    "CarParkID": {
-      "type": "Property",
-      "value": "C0133"
-    },
-    "Region": {
-      "type": "Property",
-      "value": ""
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "CARPENTER STREET OFF STREET"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.848183,
-          1.288266
-        ]
-      }
-    },
-    "ParkingAvalibility": {
-      "type": "Property",
-      "value": 0
-    },
-    "LotType": {
-      "type": "Property",
-      "value": "C"
-    },
-    "ParkingSiteOwner": {
-      "type": "Property",
-      "value": "URA"
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CLEMENCEAUAVENUEOFFSTREETC0162",
-    "type": "Carpark",
-    "CarParkID": {
-      "type": "Property",
-      "value": "C0162"
-    },
-    "Region": {
-      "type": "Property",
-      "value": ""
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "CLEMENCEAU AVENUE OFF STREET"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.844517,
-          1.293973
-        ]
-      }
-    },
-    "ParkingAvalibility": {
-      "type": "Property",
-      "value": 0
-    },
-    "LotType": {
-      "type": "Property",
-      "value": "Y"
-    },
-    "ParkingSiteOwner": {
-      "type": "Property",
-      "value": "URA"
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:HONGLIMPARKOFFSTREETH0024",
-    "type": "Carpark",
-    "CarParkID": {
-      "type": "Property",
-      "value": "H0024"
-    },
-    "Region": {
-      "type": "Property",
-      "value": ""
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "HONG LIM PARK OFF STREET"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.847327,
-          1.286401
-        ]
-      }
-    },
-    "ParkingAvalibility": {
-      "type": "Property",
-      "value": 1
-    },
-    "LotType": {
-      "type": "Property",
-      "value": "C"
-    },
-    "ParkingSiteOwner": {
-      "type": "Property",
-      "value": "URA"
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:BLK231BRASBASAHBASEMENTCARPARKBBB",
-    "type": "Carpark",
-    "CarParkID": {
-      "type": "Property",
-      "value": "BBB"
-    },
-    "Region": {
-      "type": "Property",
-      "value": ""
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "BLK 231 BRAS BASAH BASEMENT CAR PARK"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.853663,
-          1.29658
-        ]
-      }
-    },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
       "value": 45
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 11
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "HDB"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:BLK533AHONGLIMMSCPHLM",
+    "id": "urn:ngsi-ld:Carpark:ARABSTREET-QUEENSTREETOFFSTREETA0017",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "HLM"
-    },
-    "Region": {
-      "type": "Property",
-      "value": ""
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "BLK 533A HONG LIM MSCP"
+      "value": "ARAB STREET - QUEEN STREET OFF STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.845491,
-          1.284758
+          103.857025,
+          1.302941
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 0
+      "value": 148
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 70
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "HDB"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:BLK261/262/264WATERLOOBASEMENTCARPARKWCB",
+    "id": "urn:ngsi-ld:Carpark:AMOYSTREETOFFSTREETA0021",
     "type": "Carpark",
-    "CarParkID": {
+    "CarparkName": {
       "type": "Property",
-      "value": "WCB"
-    },
-    "Region": {
-      "type": "Property",
-      "value": ""
-    },
-    "DevelopmentName": {
-      "type": "Property",
-      "value": "BLK 261/262/264 WATERLOO BASEMENT CAR PARK"
+      "value": "AMOY STREET OFF STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.851938,
-          1.298808
+          103.847177,
+          1.28079
         ]
       }
     },
-    "ParkingAvalibility": {
+    "ParkingCapacity": {
       "type": "Property",
-      "value": 14
+      "value": 16
     },
-    "LotType": {
+    "ParkingAvailability": {
       "type": "Property",
-      "value": "C"
+      "value": 3
     },
-    "ParkingSiteOwner": {
+    "Pricing": {
       "type": "Property",
-      "value": "HDB"
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ADAMROADFOODCENTREOFFSTREETA0024",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ADAM ROAD FOOD CENTRE OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.813899,
+          1.324164
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 64
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 23
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
     }
   }
 ]
