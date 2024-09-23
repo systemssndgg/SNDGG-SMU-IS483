@@ -1,14 +1,15 @@
-import libs.constants as constants
+import mylibs.constants as constants
 import requests
 import json
 from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
-import libs.SVY21 as SVY21
+import mylibs.SVY21 as SVY21
 
 ACCESS_KEY = constants.URA_ACCESS_KEY
 TOKEN_URL = "https://www.ura.gov.sg/uraDataService/insertNewToken.action"
 CARPARK_URL = "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Car_Park_Details"
 SEASON_CARPARK_URL = "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Season_Car_Park_Details"
+CARPARK_AVAILABILITY_URL = "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Car_Park_Availability"
 
 ctx = constants.ctx
 broker_url = constants.broker_url
@@ -28,68 +29,155 @@ def get_ura_token():
 })
 
     if response.status_code == 200:
-        return json.loads(response.content.decode('utf-8'))
+        return json.loads(response.content.decode("utf-8"))
     else:
         return None
 
 def get_carpark(ura_token):
-    response = requests.get(CARPARK_URL, headers={
-        'Content-Type': 'application/json',
-        'AccessKey': ACCESS_KEY,
-        'Token': ura_token,
-        'User-Agent': 'Mozilla/5.0'
+    # retrieve carpark availabilities
+    carpark_availability_response = requests.get(CARPARK_AVAILABILITY_URL, headers={
+        "Content-Type": "application/json",
+        "AccessKey": ACCESS_KEY,
+        "Token": ura_token,
+        "User-Agent": "Mozilla/5.0"
     })
 
-    if response.status_code == 200:
+    if carpark_availability_response.status_code == 200:
+        carpark_availability_list = json.loads(carpark_availability_response.content.decode("utf-8"))
+    else:
+        return None
+
+    # retrieve carpark details
+    carpark_details_response = requests.get(CARPARK_URL, headers={
+        "Content-Type": "application/json",
+        "AccessKey": ACCESS_KEY,
+        "Token": ura_token,
+        "User-Agent": "Mozilla/5.0"
+    })
+
+    if carpark_details_response.status_code == 200:
         count = 0
         entity_list = []
+        unique_carparkNames = []
+        carpark_list = json.loads(carpark_details_response.content.decode("utf-8"))
+        iter_counter = 0
 
-        carpark_list = json.loads(response.content.decode('utf-8'))
+        for carpark in carpark_list["Result"]:
+            remove_spaced_name = carpark["ppName"].replace(" ", "")
+            id = remove_spaced_name + str(carpark["ppCode"])
 
-        for carpark in carpark_list['Result']:
-            remove_spaced_name = carpark["ppName"].replace(' ', '')
-            id = remove_spaced_name + str(carpark['ppCode'])
+            # Check if carpark name is unique, if yes, create a new entity
+            if carpark["ppName"].strip() not in unique_carparkNames:
+                unique_carparkNames.append(carpark["ppName"].strip())
+                entity = Entity("Carpark", id, ctx=ctx)
+                
+                for key, value in carpark.items():
+                    if key=="ppName":
+                        entity.prop("CarparkName", value.strip())
+                    if key == "geometries":
+                        svy21_geocoordinates = value[0]["coordinates"].split(",")
+                        latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
+                        if (len(latlon_geocoordinates) > 1):
+                            entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
+                    elif key == "parkCapacity":
+                        entity.prop("ParkingCapacity", value)
 
-            entity = Entity("Carpark", id, ctx=ctx)
+                for carpark_availability in carpark_availability_list["Result"]:
+                    if carpark["ppCode"] == carpark_availability["carparkNo"] and carpark_availability["lotType"] == "C":
+                        entity.prop("ParkingAvailability", int(carpark_availability["lotsAvailable"]))
+                        break
+                    else:
+                        entity.prop("ParkingAvailability", 0)
+                
+                price_dictionary = {
+                    "Car" :{
+                            "WeekdayRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "weekdayMin" : None,
+                                "weekdayRate" : None
+                            },
+                            "SaturdayRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "satdayMin" : None,
+                                "satdayRate" : None
+                            },
+                            "SundayPHRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "sunPHMin" : None,
+                                "sunPHRate" : None
+                            },
+                    },
+                    "Motorcycle" :{
+                            "WeekdayRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "weekdayMin" : None,
+                                "weekdayRate" : None
+                            },
+                            "SaturdayRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "satdayMin" : None,
+                                "satdayRate" : None
+                            },
+                            "SundayPHRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "sunPHMin" : None,
+                                "sunPHRate" : None
+                            },
+                    },
+                    "Heavy Vehicle" :{
+                            "WeekdayRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "weekdayMin" : None,
+                                "weekdayRate" : None
+                            },
+                            "SaturdayRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "satdayMin" : None,
+                                "satdayRate" : None
+                            },
+                            "SundayPHRate" : {
+                                "startTime" : None,
+                                "endTime" : None,
+                                "sunPHMin" : None,
+                                "sunPHRate" : None
+                            },
+                    }
+                }
+                entity.prop("Pricing", price_dictionary)
+                entity_list.append(entity)
+                count += 1
+                if count == 10:
+                    break
 
-            for key, value in carpark.items():
-                if key == "weekdayMin":
-                    entity.prop("WeekdayMaximumDuration", value)
-                elif key == "weekdayRate":
-                    entity.prop("WeekdayRate", value)
-                elif key == "satdayMin":
-                    entity.prop("SaturdayMaximumDuration", value)
-                elif key == "satDayRate":
-                    entity.prop("SaturdayRate", value)
-                elif key == "sunPHMin":
-                    entity.prop("SundayPHMaximumDuration", value)
-                elif key == "sunPHRate":
-                    entity.prop("SundayPHRate", value)
-                elif key == "ppCode":
-                    entity.prop("CarParkID", value)
-                elif key == "ppName":
-                    entity.prop("DevelopmentName", value.rstrip())
-                elif key == "geometries":
-                    svy21_geocoordinates = value[0]['coordinates'].split(',')
-                    latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[0]), float(svy21_geocoordinates[1]))
-                    if (len(latlon_geocoordinates) > 1):
-                        entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
-                elif key == "parkCapacity":
-                    entity.prop("ParkingAvailablilty", value)
-                elif key == "parkingSystem":
-                    entity.prop("LotType", value)
-                elif key == "startTime":
-                    entity.prop("StartTime", (datetime.strptime(value, "%I.%M %p").strftime("%H%M")))
-                elif key == "endTime":
-                    entity.prop("endTime", (datetime.strptime(value, "%I.%M %p").strftime("%H%M")))
+        for carpark in carpark_list["Result"]:            
+            for entity in entity_list:
+                vehicle_type = carpark["vehCat"]
+                if entity["CarparkName"]["value"].strip() == carpark["ppName"].strip():
+                    if carpark["weekdayRate"] != "$0.00":
+                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["weekdayMin"] = carpark["weekdayMin"]
+                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["weekdayRate"] = carpark["weekdayRate"]
+                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
+                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
+                    if carpark["satdayRate"] != "$0.00":
+                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["satdayMin"] = carpark["satdayMin"]
+                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["satdayRate"] = carpark["satdayRate"]
+                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
+                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
+                    if carpark["sunPHRate"] != "$0.00":
+                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHMin"] = carpark["sunPHMin"]
+                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHRate"] = carpark["sunPHRate"]
+                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
+                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
 
-            entity_list.append(entity)
-
-            count += 1
-            if count == 10:
-                break
-        
-        print("Total number of carparks: ", len(carpark_list['Result']))
+        print("Total number of carparks: ", len(carpark_list["Result"]))
         print("Total entities created: ", len(entity_list))
 
         return entity_list
@@ -98,13 +186,16 @@ def get_carpark(ura_token):
 
 def get_season_carpark(ura_token):
     response = requests.get(SEASON_CARPARK_URL, headers={
-        'Content-Type': 'application/json',
-        'AccessKey': ACCESS_KEY,
-        'Token': ura_token,
-        'User-Agent': 'Mozilla/5.0'
+        "Content-Type": "application/json",
+        "AccessKey": ACCESS_KEY,
+        "Token": ura_token,
+        "User-Agent": "Mozilla/5.0"
     })
 
     if response.status_code == 200:
-        return json.loads(response.content.decode('utf-8'))
+        return json.loads(response.content.decode("utf-8"))
     else:
         return None
+
+def convert_to_24hr(time):
+    return datetime.strptime(time, "%I.%M %p").strftime("%H%M")
