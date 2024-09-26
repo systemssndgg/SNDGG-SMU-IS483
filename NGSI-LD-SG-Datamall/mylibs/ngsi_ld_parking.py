@@ -94,20 +94,26 @@ def get_parking_data():  # Get parking data in NGSI-LD format
     return entity_list
 
 
-def create_entities_in_broker(entities):
-    with Client(
-        hostname=broker_url,
-        port=broker_port,
-        tenant=broker_tenant,
-        port_temporal=temporal_port,
-    ) as client:
+#Batch size controls how many entities we upload at a time. Small onbjects can use a larger batch size to increase speed
+def create_entities_in_broker(entities, batch_size=100):
+    with Client(hostname=broker_url, port=broker_port, tenant=broker_tenant, port_temporal=temporal_port) as client:
         count = 0
-        for entity in entities:
-            ret = client.upsert(entity)
+        failed = 0
+        # Split the entities list into chunks of the given batch size
+        for i in range(0, len(entities), batch_size):
+            chunk = entities[i:i+batch_size]  # Get a chunk of the specified batch size
+            ret = client.upsert(chunk)  # Upsert the chunk
+            
             if ret:
-                count += 1
-    print("Uploaded ", count)
-    return ret
+                count += len(ret.success)
+                if len(ret.errors)>0:
+                    warnings.warn("Some entities have failed to upload")
+                    failed += len(ret.errors)
+                    #print(ret.errors)
+                
+    print("Uploaded", count)
+    print("failed ", failed)
+    return ret 
 
 
 def update_entities_in_broker(entities):
