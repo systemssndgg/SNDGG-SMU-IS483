@@ -31,7 +31,6 @@ def get_traffic_advisories():
         for advisories in traffic_advisories:
             entity = Entity("TrafficAdvisories", advisories["EquipmentID"], ctx=ctx)
             location = []
-            # print(advisories)
             for key, value in advisories.items():
                 if key == "Message":
                     entity.prop("Message", value.strip())
@@ -40,10 +39,10 @@ def get_traffic_advisories():
                 elif key == "Longitude":
                     location.append(float(value))
             entity.gprop("Location", tuple(location))
-        # return traffic_advisories
             
             entity_list.append(entity)
-        print(entity_list)
+        print("Total number of Traffic Advisories: ", len(traffic_advisories))
+        print("Total entities created: ", len(entity_list))
     
         return entity_list
     else:

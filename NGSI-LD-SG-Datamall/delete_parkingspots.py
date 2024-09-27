@@ -19,3 +19,5 @@ temporal_port = constants.temporal_port #default 1026
 broker_tenant = constants.broker_tenant
 
 ngsi_parking.delete_all_type("Carpark")
+ngsi_parking.delete_all_type("TrafficFlow")
+ngsi_parking.delete_all_type("TrafficAdvisories")

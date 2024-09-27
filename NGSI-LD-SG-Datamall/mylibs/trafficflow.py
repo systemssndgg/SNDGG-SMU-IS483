@@ -106,7 +106,7 @@ def get_trafficflow():
                     entity["Date"]["value"][date_key][hour_key] = volume_value
 
         print("Total number of Traffic Flow: ", len(trafficflow_dataset))
-        print("Total entities created: ", len(entity_list), entity_list)
+        print("Total entities created: ", len(entity_list))
 
         return entity_list
     # else:    
