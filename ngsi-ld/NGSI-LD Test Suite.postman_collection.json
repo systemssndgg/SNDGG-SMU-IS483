@@ -1918,7 +1918,7 @@
 	"variable": [
 		{
 			"key": "context-ld",
-			"value": "http://34.126.76.13/context.jsonld",
+			"value": "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld",
 			"type": "string"
 		},
 		{

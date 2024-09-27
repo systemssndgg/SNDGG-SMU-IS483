@@ -38,7 +38,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:BusStop:BusStop01012\",\r\n  \"type\": \"BusStop\",\r\n  \"@context\": [\r\n    \"http://34.126.76.13/context.jsonld\"\r\n  ],\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.852536,\r\n        1.296848\r\n      ]\r\n    }\r\n  },\r\n  \"BusStopCode\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"01012\"\r\n  },\r\n  \"RoadName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Victoria St\"\r\n  },\r\n  \"Description\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Hotel Grand Pacific\"\r\n  },\r\n  \"Latitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 1.29684825487647\r\n  },\r\n  \"Longitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 103.85253591654006\r\n  }\r\n}",
+							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:BusStop:BusStop01012\",\r\n  \"type\": \"BusStop\",\r\n  \"@context\": [\r\n    \"https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld\"\r\n  ],\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.852536,\r\n        1.296848\r\n      ]\r\n    }\r\n  },\r\n  \"BusStopCode\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"01012\"\r\n  },\r\n  \"RoadName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Victoria St\"\r\n  },\r\n  \"Description\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Hotel Grand Pacific\"\r\n  },\r\n  \"Latitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 1.29684825487647\r\n  },\r\n  \"Longitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 103.85253591654006\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,7 +91,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"@context\": \"http://34.126.76.13/context.jsonld\",\r\n  \"id\": \"urn:ngsi-ld:Carpark:SingaporeFlyer6\",\r\n  \"type\": \"Carpark\",\r\n  \"CarParkID\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"6\"\r\n  },\r\n  \"Region\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Marina\"\r\n  },\r\n  \"DevelopmentName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Singapore Flyer\"\r\n  },\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.86311,\r\n        1.28944\r\n      ]\r\n    }\r\n  },\r\n  \"ParkingAvalibility\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 270\r\n  },\r\n  \"LotType\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"C\"\r\n  },\r\n  \"ParkingSiteOwner\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"LTA\"\r\n  }\r\n}",
+							"raw": "{\r\n  \"@context\": \"https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld\",\r\n  \"id\": \"urn:ngsi-ld:Carpark:SingaporeFlyer6\",\r\n  \"type\": \"Carpark\",\r\n  \"CarParkID\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"6\"\r\n  },\r\n  \"Region\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Marina\"\r\n  },\r\n  \"DevelopmentName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Singapore Flyer\"\r\n  },\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.86311,\r\n        1.28944\r\n      ]\r\n    }\r\n  },\r\n  \"ParkingAvalibility\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 270\r\n  },\r\n  \"LotType\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"C\"\r\n  },\r\n  \"ParkingSiteOwner\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"LTA\"\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -624,7 +624,7 @@
 	"variable": [
 		{
 			"key": "context-ld",
-			"value": "http://34.126.76.13/context.jsonld"
+			"value": "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld"
 		},
 		{
 			"key": "gateway",

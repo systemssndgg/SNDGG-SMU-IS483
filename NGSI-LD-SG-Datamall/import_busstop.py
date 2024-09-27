@@ -25,7 +25,7 @@ print("Example bus stop: " , bus_stop_list[0])
 
 
 # No context provided => defaults to NGSI-LD Core Context
-#ctx = "http://34.126.76.13/context.jsonld"
+#ctx = "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld"
 ctx = constants.ctx
 broker_url = constants.broker_url
 broker_port = constants.broker_port # default, 80

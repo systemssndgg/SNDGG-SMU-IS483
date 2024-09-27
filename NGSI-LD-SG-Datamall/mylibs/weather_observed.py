@@ -1,4 +1,4 @@
-import constants as constants
+import mylibs.constants as constants
 from landtransportsg import Traffic
 import requests
 import urllib.parse
@@ -224,16 +224,6 @@ def check_id(json_obj, entity_dict):
 
         entity_dict[e_id] = entity
         return e_id
-
-
-# Code to run ==================================================
-list_entities = get_weather_observed_data()
-
-print("Entities created: ", len(list_entities))
-print("\nPushing to broker...")
-
-create_entities_in_broker(list_entities)
-
 
 # TESTING
 # # [1] relative_humidity_data ==================================

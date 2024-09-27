@@ -1,7 +1,7 @@
 """This module contains constants used in the api package.
 """
 
-ctx = "http://34.126.76.13/context.jsonld"
+ctx = "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld"
 #broker_url = "35.240.151.148"
 broker_url = "localhost"
 broker_port = 1026 # default, 80
