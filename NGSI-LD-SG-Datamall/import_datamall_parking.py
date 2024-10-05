@@ -7,17 +7,17 @@ import json
 from requests.exceptions import RequestException, HTTPError
 from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
-import mylibs.ngsi_ld_parking as ngsi_parking
+import mylibs.datamall_parking as datamall_parking
+import mylibs.ngsi_ld as ngsi_ld
 from geopy.distance import geodesic
 
 
-API_KEY = constants.LTA_API_KEY
+API_KEY = constants.DATAMALL_API_KEY
 ctx = constants.ctx
 broker_url = constants.broker_url
 broker_port = constants.broker_port  # default, 80
 temporal_port = constants.temporal_port  # default 1026
 broker_tenant = constants.broker_tenant
-
 
 # Convert to NGSI-LD
 """
@@ -45,16 +45,16 @@ Example LTA data return:
 """
 
 
-entity_list = ngsi_parking.get_parking_data()
+entity_list = datamall_parking.get_parking_data()
 print("Num entities to upload", len(entity_list))
-entity_list[1].pprint()
-ngsi_parking.create_entities_in_broker(entity_list)
+# entity_list[1].pprint()
+ngsi_ld.create_entities_in_broker(entity_list)
 
 
 print("\n\n\n\n\n")
-retrieved_carparks = ngsi_parking.retrieve_carparks()
+retrieved_carparks = ngsi_ld.retrieve_ngsi_type("Carpark")
 print("Num entities retrieved", len(retrieved_carparks))
-retrieved_carparks[0].pprint()
+# retrieved_carparks[0].pprint()
 
 # Delete carparks
 """
