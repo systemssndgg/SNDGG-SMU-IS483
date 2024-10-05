@@ -8,7 +8,7 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 
 
-API_KEY = constants.LTA_API_KEY
+API_KEY = constants.DATAMALL_API_KEY
 
 
 ctx = constants.ctx
