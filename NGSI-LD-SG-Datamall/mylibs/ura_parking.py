@@ -178,7 +178,7 @@ def get_carpark(ura_token):
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
 
         print("Total number of carparks: ", len(carpark_list["Result"]))
-        print("Total entities created: ", len(entity_list))
+        print("Total entities created: ", len(entity_list), "\n")
 
         return entity_list
     else:
