@@ -295,7 +295,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 72
+      "value": 16
     },
     "Pricing": {
       "type": "Property",
@@ -568,7 +568,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 11
+      "value": 6
     },
     "Pricing": {
       "type": "Property",
@@ -659,7 +659,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 70
+      "value": 17
     },
     "Pricing": {
       "type": "Property",
@@ -750,7 +750,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 3
+      "value": 9
     },
     "Pricing": {
       "type": "Property",
@@ -841,7 +841,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 23
+      "value": 9
     },
     "Pricing": {
       "type": "Property",
