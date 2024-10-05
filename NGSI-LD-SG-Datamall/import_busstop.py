@@ -12,7 +12,7 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 
 
-API_KEY = constants.LTA_API_KEY
+API_KEY = constants.DATAMALL_API_KEY
 
 lta_client = PublicTransport(API_KEY)
 bus_stop_list = lta_client.bus_stops()
