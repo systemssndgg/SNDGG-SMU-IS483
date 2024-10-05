@@ -20,6 +20,10 @@ from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandle
 import mylibs.google_maps as google_maps
 import asyncio
 
+import colorama
+from colorama import Fore, Back, Style
+colorama.init(autoreset=True)
+
 # Logging setup
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -164,18 +168,15 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     # Handle both regular and live location updates
     if update.message and update.message.location:
         live_location = (update.message.location.latitude, update.message.location.longitude)
+        context.user_data['live_location'] = live_location
+        print(Fore.BLUE + f"Received initial live location: Latitude {live_location[0]}, Longitude {live_location[1]}")
     elif update.edited_message and update.edited_message.location:
         live_location = (update.edited_message.location.latitude, update.edited_message.location.longitude)
+        context.user_data['live_location'] = live_location
+        print(Fore.RED + f"Received updated live location: Latitude {live_location[0]}, Longitude {live_location[1]}")
     else:
-        if update.message:
-            await update.message.reply_text("⚠️ Please share your live location to proceed.")
-        elif update.edited_message:
-            await update.edited_message.reply_text("⚠️ Please share your live location to proceed.")
-        else:
-            logger.error("No message or edited message found in update. Cannot retrieve location.")
+        await update.message.reply_text("⚠️ Please share your live location to proceed.")
         return LIVE_LOCATION
-    
-    context.user_data['live_location'] = live_location
 
     if context.user_data.get('carpark_list_sent'):
         logger.info("Carpark list has already been sent. Skipping...")
@@ -264,25 +265,29 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
 async def monitor_carpark_availability(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
     """Monitor the user's proximity to the selected carpark and alert if availability is low."""
-    if update.message:
-        chat_id = update.message.chat_id
-    elif update.callback_query:
-        chat_id = update.callback_query.message.chat_id
-    else:
-        # If neither, we can't process the update
-        logger.error("No message or callback query found in update. Cannot retrieve chat_id.")
-        return
-
-    live_location = context.user_data.get('live_location')
-    if not live_location:
-        await context.bot.send_message(chat_id=chat_id, text="⚠️ Error: Couldn't retrieve your live location.")
-        return
-
+    chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
+    
+    # Begin monitoring the user's proximity
     while True:
+        # Continuously get updated live location
+        live_location = context.user_data.get('live_location')
+
+        # Debugging: print current lat/lng for testing
+        print(Fore.GREEN + f"Monitoring live location: Latitude {live_location[0]}, Longitude {live_location[1]}")
+
+        # Check if live location is still available
+        if not live_location:
+            await context.bot.send_message(chat_id=chat_id, text="⚠️ Error: Couldn't retrieve your live location.")
+            break
+
         carpark_lat = selected_carpark['location']['value']['coordinates'][1]
         carpark_long = selected_carpark['location']['value']['coordinates'][0]
         distance = geodesic(live_location, (carpark_lat, carpark_long)).km
 
+        # Debugging: print distance calculation
+        print(f"Distance from carpark: {distance:.2f} km")
+
+        # Trigger warning if within 4km and less than 10 parking spots
         if distance <= 4.0:
             available_lots = selected_carpark['ParkingAvailability']['value']
 
@@ -295,7 +300,8 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
                 )
                 break
 
-            await asyncio.sleep(10)
+        # Sleep for 5 seconds before checking again    
+        await asyncio.sleep(5)
 
 async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected carpark and return a Google Maps route."""
@@ -335,76 +341,9 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         disable_web_page_preview=True
     )
 
-    await monitor_carpark_availability(update, context, selected_carpark)
+    asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
 
-    return ConversationHandler.END
-
-# async def destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-#     """Store the destination location and ask for live location."""
-#     if update.message and update.message.location:
-#         user = update.message.from_user
-#         destination_location = update.message.location
-#         user_data[user.id] = {
-#             'destination': (destination_location.latitude, destination_location.longitude)
-#         }
-
-#         nearest_carparks = ngsi_parking.geoquery_ngsi_point(input_type="Carpark", maxDistance=10000, lat=destination_location.latitude, long=destination_location.longitude)
-
-#         if len(nearest_carparks) == 0:
-#             await update.message.reply_text("No Nearby carparks")
-#         else:
-#             closest_three_carparks = find_closest_three_carparks(nearest_carparks_list=nearest_carparks, dest_lat=destination_location.latitude, dest_long=destination_location.longitude)
-
-#             closest_carparks_message = "The closest 3 carparks to your destination are:\n"
-#             for count, carpark in enumerate(closest_three_carparks, 1):
-#                 closest_carparks_message += (
-#                     f"{count}: \nArea: {carpark['CarparkName']['value']} \nLots: {carpark['ParkingAvailability']['value']} \n"
-#                     f"Distance from destination: {carpark['distance']} km\n"
-#                 )
-
-#             await update.message.reply_text(closest_carparks_message)
-
-#         await update.message.reply_text('Got your destination. Now please share your live location continuously.')
-#         return LIVE_LOCATION
-#     else:
-#         await update.message.reply_text('Please send your destination location by using the location sharing feature in Telegram.')
-#         return DESTINATION
-
-# async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-#     """Check if the user is within 5km of the destination."""
-#     if update.message and update.message.location:
-#         user = update.message.from_user
-#         live_location = update.message.location
-
-#         destination = user_data.get(user.id, {}).get('destination')
-#         print(destination)
-#         if destination:
-#             distance = geodesic((destination[0] , destination[1]), (live_location.latitude, live_location.longitude)).km
-
-#             if distance <= 5:
-#                 await update.message.reply_text('You are within 5km of your destination!')
-                
-#                 nearest_carparks = ngsi_parking.geoquery_ngsi_point(input_type="Carpark", maxDistance=10000, lat=destination[0], long=destination[1])
-#                 if len(nearest_carparks) == 0:
-#                     await update.message.reply_text("No Nearby carparks")
-#                 else:
-#                     closest_three_carparks = find_closest_three_carparks(nearest_carparks_list=nearest_carparks, dest_lat=destination[0], dest_long=destination[1])
-
-#                     closest_carparks_message = "The current closest 3 carparks to your destination with available lots are:\n"
-#                     for count, carpark in enumerate(closest_three_carparks, 1):
-#                         closest_carparks_message += (
-#                             f"{count}: \nArea: {carpark['CarparkName']['value']} \nLots: {carpark['ParkingAvailability']['value']} \n"
-#                             f"Distance from destination: {carpark['distance']} km\n"
-#                         )
-#                     await update.message.reply_text(closest_carparks_message)
-#             else:
-#                 await update.message.reply_text("You are not within 5km of your destination yet.")
-             
-#         return LIVE_LOCATION
-#     else:
-#         if update.message:
-#             await update.message.reply_text('Please share your live location by using the location sharing feature in Telegram.')
-#         return LIVE_LOCATION
+    return LIVE_LOCATION
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
