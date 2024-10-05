@@ -218,18 +218,28 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                     if 0 <= today <= 4:  # Monday to Friday (Weekday)
                         rate_info = carpark['Pricing']['value']['Car']['WeekdayRate']
                         day_type = "Weekday"
-                    elif today == 5:  # Saturday
-                        rate_info = carpark['Pricing']['value']['Car']['SaturdayRate']
-                        day_type = "Saturday"
-                    else:  # Sunday/Public Holiday (today == 6)
-                        rate_info = carpark['Pricing']['value']['Car']['SundayPHRate']
-                        day_type = "Sunday/Public Holiday"
-
-                    closest_carparks_message += (
+                        closest_carparks_message += (
                         f"🏷️ *{day_type} Rate:* {rate_info['weekdayRate']}\n"
                         f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n"
                         f"⏳ *Duration:* {rate_info['weekdayMin']}\n\n"
                     )
+                    elif today == 5:  # Saturday
+                        rate_info = carpark['Pricing']['value']['Car']['SaturdayRate']
+                        day_type = "Saturday"
+                        closest_carparks_message += (
+                        f"🏷️ *{day_type} Rate:* {rate_info['satdayRate']}\n"
+                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n"
+                        f"⏳ *Duration:* {rate_info['satdayMin']}\n\n"
+                    )
+                    else:  # Sunday/Public Holiday (today == 6)
+                        rate_info = carpark['Pricing']['value']['Car']['SundayPHRate']
+                        day_type = "Sunday/Public Holiday"
+                        closest_carparks_message += (
+                        f"🏷️ *{day_type} Rate:* {rate_info['sunPHRate']}\n"
+                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n"
+                        f"⏳ *Duration:* {rate_info['sunPHMin']}\n\n"
+                    )
+
                 else:
                     closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
 
