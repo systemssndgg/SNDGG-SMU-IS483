@@ -9,13 +9,12 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 
 
-API_KEY = constants.LTA_API_KEY
+API_KEY = constants.DATAMALL_API_KEY
 ctx = constants.ctx
 broker_url = constants.broker_url
 broker_port = constants.broker_port  # default, 80
 temporal_port = constants.temporal_port  # default 1026
 broker_tenant = constants.broker_tenant
-
 
 # Convert to NGSI-LD
 """
@@ -42,58 +41,6 @@ Example LTA data return:
             "Agency": "LTA"
 """
 
-
-def get_parking_data():  # Get parking data in NGSI-LD format
-    count = 0
-    entity_list = []
-
-    # Import data from LTA
-    LTA_client = Traffic(API_KEY)
-    carpark_list = LTA_client.carpark_availability()
-
-    print("Example Carpark: ", carpark_list[0])
-    print("Number of carparks: ", len(carpark_list))
-
-    for carpark in carpark_list:
-        remove_spaced_name = carpark["Development"].replace(
-            " ", ""
-        )  # remove spaces in development name
-        id = remove_spaced_name + str(
-            carpark["CarParkID"]
-        )  # carparkID would be developmentname plus ID?
-        print("ID: ", id)
-        entity = Entity("Carpark", id, ctx=ctx)  # type, id , ctx
-
-        for key, value in carpark.items():
-            if key == "CarParkID":
-                entity.prop("CarParkID", value)
-            elif key == "Area":
-                entity.prop("Region", value)
-            elif key == "Development":
-                entity.prop("DevelopmentName", value)
-            elif key == "Location":  # Geoproperty
-                geocoordinates = value.split()  # lat, long
-                if len(geocoordinates) > 1:
-                    entity.gprop(
-                        "location", (float(geocoordinates[0]), float(geocoordinates[1]))
-                    )  # Pass in point
-                    print("Lat ", geocoordinates[0], " Long ", geocoordinates[1])
-            elif key == "AvailableLots":
-                entity.prop("ParkingAvailability", value)
-            elif key == "LotType":
-                entity.prop("LotType", value)
-            elif key == "Agency":
-                entity.prop("ParkingSiteOwner", value)
-
-        entity_list.append(entity)  # Add entity to list
-
-        count += 1
-        if count == 10:  # Limit number of carparks pulled for now
-            break
-
-    return entity_list
-
-
 #Batch size controls how many entities we upload at a time. Small onbjects can use a larger batch size to increase speed
 def create_entities_in_broker(entities, batch_size=100):
     with Client(hostname=broker_url, port=broker_port, tenant=broker_tenant, port_temporal=temporal_port) as client:
@@ -111,8 +58,8 @@ def create_entities_in_broker(entities, batch_size=100):
                     failed += len(ret.errors)
                     #print(ret.errors)
                 
-    print("Uploaded", count)
-    print("failed ", failed)
+    print("Uploaded: ", count)
+    print("Failed: ", failed)
     return ret 
 
 
@@ -253,11 +200,6 @@ def geoquery_ngsi_point(
 
     return retrieve_entity_from_json_file(output_file)
 
-
-def retrieve_carparks():
-    return retrieve_ngsi_type("Carpark")
-
-
 def delete_all_type(type):
     with Client(
         hostname=broker_url,
@@ -272,7 +214,11 @@ def delete_all_type(type):
         # client.drop("https://schema.org/BusStop")
 
         # Delete by list
-        client.delete(entities)
+        if len(entities) > 0:
+            client.delete(entities)
+            print("\n")
+        else:
+            print("Skipping - no entities to delete\n")
 
 
 """
