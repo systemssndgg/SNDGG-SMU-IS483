@@ -9,7 +9,7 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 
 
-API_KEY = constants.LTA_API_KEY
+API_KEY = constants.DATAMALL_API_KEY
 ctx = constants.ctx
 broker_url = constants.broker_url
 broker_port = constants.broker_port  # default, 80
@@ -100,59 +100,55 @@ def fetch_uv_index_data():
             finalData['UVIndex'] = UVIndexData['data']['records'][0]['index'][i]['value']
     return finalData
 
-def get_weather_observed_data():
-    print("Running get_weather_observed_data()...")
+def get_weather_observed():
+    # print("Running get_weather_observed_data()...")
     # Fetches data from each data source and returns a list of WeatherObserved entities
     entity_dict = {}
 
     # [1] relative_humidity_data
-    print("\nFetching relative humidity data...")
+    # print("\nFetching relative humidity data...")
     rhum_data = fetch_relative_humidity_data()
-    print("Fetched ", len(rhum_data), " relative humidity data")
+    # print("Fetched ", len(rhum_data), " relative humidity data")
 
     for e_rhum in rhum_data:
         e_id = check_id(e_rhum, entity_dict)
 
         entity_dict[e_id].prop("relativeHumidity", e_rhum['value'])
-    
 
     # [2] rainfall_precipitation_data
-    print("\nFetching rainfall precipitation data...")
+    # print("\nFetching rainfall precipitation data...")
     rain_data = fetch_rainfall_precipitation_data()
-    print("Fetched ", len(rain_data), " rainfall precipitation data")
+    # print("Fetched ", len(rain_data), " rainfall precipitation data")
 
     for e_rain in rain_data:
         e_id = check_id(e_rain, entity_dict)
 
         entity_dict[e_id].prop("precipitation", e_rain['value'])
-    
 
     # [3] wind_direction_data
-    print("\nFetching wind direction data...")
+    # print("\nFetching wind direction data...")
     wind_dir_data = fetch_wind_direction_data()
-    print("Fetched ", len(wind_dir_data), " wind direction data")
+    # print("Fetched ", len(wind_dir_data), " wind direction data")
 
     for e_wind_dir in wind_dir_data:
         e_id = check_id(e_wind_dir, entity_dict)
 
         entity_dict[e_id].prop("windDirection", e_wind_dir['value'])
-    
 
     # [4] wind_speed_data
-    print("\nFetching wind speed data...")
+    # print("\nFetching wind speed data...")
     wind_speed_data = fetch_wind_speed_data()
-    print("Fetched ", len(wind_speed_data), " wind speed data")
+    # print("Fetched ", len(wind_speed_data), " wind speed data")
 
     for e_wind_speed in wind_speed_data:
         e_id = check_id(e_wind_speed, entity_dict)
 
         entity_dict[e_id].prop("windSpeed", e_wind_speed['value'])
-    
 
     # [5] air_temperature_data
-    print("\nFetching air temperature data...")
+    # print("\nFetching air temperature data...")
     air_temp_data = fetch_air_temperature_data()
-    print("Fetched ", len(air_temp_data), " air temperature data")
+    # print("Fetched ", len(air_temp_data), " air temperature data")
 
     for e_air_temp in air_temp_data:
         e_id = check_id(e_air_temp, entity_dict)
@@ -160,38 +156,27 @@ def get_weather_observed_data():
         entity_dict[e_id].prop("temperature", e_air_temp['value'])
     
     # [6] uv_index_data
-    print("\nFetching UV Index data...")
+    # print("\nFetching UV Index data...")
     # Check the current time
     current_time = datetime.now().strftime("%H:%M")
     if current_time < "07:00" or current_time > "20:00":
-        print("Outside of UV Index hours. Setting UV Index data to 0...")
+        # print("Outside of UV Index hours. Setting UV Index data to 0...")
         uv_index_data = {"UVIndex": 0, "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")}
 
     else:
         uv_index_data = fetch_uv_index_data()
-        print(f"Fetched UV Index data: {uv_index_data['UVIndex']}, for timestamp:, {uv_index_data['timestamp']}")
+        # print(f"Fetched UV Index data: {uv_index_data['UVIndex']}, for timestamp:, {uv_index_data['timestamp']}")
 
     # Add UV Index to all entities
     for key in entity_dict.keys():
         entity_dict[key].prop("uvIndex", uv_index_data['UVIndex'])
 
+    limited_entities = list(entity_dict.values())[:10]
+
+    print("Total number of observed: ", len(entity_dict))
+    print("Total entities created: ", len(limited_entities), "\n")
+    
     return list(entity_dict.values())
-
-def create_entities_in_broker(entities):
-    with Client(
-        hostname=broker_url,
-        port=broker_port,
-        tenant=broker_tenant,
-        port_temporal=temporal_port,
-    ) as client:
-        count = 0
-        for entity in entities:
-            ret = client.upsert(entity)
-            if ret:
-                count += 1
-    print("Uploaded ", count)
-    return ret
-
 
 # Helper Functions ==================================================
 
