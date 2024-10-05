@@ -3,20 +3,15 @@ import requests
 import json
 from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
-import mylibs.SVY21 as SVY21
 
 TRAFFICFLOW_URL = "https://datamall2.mytransport.sg/ltaodataservice/TrafficFlow"
-ACCESS_KEY = constants.DATAMALL_ACCESS_KEY
+ACCESS_KEY = constants.DATAMALL_API_KEY
 
 ctx = constants.ctx
 broker_url = constants.broker_url
 broker_port = constants.broker_port # default, 80
 temporal_port = constants.temporal_port #default 1026
 broker_tenant = constants.broker_tenant
-
-# Initialise the SVY21 class
-svy21_converter = SVY21.SVY21()
-
 
 def get_trafficflow_url(ACCESS_KEY):
     response = requests.get(TRAFFICFLOW_URL, headers={
@@ -29,7 +24,6 @@ def get_trafficflow_url(ACCESS_KEY):
         trafficflow_url = json.loads(response.content.decode("utf-8"))["value"][0]["Link"]
         return trafficflow_url
     
-
 def get_trafficflow():
     # response = requests.get(get_trafficflow_url(ACCESS_KEY), headers={
     # "Content-Type": "application/json",
@@ -42,7 +36,7 @@ def get_trafficflow():
 
     # To remove and uncomment from line 34 to 40 & 111 to 112, substitute for exceeding Datamall Traffic Flow API call
     # Change URL to local file path
-    with open(r"C:\Users\jiale\OneDrive\Desktop\FYP\SNDGG-SMU-IS483\NGSI-LD-SG-Datamall\mylibs\sample_trafficflow.json") as f:
+    with open("./mylibs/sample_trafficflow.json", "r") as f:
         trafficflow_dataset = json.load(f)['Value']
         
         # =============== Actual Logic ================= 
@@ -89,7 +83,6 @@ def get_trafficflow():
                 count += 1
                 if count == 10:
                     break
-        # print(entity_list)
 
         # Date
         for traffic_flow in trafficflow_dataset:
@@ -106,8 +99,6 @@ def get_trafficflow():
                     entity["Date"]["value"][date_key][hour_key] = volume_value
 
         print("Total number of Traffic Flow: ", len(trafficflow_dataset))
-        print("Total entities created: ", len(entity_list))
+        print("Total entities created: ", len(entity_list), '\n')
 
         return entity_list
-    # else:    
-        # return None
