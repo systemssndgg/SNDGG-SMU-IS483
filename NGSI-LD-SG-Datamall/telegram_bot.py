@@ -2,7 +2,7 @@ import sys
 print(sys.version)
 
 import mylibs.constants as constants
-import mylibs.ngsi_ld_parking as ngsi_parking
+import mylibs.ngsi_ld as ngsi_parking
 import time
 
 from landtransportsg import PublicTransport

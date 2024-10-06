@@ -295,7 +295,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 16
+      "value": 21
     },
     "Pricing": {
       "type": "Property",
@@ -473,7 +473,7 @@
     },
     "ParkingCapacity": {
       "type": "Property",
-      "value": 86
+      "value": 70
     },
     "ParkingAvailability": {
       "type": "Property",
@@ -568,7 +568,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 6
+      "value": 23
     },
     "Pricing": {
       "type": "Property",
@@ -659,7 +659,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 17
+      "value": 44
     },
     "Pricing": {
       "type": "Property",
@@ -750,7 +750,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 9
+      "value": 11
     },
     "Pricing": {
       "type": "Property",
@@ -841,7 +841,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 9
+      "value": 14
     },
     "Pricing": {
       "type": "Property",
@@ -884,6 +884,916 @@
             "endTime": "0700",
             "sunPHMin": "510 mins",
             "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ADAMROAD-DUNEARNCLOSEOFFSTREETA0025",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ADAM ROAD - DUNEARN CLOSE OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.814121,
+          1.324477
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 12
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "2200",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$0.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "weekdayMin": "810 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "satdayMin": "810 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "0830",
+            "endTime": "2200",
+            "sunPHMin": "810 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ALJUNIEDROAD(MINOR)A0028",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ALJUNIED ROAD (MINOR)"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.879648,
+          1.325439
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 19
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "0830",
+            "endTime": "1700",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "0830",
+            "endTime": "1700",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ANAMALAIAVENUEA0034",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ANAMALAI AVENUE"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.7947,
+          1.330659
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 12
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "0830",
+            "endTime": "1700",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "0830",
+            "endTime": "1700",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ANTHONYROADOFFSTREETA0035",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ANTHONY ROAD OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.836893,
+          1.310296
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 50
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 40
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$0.65"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$0.65"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$0.65"
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ANGMOKIOSTREET62A0036",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ANG MO KIO STREET 62"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.845144,
+          1.386957
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 15
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$10.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$10.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$10.00"
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ANGMOKIOSTREET64A0037",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ANG MO KIO STREET 64"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.849233,
+          1.387706
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 11
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:AYERRAJAHCRESCENTA0043",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "AYER RAJAH CRESCENT"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.788885,
+          1.2934
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 21
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "1900",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$0.60"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "1900",
+            "satdayMin": "30 mins",
+            "satdayRate": "$0.60"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "1900",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$0.60"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": "1700",
+            "endTime": "1900",
+            "weekdayMin": "30 mins",
+            "weekdayRate": "$1.20"
+          },
+          "SaturdayRate": {
+            "startTime": "1700",
+            "endTime": "1900",
+            "satdayMin": "30 mins",
+            "satdayRate": "$1.20"
+          },
+          "SundayPHRate": {
+            "startTime": "1700",
+            "endTime": "1900",
+            "sunPHMin": "30 mins",
+            "sunPHRate": "$1.20"
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ALJUNIEDROADOFFSTREETA0046",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ALJUNIED ROAD OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.881788,
+          1.313892
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 13
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 4
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ANGMOKIOSTREET63A0048",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ANG MO KIO STREET 63"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.848247,
+          1.385709
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 43
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        },
+        "Heavy Vehicle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ANCHORVALESTREETA0054",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ANCHORVALE STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.886181,
+          1.397576
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 62
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "WeekdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "weekdayMin": "510 mins",
+            "weekdayRate": "$5.00"
+          },
+          "SaturdayRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "satdayMin": "510 mins",
+            "satdayRate": "$5.00"
+          },
+          "SundayPHRate": {
+            "startTime": "2230",
+            "endTime": "0700",
+            "sunPHMin": "510 mins",
+            "sunPHRate": "$5.00"
+          }
+        },
+        "Motorcycle": {
+          "WeekdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "weekdayMin": null,
+            "weekdayRate": null
+          },
+          "SaturdayRate": {
+            "startTime": null,
+            "endTime": null,
+            "satdayMin": null,
+            "satdayRate": null
+          },
+          "SundayPHRate": {
+            "startTime": null,
+            "endTime": null,
+            "sunPHMin": null,
+            "sunPHRate": null
           }
         },
         "Heavy Vehicle": {

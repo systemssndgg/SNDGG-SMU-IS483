@@ -4,9 +4,11 @@ from mylibs.traffic_advisories import get_traffic_advisories
 from mylibs.ngsi_ld import create_entities_in_broker
 
 token = get_ura_token()['Result']
+print("Token ", token)
 
 # Code to run ==================================================
 carpark_list = get_carpark(token)
+print("carpark_list" , carpark_list)
 trafficflow_list = get_trafficflow()
 trafficadvisories_list = get_traffic_advisories()
 

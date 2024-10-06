@@ -58,9 +58,9 @@ def create_entities_in_broker(entities, batch_size=100):
                     failed += len(ret.errors)
                     #print(ret.errors)
                 
-    print("Uploaded: ", count)
-    print("Failed: ", failed)
-    return ret 
+        print("Uploaded: ", count)
+        print("Failed: ", failed)
+        return (failed>0)
 
 
 def update_entities_in_broker(entities):
