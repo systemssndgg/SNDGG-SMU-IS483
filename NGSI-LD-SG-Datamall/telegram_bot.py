@@ -2,7 +2,7 @@ import sys
 print(sys.version)
 
 import mylibs.constants as constants
-import mylibs.ngsi_ld_parking as ngsi_parking
+from mylibs.ngsi_ld import geoquery_ngsi_point, retrieve_ngsi_type
 import time
 
 from landtransportsg import PublicTransport
@@ -29,7 +29,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 def ngsi_test_fn():
-    ret = ngsi_parking.geoquery_ngsi_point(input_type="Carpark", maxDistance=5000, lat=103.83359, long=1.3071)
+    ret = geoquery_ngsi_point(input_type="Carpark", maxDistance=5000, lat=103.83359, long=1.3071)
     print(len(ret))
 
 # State definitions
@@ -51,6 +51,7 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     """Handle destination input and return a list of suggestions"""
     if update.message and update.message.text:
         user_input = update.message.text
+        loading_message = await update.message.reply_text("🔄 Fetching suggestions for your destination...")
         suggestions = google_maps.get_autocomplete_place(user_input)
 
         if suggestions:
@@ -66,9 +67,10 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            await update.message.reply_text("🌐 *Please select your destination from the suggestions below:*", reply_markup=reply_markup, parse_mode="Markdown")
+            await context.bot.edit_message_text(
+                chat_id=update.effective_chat.id, message_id=loading_message.message_id, text="🌐 *Please select your destination from the suggestions below:*", reply_markup=reply_markup, parse_mode="Markdown")
         else:
-            await update.message.reply_text('🚫 No suggestions found. Please try again.')
+            await context.bot.edit_message_text(chat_id=update.effective_chat.id, message_id=loading_message.message_id, text='🚫 No suggestions found. Please try again.')
         
         return DESTINATION
     else:
@@ -152,19 +154,31 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     if query.data == "confirm_yes":
         print("User confirmed the location. Asking for live location.")
-        await query.message.reply_text("🛰️ *Great!* Now, please share your live location so I can find the best route.", parse_mode="Markdown")
+
+        await query.edit_message_text(
+            "✅ *Destination confirmed!* Now, please share your live location so I can find the best route.",
+            parse_mode="Markdown",
+            reply_markup=None
+        )
+
         return LIVE_LOCATION 
     
     elif query.data == "confirm_no":
         print("User rejected the location. Asking for a new destination.")
-        await query.message.reply_text("🔄 Let's search again. Where would you like to go?")
+
+        await query.edit_message_text(
+            "❌ *Destination rejected.* Let's search again. Where would you like to go?",
+            parse_mode="Markdown",
+            reply_markup=None
+        )
+
         return DESTINATION
     
     return ConversationHandler.END
 
 async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the live location input and find nearest carpark based on destination"""
-    
+
     # Handle both regular and live location updates
     if update.message and update.message.location:
         live_location = (update.message.location.latitude, update.message.location.longitude)
@@ -186,7 +200,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     destination_long = context.user_data.get('destination_long')
     
     if destination_lat and destination_long:
-        nearest_carparks = ngsi_parking.geoquery_ngsi_point(
+        nearest_carparks = geoquery_ngsi_point(
             input_type="Carpark",
             maxDistance=100000,
             lat=destination_lat,
@@ -266,7 +280,10 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 async def monitor_carpark_availability(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
     """Monitor the user's proximity to the selected carpark and alert if availability is low."""
     chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
-    
+
+    traffic_advisories = get_traffic_advisories()
+    warning_distance_km = 2
+
     # Begin monitoring the user's proximity
     while True:
         # Continuously get updated live location
@@ -299,6 +316,22 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
                     parse_mode='Markdown'
                 )
                 break
+        
+        for advisory in traffic_advisories:
+            advisory_coordinates = advisory['Location']['value']['coordinates']
+            advisory_lat = advisory_coordinates[1]
+            advisory_long = advisory_coordinates[0]
+            distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
+
+            print(Fore.BLUE + f"Distance to advisory {advisory['id']}: {distance_to_advisory:.2f} km")
+
+            if distance_to_advisory <= warning_distance_km:
+                advisory_message = advisory['Message']['value']
+                await context.bot.send_message(
+                    chat_id=chat_id,
+                    text=f"🚧 *Traffic Advisory:* {advisory_message}",
+                    parse_mode='Markdown'
+                )
 
         # Sleep for 5 seconds before checking again    
         await asyncio.sleep(5)
@@ -369,6 +402,9 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long):
                     closest_three_carparks.remove(farthest_carpark)
                     closest_three_carparks.append(carpark_dict)
     return closest_three_carparks
+
+def get_traffic_advisories():
+    return retrieve_ngsi_type("TrafficAdvisories")
 
 def main() -> None:
     """Run the bot."""
