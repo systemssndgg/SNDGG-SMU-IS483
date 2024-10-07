@@ -45,6 +45,7 @@ def get_carpark(ura_token):
     if carpark_availability_response.status_code == 200:
         carpark_availability_list = json.loads(carpark_availability_response.content.decode("utf-8"))
     else:
+        print(f"Failed to retrieve URA carparks , {carpark_availability_response.status_code}")
         return None
 
     # retrieve carpark details
@@ -61,7 +62,7 @@ def get_carpark(ura_token):
         unique_carparkNames = []
         carpark_list = json.loads(carpark_details_response.content.decode("utf-8"))
         iter_counter = 0
-
+        print("Carkaprklist ", carpark_list)
         for carpark in carpark_list["Result"]:
             remove_spaced_name = carpark["ppName"].replace(" ", "")
             id = remove_spaced_name + str(carpark["ppCode"])
@@ -75,6 +76,10 @@ def get_carpark(ura_token):
                     if key=="ppName":
                         entity.prop("CarparkName", value.strip())
                     if key == "geometries":
+                        if not value:
+                            print("Carpark ",carpark)
+                            print("geometries value" , value)
+                            continue
                         svy21_geocoordinates = value[0]["coordinates"].split(",")
                         latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
                         if (len(latlon_geocoordinates) > 1):
@@ -153,25 +158,31 @@ def get_carpark(ura_token):
                 }
                 entity.prop("Pricing", price_dictionary)
                 entity_list.append(entity)
-                count += 1
-                if count == 10:
-                    break
+
 
         for carpark in carpark_list["Result"]:            
             for entity in entity_list:
                 vehicle_type = carpark["vehCat"]
                 if entity["CarparkName"]["value"].strip() == carpark["ppName"].strip():
-                    if carpark["weekdayRate"] != "$0.00":
+                    if (
+                        not carpark.get("weekdayRate") or 
+                        not carpark.get("satdayRate") or 
+                        not carpark.get("sunPHRate") or 
+                        not carpark.get("sunPHMin")
+                    ):
+                        continue
+                    if carpark.get("weekdayRate") != "$0.00":
                         entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["weekdayMin"] = carpark["weekdayMin"]
                         entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["weekdayRate"] = carpark["weekdayRate"]
                         entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
                         entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
-                    if carpark["satdayRate"] != "$0.00":
+                    if carpark.get("satdayRate") != "$0.00":
                         entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["satdayMin"] = carpark["satdayMin"]
                         entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["satdayRate"] = carpark["satdayRate"]
                         entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
                         entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
-                    if carpark["sunPHRate"] != "$0.00":
+                    if carpark.get("sunPHRate") != "$0.00":
+                        print(carpark)
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHMin"] = carpark["sunPHMin"]
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHRate"] = carpark["sunPHRate"]
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["startTime"] = convert_to_24hr(carpark["startTime"])

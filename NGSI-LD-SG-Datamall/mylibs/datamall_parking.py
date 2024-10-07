@@ -53,8 +53,8 @@ def get_parking_data():  # Get parking data in NGSI-LD format
 
         entity_list.append(entity)  # Add entity to list
 
-        count += 1
-        if count == 10:  # Limit number of carparks pulled for now
-            break
+        #count += 1
+        #if count == 10:  # Limit number of carparks pulled for now
+            #break
 
     return entity_list
