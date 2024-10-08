@@ -4,6 +4,9 @@ import json
 from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 import mylibs.SVY21 as SVY21
+import colorama
+from colorama import Fore, Back, Style
+colorama.init(autoreset=True)
 
 ACCESS_KEY = constants.URA_ACCESS_KEY
 TOKEN_URL = "https://www.ura.gov.sg/uraDataService/insertNewToken.action"
@@ -61,8 +64,9 @@ def get_carpark(ura_token):
         entity_list = []
         unique_carparkNames = []
         carpark_list = json.loads(carpark_details_response.content.decode("utf-8"))
+            
         iter_counter = 0
-        print("Carkaprklist ", carpark_list)
+
         for carpark in carpark_list["Result"]:
             remove_spaced_name = carpark["ppName"].replace(" ", "")
             id = remove_spaced_name + str(carpark["ppCode"])
@@ -77,8 +81,8 @@ def get_carpark(ura_token):
                         entity.prop("CarparkName", value.strip())
                     if key == "geometries":
                         if not value:
-                            print("Carpark ",carpark)
-                            print("geometries value" , value)
+                            # print("Carpark ",carpark)
+                            # print("geometries value" , value)
                             continue
                         svy21_geocoordinates = value[0]["coordinates"].split(",")
                         latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
@@ -86,7 +90,13 @@ def get_carpark(ura_token):
                             entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
                     elif key == "parkCapacity":
                         entity.prop("ParkingCapacity", value)
-
+                    if count % 2 == 0:
+                        entity.prop("Sheltered",True)
+                    else:
+                        entity.prop("Sheltered",False)
+                    count += 1
+                    
+                
                 for carpark_availability in carpark_availability_list["Result"]:
                     if carpark["ppCode"] == carpark_availability["carparkNo"] and carpark_availability["lotType"] == "C":
                         entity.prop("ParkingAvailability", int(carpark_availability["lotsAvailable"]))
@@ -160,6 +170,7 @@ def get_carpark(ura_token):
                 entity_list.append(entity)
 
 
+        
         for carpark in carpark_list["Result"]:            
             for entity in entity_list:
                 vehicle_type = carpark["vehCat"]
@@ -182,16 +193,18 @@ def get_carpark(ura_token):
                         entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
                         entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
                     if carpark.get("sunPHRate") != "$0.00":
-                        print(carpark)
+                        # print(carpark)
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHMin"] = carpark["sunPHMin"]
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHRate"] = carpark["sunPHRate"]
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
                         entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
 
+
+
         print("Total number of carparks: ", len(carpark_list["Result"]))
         print("Total entities created: ", len(entity_list), "\n")
-
-        return entity_list
+        
+        return entity_list 
     else:
         return None
 

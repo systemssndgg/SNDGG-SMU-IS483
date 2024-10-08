@@ -38,8 +38,14 @@ DESTINATION, CONFIRM_DESTINATION, LIVE_LOCATION = range(3)
 # Store user data
 user_data = {}
 
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Send a welcome message and ask for user's destination."""
+    
+    # store in context.user_data, then retrieve by context.user_data.get
+    # closest_three_carparks = context.user_data['closest_carparks']
+    # context.user_data.get('carpark_list_sent'):
+
     await update.message.reply_text(
         "👋 *Welcome!* Where would you like to go today?\n\n"
         "Please type your destination.",
@@ -76,6 +82,7 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     else:
         await update.message.reply_text('✏️ Please type your destination.')
         return DESTINATION
+    
 
 async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected destination, search another destination, or cancel"""
@@ -106,6 +113,7 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
     print(f"Destination selected. Fetching details for place ID: {destination_id}")
 
     # Fetch destination details using the Google Maps API
+    global destination_details
     destination_details = google_maps.get_details_place(destination_id)
 
     if destination_details:
@@ -156,7 +164,9 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
         print("User confirmed the location. Asking for live location.")
 
         await query.edit_message_text(
-            "✅ *Destination confirmed!* Now, please share your live location so I can find the best route.",
+            "✅ Destination confirmed! Please share your live location to help me find the best route.\n\n"
+            "*Follow these steps:*\n"
+            "📎 Paper Clip > Location > Share Live Location > Select ‘for 1 hour’",
             parse_mode="Markdown",
             reply_markup=None
         )
@@ -196,16 +206,23 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         logger.info("Carpark list has already been sent. Skipping...")
         return LIVE_LOCATION
 
+    
     destination_lat = context.user_data.get('destination_lat')
     destination_long = context.user_data.get('destination_long')
-    
     if destination_lat and destination_long:
         nearest_carparks = geoquery_ngsi_point(
             input_type="Carpark",
-            maxDistance=100000,
+            maxDistance=3000,
             lat=destination_lat,
             long=destination_long
         )
+
+        global sheltered_carpark_list
+        sheltered_carpark_list = []
+        for carpark in nearest_carparks:
+            if carpark["Sheltered"]["value"] == True:
+                sheltered_carpark_list.append(carpark)
+        
 
         if len(nearest_carparks) == 0:
             await context.bot.send_message(chat_id=update.effective_chat.id, text="🚫 Sorry! No nearby carparks found.")
@@ -220,6 +237,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
             today = datetime.today().weekday()
             
+            
             for count, carpark in enumerate(closest_three_carparks, 1):
                 carpark_name = carpark['CarparkName']['value'].title()
 
@@ -227,32 +245,36 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                     f"*{count}. {carpark_name}*\n"
                     f"🅿️ *Available Lots:* {carpark['ParkingAvailability']['value']}\n"
                     f"📏 *Distance:* {carpark['distance']:.2f} km\n"
+                    f"☂️ *Sheltered:* {'Yes' if carpark['Sheltered']['value'] else 'No'}\n"
                 )
             
                 if 'Pricing' in carpark and 'Car' in carpark['Pricing']["value"]:
                     if 0 <= today <= 4:  # Monday to Friday (Weekday)
                         rate_info = carpark['Pricing']['value']['Car']['WeekdayRate']
+                        minutes = int(rate_info['weekdayMin'].split(" ")[0])
+                        h, mins = convert_to_hours(minutes)
                         day_type = "Weekday"
                         closest_carparks_message += (
-                        f"🏷️ *{day_type} Rate:* {rate_info['weekdayRate']}\n"
-                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n"
-                        f"⏳ *Duration:* {rate_info['weekdayMin']}\n\n"
+                        f"🏷️ *{day_type} Rate:* {rate_info['weekdayRate']} per {h} h {mins} mins\n"
+                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n"
                     )
-                    elif today == 5:  # Saturday
+                    elif today == 5:  # Saturday      
                         rate_info = carpark['Pricing']['value']['Car']['SaturdayRate']
+                        minutes = int(rate_info['satdayMin'].split(" ")[0])
+                        h, mins = convert_to_hours(minutes)
                         day_type = "Saturday"
                         closest_carparks_message += (
-                        f"🏷️ *{day_type} Rate:* {rate_info['satdayRate']}\n"
-                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n"
-                        f"⏳ *Duration:* {rate_info['satdayMin']}\n\n"
+                        f"🏷️ *{day_type} Rate:* {rate_info['satdayRate']} per {h} h {mins} mins\n"
+                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n"
                     )
                     else:  # Sunday/Public Holiday (today == 6)
                         rate_info = carpark['Pricing']['value']['Car']['SundayPHRate']
+                        minutes = int(rate_info['sunPHMin'].split(" ")[0])
+                        h, mins = convert_to_hours(minutes)
                         day_type = "Sunday/Public Holiday"
                         closest_carparks_message += (
-                        f"🏷️ *{day_type} Rate:* {rate_info['sunPHRate']}\n"
-                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n"
-                        f"⏳ *Duration:* {rate_info['sunPHMin']}\n\n"
+                        f"🏷️ *{day_type} Rate:* {rate_info['sunPHRate']} per {h} h {mins} mins\n"
+                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n"
                     )
 
                 else:
@@ -284,6 +306,9 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
     traffic_advisories = get_traffic_advisories()
     warning_distance_km = 2
 
+    rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
+
+    sent_new = False
     # Begin monitoring the user's proximity
     while True:
         # Continuously get updated live location
@@ -332,9 +357,84 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
                     text=f"🚧 *Traffic Advisory:* {advisory_message}",
                     parse_mode='Markdown'
                 )
+        weather = [
+        {
+            "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-10-08T12:23:56_2024-10-08T14:23:56",
+            "type": "WeatherForecast",
+            "Area": {
+                "type": "Property",
+                "value": "Bedok"
+            },
+            "forecast": {
+                "type": "Property",
+                "value": "Heavy Rain"
+            },
+            "location": {
+                "type": "GeoProperty",
+                "value": {
+                    "type": "Point",
+                    "coordinates": [
+                        103.924,
+                        1.321
+                    ]
+                }
+            }
+        }
+        ]
+        carpark_location = current_carpark['location']['value']['coordinates']
+
+        query = update.callback_query
+        await query.answer()
+
+        for area in weather:
+            carpark_coordinates = (carpark_location[1], carpark_location[0])
+            forecast_coordinates= (area["location"]["value"]["coordinates"][1], area["location"]["value"]["coordinates"][0])
+
+            distance = geodesic(carpark_coordinates, forecast_coordinates).km
+
+
+            check_distance_list = [0.5, 1.0, 1.5, 2.0]
+            new_carpark = None
+            for check_distance in check_distance_list: 
+                if distance < check_distance and area["forecast"]["value"] in rain_values:
+                    rain_value = area["forecast"]["value"]
+                    print("=====================================")
+                    print("im in!")
+                    print("rain_value:", rain_value)
+            if current_carpark["Sheltered"]["value"] == False:    
+                new_carpark = find_closest_carpark(sheltered_carpark_list, destination_details['geometry']['location']['lat'], destination_details['geometry']['location']['lng'])
+                print(new_carpark)
+
+                lat = new_carpark["location"]["value"]["coordinates"][1] 
+                long = new_carpark["location"]["value"]["coordinates"][0]
+                google_maps_link = (
+                    f"https://www.google.com/maps/dir/?api=1&origin={live_location[0]},{live_location[1]}"
+                    f"&waypoints={lat},{long}"
+                    f"&destination={context.user_data.get('destination_lat')},{context.user_data.get('destination_long')}&travelmode=driving"
+                )
+
+                await query.message.reply_text(
+                    f"🛣️ *Here is your route:*\n\n"
+                    f"📍 Start: {user_address}\n"
+                    f"🅿️ Stop: {new_carpark['CarparkName']['value'].title()} (Carpark)\n"
+                    f"🏁 End: {destination_address}\n\n"
+                    f"[Click here to view the route]({google_maps_link})", 
+                    parse_mode='Markdown', 
+                    disable_web_page_preview=True
+                )
+                sent_new = True
+            else:
+                await context.bot.send_message(
+                    chat_id=update.effective_chat.id, 
+                    text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 
+                    parse_mode='Markdown')
+                
 
         # Sleep for 5 seconds before checking again    
         await asyncio.sleep(5)
+        if sent_new == True:
+            break
+        
 
 async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected carpark and return a Google Maps route."""
@@ -350,6 +450,9 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await query.message.reply_text("⚠️ Error: Couldn't retrieve your live location.")
         return ConversationHandler.END
     
+    global user_address
+    global destination_address
+
     user_address = google_maps.get_address_from_coordinates(live_location[0], live_location[1])
     destination_address = context.user_data.get('destination_address')
     
@@ -373,16 +476,22 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         parse_mode='Markdown', 
         disable_web_page_preview=True
     )
-
+    
     asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
-
+    
+    global current_carpark
+    current_carpark = selected_carpark
+    
     return LIVE_LOCATION
+
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
     if update.message:
         await update.message.reply_text('👋 Goodbye! I look forward to assisting you again.', reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
+
+
 
 def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long):
     closest_three_carparks = []
@@ -392,19 +501,44 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long):
         long = carpark_dict["location"]["value"]["coordinates"][0]
         distance = geodesic((dest_lat, dest_long), (lat, long)).km
         carpark_dict["distance"] = distance
-        
         if "Car" in carpark_dict["Pricing"]["value"] and carpark_dict["ParkingAvailability"]["value"] > 0:
             if len(closest_three_carparks) < 3:
                 closest_three_carparks.append(carpark_dict)
             else:
+                
                 farthest_carpark = max(closest_three_carparks, key=lambda x: x["distance"])
+                print("carpark_dict:", carpark_dict)
+                print("farthest_carpark:", farthest_carpark, "farthest_carpark distance:", farthest_carpark["distance"])
                 if farthest_carpark["distance"] > carpark_dict["distance"]:
                     closest_three_carparks.remove(farthest_carpark)
                     closest_three_carparks.append(carpark_dict)
     return closest_three_carparks
 
+def find_closest_carpark(sheltered_carparks_list, dest_lat, dest_long):
+    closest_carpark = None
+    min_distance = float('inf')
+    
+    for carpark in sheltered_carparks_list:
+        lat = carpark["location"]["value"]["coordinates"][1]
+        long = carpark["location"]["value"]["coordinates"][0]
+        distance = geodesic((dest_lat, dest_long), (lat, long)).km
+        
+        if distance < min_distance:
+            min_distance = distance
+            closest_carpark = carpark
+    
+    return closest_carpark if closest_carpark else []
+
 def get_traffic_advisories():
     return retrieve_ngsi_type("TrafficAdvisories")
+
+def get_weather():
+    return retrieve_ngsi_type("WeatherForecast")
+
+def convert_to_hours(minutes):
+    hours = minutes // 60
+    minutes = minutes % 60
+    return hours, minutes
 
 def main() -> None:
     """Run the bot."""

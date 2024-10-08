@@ -8,7 +8,7 @@ print("Token ", token)
 
 # Code to run ==================================================
 carpark_list = get_carpark(token)
-print("carpark_list" , carpark_list)
+# print("carpark_list" , carpark_list)
 trafficflow_list = get_trafficflow()
 trafficadvisories_list = get_traffic_advisories()
 
