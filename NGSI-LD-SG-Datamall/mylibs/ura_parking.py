@@ -64,8 +64,6 @@ def get_carpark(ura_token):
         entity_list = []
         unique_carparkNames = []
         carpark_list = json.loads(carpark_details_response.content.decode("utf-8"))
-            
-        iter_counter = 0
 
         for carpark in carpark_list["Result"]:
             remove_spaced_name = carpark["ppName"].replace(" ", "")
@@ -74,29 +72,28 @@ def get_carpark(ura_token):
             # Check if carpark name is unique, if yes, create a new entity
             if carpark["ppName"].strip() not in unique_carparkNames:
                 unique_carparkNames.append(carpark["ppName"].strip())
+                
+                # Set entity properties
                 entity = Entity("Carpark", id, ctx=ctx)
+
+                # Set carpark name
+                entity.prop("CarparkName", carpark["ppName"])
                 
-                for key, value in carpark.items():
-                    if key=="ppName":
-                        entity.prop("CarparkName", value.strip())
-                    if key == "geometries":
-                        if not value:
-                            # print("Carpark ",carpark)
-                            # print("geometries value" , value)
-                            continue
-                        svy21_geocoordinates = value[0]["coordinates"].split(",")
-                        latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
-                        if (len(latlon_geocoordinates) > 1):
-                            entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
-                    elif key == "parkCapacity":
-                        entity.prop("ParkingCapacity", value)
-                    if count % 2 == 0:
-                        entity.prop("Sheltered",True)
-                    else:
-                        entity.prop("Sheltered",False)
-                    count += 1
-                    
+                # Set location using coordinates
+                if carpark["geometries"]:
+                    svy21_geocoordinates = carpark["geometries"][0]["coordinates"].split(",")
+                    latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
+                    if len(latlon_geocoordinates) > 1:
+                        entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
                 
+                # Parking capcacity
+                entity.prop("ParkingCapacity", carpark.get("parkCapacity", 0))
+
+                # Mock sheltered status
+                entity.prop("Sheltered", True if count % 2 == 0 else False)
+                count += 1
+
+                # Parking availability
                 for carpark_availability in carpark_availability_list["Result"]:
                     if carpark["ppCode"] == carpark_availability["carparkNo"] and carpark_availability["lotType"] == "C":
                         entity.prop("ParkingAvailability", int(carpark_availability["lotsAvailable"]))
@@ -104,102 +101,49 @@ def get_carpark(ura_token):
                     else:
                         entity.prop("ParkingAvailability", 0)
                 
+                # Initialize pricing dictionary
                 price_dictionary = {
                     "Car" :{
-                            "WeekdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "weekdayMin" : None,
-                                "weekdayRate" : None
-                            },
-                            "SaturdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "satdayMin" : None,
-                                "satdayRate" : None
-                            },
-                            "SundayPHRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "sunPHMin" : None,
-                                "sunPHRate" : None
-                            },
+                           "TimeSlots": []
                     },
                     "Motorcycle" :{
-                            "WeekdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "weekdayMin" : None,
-                                "weekdayRate" : None
-                            },
-                            "SaturdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "satdayMin" : None,
-                                "satdayRate" : None
-                            },
-                            "SundayPHRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "sunPHMin" : None,
-                                "sunPHRate" : None
-                            },
+                           "TimeSlots": []
                     },
                     "Heavy Vehicle" :{
-                            "WeekdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "weekdayMin" : None,
-                                "weekdayRate" : None
-                            },
-                            "SaturdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "satdayMin" : None,
-                                "satdayRate" : None
-                            },
-                            "SundayPHRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "sunPHMin" : None,
-                                "sunPHRate" : None
-                            },
+                            "TimeSlots": []
                     }
                 }
                 entity.prop("Pricing", price_dictionary)
                 entity_list.append(entity)
 
-
-        
+        # Update entity pricing based on carpark data
         for carpark in carpark_list["Result"]:            
             for entity in entity_list:
+                # print(Fore.GREEN + str(entity))
                 vehicle_type = carpark["vehCat"]
                 if entity["CarparkName"]["value"].strip() == carpark["ppName"].strip():
-                    if (
-                        not carpark.get("weekdayRate") or 
-                        not carpark.get("satdayRate") or 
-                        not carpark.get("sunPHRate") or 
-                        not carpark.get("sunPHMin")
-                    ):
-                        continue
-                    if carpark.get("weekdayRate") != "$0.00":
-                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["weekdayMin"] = carpark["weekdayMin"]
-                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["weekdayRate"] = carpark["weekdayRate"]
-                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
-                        entity["Pricing"]["value"][vehicle_type]["WeekdayRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
-                    if carpark.get("satdayRate") != "$0.00":
-                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["satdayMin"] = carpark["satdayMin"]
-                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["satdayRate"] = carpark["satdayRate"]
-                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
-                        entity["Pricing"]["value"][vehicle_type]["SaturdayRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
-                    if carpark.get("sunPHRate") != "$0.00":
-                        # print(carpark)
-                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHMin"] = carpark["sunPHMin"]
-                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["sunPHRate"] = carpark["sunPHRate"]
-                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["startTime"] = convert_to_24hr(carpark["startTime"])
-                        entity["Pricing"]["value"][vehicle_type]["SundayPHRate"]["endTime"] = convert_to_24hr(carpark["endTime"])
-
-
+                    if all(carpark.get(rate_key) for rate_key in ["weekdayRate", "satdayRate", "sunPHRate", "sunPHMin"]):
+                        time_slot = {
+                            "WeekdayRate": {
+                                "startTime": convert_to_24hr(carpark["startTime"]),
+                                "endTime": convert_to_24hr(carpark["endTime"]),
+                                "weekdayMin": carpark["weekdayMin"],
+                                "weekdayRate": carpark["weekdayRate"]
+                            },
+                            "SaturdayRate": {
+                                "startTime": convert_to_24hr(carpark["startTime"]),
+                                "endTime": convert_to_24hr(carpark["endTime"]),
+                                "satdayMin": carpark["satdayMin"],
+                                "satdayRate": carpark["satdayRate"]
+                            },
+                            "SundayPHRate": {
+                                "startTime": convert_to_24hr(carpark["startTime"]),
+                                "endTime": convert_to_24hr(carpark["endTime"]),
+                                "sunPHMin": carpark["sunPHMin"],
+                                "sunPHRate": carpark["sunPHRate"]
+                            },
+                        }
+                        entity["Pricing"]["value"][vehicle_type]["TimeSlots"].append(time_slot)
 
         print("Total number of carparks: ", len(carpark_list["Result"]))
         print("Total entities created: ", len(entity_list), "\n")

@@ -74,7 +74,7 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             reply_markup = InlineKeyboardMarkup(keyboard)
 
             await context.bot.edit_message_text(
-                chat_id=update.effective_chat.id, message_id=loading_message.message_id, text="🌐 *Please select your destination from the suggestions below:*", reply_markup=reply_markup, parse_mode="Markdown")
+                chat_id=update.effective_chat.id, message_id=loading_message.message_id, text="🌐 *Please select your destination below:*", reply_markup=reply_markup, parse_mode="Markdown")
         else:
             await context.bot.edit_message_text(chat_id=update.effective_chat.id, message_id=loading_message.message_id, text='🚫 No suggestions found. Please try again.')
         
@@ -236,7 +236,9 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             closest_carparks_message = "🚗 *The closest 3 carparks to your destination are:*\n\n"
 
             today = datetime.today().weekday()
+            current_time = datetime.now().time()
             
+            closest_carparks_message = ""
             
             for count, carpark in enumerate(closest_three_carparks, 1):
                 carpark_name = carpark['CarparkName']['value'].title()
@@ -250,32 +252,43 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             
                 if 'Pricing' in carpark and 'Car' in carpark['Pricing']["value"]:
                     if 0 <= today <= 4:  # Monday to Friday (Weekday)
-                        rate_info = carpark['Pricing']['value']['Car']['WeekdayRate']
-                        minutes = int(rate_info['weekdayMin'].split(" ")[0])
-                        h, mins = convert_to_hours(minutes)
-                        day_type = "Weekday"
-                        closest_carparks_message += (
-                        f"🏷️ *{day_type} Rate:* {rate_info['weekdayRate']} per {h} h {mins} mins\n"
-                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n"
-                    )
+                        rate_info = find_rate_based_on_time(carpark, "Car", current_time, today)
+
+                        if rate_info:
+                            minutes = int(rate_info['weekdayMin'].split(" ")[0])
+                            h, mins = convert_to_hours(minutes)
+                            day_type = "Weekday"
+                            closest_carparks_message += (
+                            f"🏷️ *{day_type} Rate:* {rate_info['weekdayRate']} per {h} h {mins} mins\n"
+                            f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n")
+                        else:
+                            closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
+
                     elif today == 5:  # Saturday      
-                        rate_info = carpark['Pricing']['value']['Car']['SaturdayRate']
-                        minutes = int(rate_info['satdayMin'].split(" ")[0])
-                        h, mins = convert_to_hours(minutes)
-                        day_type = "Saturday"
-                        closest_carparks_message += (
-                        f"🏷️ *{day_type} Rate:* {rate_info['satdayRate']} per {h} h {mins} mins\n"
-                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n"
-                    )
+                        rate_info = find_rate_based_on_time(carpark, "Car", current_time)
+
+                        if rate_info:
+                            minutes = int(rate_info['satdayMin'].split(" ")[0])
+                            h, mins = convert_to_hours(minutes)
+                            day_type = "Saturday"
+                            closest_carparks_message += (
+                            f"🏷️ *{day_type} Rate:* {rate_info['satdayRate']} per {h} h {mins} mins\n"
+                            f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n")
+                        else:
+                            closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
+
                     else:  # Sunday/Public Holiday (today == 6)
-                        rate_info = carpark['Pricing']['value']['Car']['SundayPHRate']
-                        minutes = int(rate_info['sunPHMin'].split(" ")[0])
-                        h, mins = convert_to_hours(minutes)
-                        day_type = "Sunday/Public Holiday"
-                        closest_carparks_message += (
-                        f"🏷️ *{day_type} Rate:* {rate_info['sunPHRate']} per {h} h {mins} mins\n"
-                        f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n"
-                    )
+                        rate_info = find_rate_based_on_time(carpark, "Car", current_time)
+
+                        if rate_info:
+                            minutes = int(rate_info['sunPHMin'].split(" ")[0])
+                            h, mins = convert_to_hours(minutes)
+                            day_type = "Sunday/Public Holiday"
+                            closest_carparks_message += (
+                            f"🏷️ *{day_type} Rate:* {rate_info['sunPHRate']} per {h} h {mins} mins\n"
+                            f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n")
+                        else:
+                            closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
 
                 else:
                     closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
@@ -539,6 +552,31 @@ def convert_to_hours(minutes):
     hours = minutes // 60
     minutes = minutes % 60
     return hours, minutes
+
+def is_time_in_range(start_time, end_time, current_time):
+    start = datetime.strptime(start_time, "%H%M").time()
+    end = datetime.strptime(end_time, "%H%M").time()
+    return start <= current_time <= end
+
+def find_rate_based_on_time(carpark, vehicle_type, current_time, today):
+    time_slots = carpark['Pricing']['value'][vehicle_type]['TimeSlots']
+
+    if 0 <= today <= 4:
+        rate_type = "WeekdayRate"
+    elif today == 5:
+        rate_type = "SaturdayRate"
+    else:
+        rate_type = "SundayPHRate"
+
+    for time_slot in time_slots:
+        rate_info = time_slot[rate_type]
+        start_time = rate_info["startTime"]
+        end_time = rate_info["endTime"]
+
+        if start_time and end_time and is_time_in_range(start_time, end_time, current_time):
+            return rate_info
+        
+    return None
 
 def main() -> None:
     """Run the bot."""
