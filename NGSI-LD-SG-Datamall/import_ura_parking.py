@@ -16,7 +16,7 @@ print("\nPushing to broker...")
 create_entities_in_broker(carpark_list)
 
 # print("\nPushing to broker...")
-# ngsi_ld.create_entities_in_broker(trafficflow_list)
+# create_entities_in_broker(trafficflow_list)
 
 print("\nPushing to broker...")
 create_entities_in_broker(trafficadvisories_list)
