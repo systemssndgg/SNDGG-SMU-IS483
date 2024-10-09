@@ -63,10 +63,32 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
         context.user_data['start_message_id'] = sent_message.message_id
     
+    context.user_data['start_message_edited_status'] = False
     return DESTINATION
 
 async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle destination input and return a list of suggestions"""
+
+    if context.user_data.get("start_message_edited_status") == False:
+        sent_message_id = context.user_data.get('start_message_id')
+        if sent_message_id:
+            await context.bot.edit_message_reply_markup(
+                chat_id=update.effective_chat.id,
+                message_id=sent_message_id,
+                reply_markup=None
+            )
+        context.user_data['start_message_edited_status'] = True
+
+    if context.user_data.get('retry_message_edited_status') == False:
+        retry_message_id = context.user_data.get('retry_message_id')
+        if retry_message_id:
+            await context.bot.edit_message_reply_markup(
+                chat_id=update.effective_chat.id,
+                message_id=retry_message_id,
+                reply_markup=None
+            )
+        context.user_data['retry_message_edited_status'] = True
+
     if update.message and update.message.text:
         user_input = update.message.text
         loading_message = await update.message.reply_text("🔄 Fetching suggestions for your destination...")
@@ -99,9 +121,6 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 text='🚫 No suggestions found. Please try again.')
         
         return DESTINATION
-    else:
-        await update.message.reply_text('✏️ Please type your destination.')
-        return DESTINATION
 
 async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected destination, search another destination, or cancel"""
@@ -117,9 +136,19 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
 
     # Check if the destination_id matches any special cases
     if destination_id == "search_again":
-        await query.edit_message_text("🔄 Let's try again. Where would you like to go?\n\n"
-        "Please type your destination."
+        keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+    
+        retry_message = await query.edit_message_text(
+            "🔄 *Let's try again.* Where would you like to go?\n\n"
+            "Please type your destination.",parse_mode="Markdown",
+            reply_markup=reply_markup
         )
+
+        context.user_data['retry_message_id'] = retry_message.message_id
+        context.user_data['retry_message_edited_status'] = False
+
         return DESTINATION
     
     if destination_id == "end":
@@ -143,10 +172,11 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['destination_address'] = place_name + " " + address
 
         # Display the destination details to the user
-        await query.edit_message_text(
+        destination_address = await query.edit_message_text(
             f"📍 *{place_name} {address}*\n\n",
             parse_mode="Markdown"
             )
+        context.user_data['destination_address_id'] = destination_address.message_id
 
         # Generate static map URL and send the map to the user
         static_map_url = google_maps.generate_static_map_url(lat, lng)
@@ -184,13 +214,16 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
         keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await query.edit_message_text(
+        confirm_destination = await query.edit_message_text(
             "✅ Destination confirmed! Please share your live location to help me find the best route.\n\n"
             "*Follow these steps:*\n"
             "📎 Paper Clip > Location > Share Live Location > Select ‘for 1 hour’",
             parse_mode="Markdown",
             reply_markup=reply_markup
         )
+
+        context.user_data['confirm_destination_message_id'] = confirm_destination.message_id
+        context.user_data['confirm_destination_edited_status'] = False
 
         return LIVE_LOCATION 
     
@@ -218,10 +251,16 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
     
     elif query.data == "end":
         static_map_message_id = context.user_data.get('static_map_message_id')
+        destination_address_id = context.user_data.get('destination_address_id')
         if static_map_message_id:
             await context.bot.delete_message(
                 chat_id=query.message.chat_id,
                 message_id=static_map_message_id
+            )
+        if destination_address_id:
+            await context.bot.delete_message(
+                chat_id=query.message.chat_id,
+                message_id=destination_address_id
             )
 
         return await end(update, context)
@@ -230,6 +269,16 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the live location input and find nearest carpark based on destination"""
+    confirm_destination_message_id = context.user_data.get('confirm_destination_message_id')
+
+    if context.user_data.get('confirm_destination_edited_status') == False:
+        if confirm_destination_message_id:
+            await context.bot.delete_message(
+                chat_id=update.effective_chat.id,
+                message_id=confirm_destination_message_id,
+            )
+            context.user_data['confirm_destination_edited_status'] = True
+    
     query = update.callback_query
     if query and query.data == "end":
         static_map_message_id = context.user_data.get('static_map_message_id')
@@ -245,6 +294,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     if update.message and update.message.location:
         live_location = (update.message.location.latitude, update.message.location.longitude)
         context.user_data['live_location'] = live_location
+        context.user_data['live_location_message_id'] = update.message.message_id
         print(Fore.BLUE + f"Received initial live location: Latitude {live_location[0]}, Longitude {live_location[1]}")
     elif update.edited_message and update.edited_message.location:
         live_location = (update.edited_message.location.latitude, update.edited_message.location.longitude)
@@ -346,9 +396,12 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 else:
                     closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
 
-            carpark_options_message = await context.bot.send_message(chat_id=update.effective_chat.id, text=closest_carparks_message, parse_mode='Markdown')
+            carpark_options_message_id = await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=closest_carparks_message,
+                parse_mode='Markdown')
 
-            context.user_data['carpark_options_message_id'] = carpark_options_message.message_id
+            context.user_data['carpark_options_message_id'] = carpark_options_message_id.message_id
 
             context.user_data['closest_carparks'] = closest_three_carparks
 
@@ -361,7 +414,9 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            await context.bot.send_message(chat_id=update.effective_chat.id, text="Please select a carpark:", reply_markup=reply_markup)
+            carpark_select_message = await context.bot.send_message(chat_id=update.effective_chat.id, text="Please select a carpark:", reply_markup=reply_markup)
+
+            context.user_data['carpark_select_message_id'] = carpark_select_message.message_id
 
             context.user_data['carpark_list_sent'] = True
 
@@ -512,20 +567,52 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     if query.data == "end":
         static_map_message_id = context.user_data.get('static_map_message_id')
         if static_map_message_id:
-            await context.bot.delete_message(
-                chat_id=query.message.chat_id,
-                message_id=static_map_message_id
-            )
+            try:
+                await context.bot.delete_message(
+                    chat_id=query.message.chat_id,
+                    message_id=static_map_message_id
+                )
+            except BadRequest as e:
+                logger.error(f"Failed to delete static map message: {e}")
 
         carpark_options_message_id = context.user_data.get('carpark_options_message_id')
         if carpark_options_message_id:
+            try:
+                await context.bot.delete_message(
+                    chat_id=update.effective_chat.id,
+                    message_id=carpark_options_message_id
+                )
+            except BadRequest as e:
+                logger.error(f"Failed to delete carpark options message: {e}")
+
+        destination_address_id = context.user_data.get('destination_address_id')
+        if destination_address_id:
+            try:
+                await context.bot.delete_message(
+                    chat_id=update.effective_chat.id,
+                    message_id=destination_address_id
+                )
+            except BadRequest as e:
+                logger.error(f"Failed to delete destination address message: {e}")
+
+        return await end(update, context)
+
+    carpark_options_message_id = context.user_data.get('carpark_options_message_id')
+    if carpark_options_message_id:
+        try:
             await context.bot.delete_message(
                 chat_id=update.effective_chat.id,
                 message_id=carpark_options_message_id
             )
-
-
-        return await end(update, context)
+        except BadRequest as e:
+            logger.error(f"Failed to delete carpark options message: {e}")
+    
+    carpark_select_message_id = context.user_data.get('carpark_select_message_id')
+    if carpark_select_message_id:
+        await context.bot.delete_message(
+            chat_id=update.effective_chat.id,
+            message_id=carpark_select_message_id
+        )
 
     selected_carpark_index = int(query.data.split("_")[1])
     closest_three_carparks = context.user_data['closest_carparks']
@@ -556,7 +643,7 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await query.message.reply_text(
+    google_route_id = await query.message.reply_text(
         f"🛣️ *Here is your route:*\n\n"
         f"📍 Start: {user_address}\n"
         f"🅿️ Stop: {selected_carpark['CarparkName']['value'].title()} (Carpark)\n"
@@ -566,6 +653,8 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         reply_markup=reply_markup, 
         disable_web_page_preview=True
     )
+
+    context.user_data['google_route_id'] = google_route_id.message_id
     
     asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
     
@@ -576,6 +665,13 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle ending the session and provide a restart button."""
+    live_location_message_id = context.user_data.get('live_location_message_id')
+    if live_location_message_id:
+        await context.bot.delete_message(
+            chat_id=update.effective_chat.id,
+            message_id=live_location_message_id
+        )
+
     context.user_data.clear()
 
     if update.message:
