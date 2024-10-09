@@ -258,8 +258,9 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                             minutes = int(rate_info['weekdayMin'].split(" ")[0])
                             h, mins = convert_to_hours(minutes)
                             day_type = "Weekday"
+                            rate_display = format_time_and_rate(h, mins, rate_info['weekdayRate'])
                             closest_carparks_message += (
-                            f"🏷️ *{day_type} Rate:* {rate_info['weekdayRate']} per {h} h {mins} mins\n"
+                            f"🏷️ *{day_type} Rate:* {rate_display}\n"
                             f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n")
                         else:
                             closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
@@ -271,8 +272,9 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                             minutes = int(rate_info['satdayMin'].split(" ")[0])
                             h, mins = convert_to_hours(minutes)
                             day_type = "Saturday"
+                            rate_display = format_time_and_rate(h, mins, rate_info['satdayRate'])
                             closest_carparks_message += (
-                            f"🏷️ *{day_type} Rate:* {rate_info['satdayRate']} per {h} h {mins} mins\n"
+                            f"🏷️ *{day_type} Rate:* {rate_display}\n"
                             f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n")
                         else:
                             closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
@@ -284,8 +286,9 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                             minutes = int(rate_info['sunPHMin'].split(" ")[0])
                             h, mins = convert_to_hours(minutes)
                             day_type = "Sunday/Public Holiday"
+                            rate_display = format_time_and_rate(h, mins, rate_info['sunPHRate'])
                             closest_carparks_message += (
-                            f"🏷️ *{day_type} Rate:* {rate_info['sunPHRate']} per {h} h {mins} mins\n"
+                            f"🏷️ *{day_type} Rate:* {rate_display}\n"
                             f"⏰ *Time:* {rate_info['startTime']} - {rate_info['endTime']}\n\n")
                         else:
                             closest_carparks_message += "🏷️ *Price Information:* Not Available\n\n"
@@ -547,6 +550,18 @@ def get_traffic_advisories():
 
 def get_weather():
     return retrieve_ngsi_type("WeatherForecast")
+
+def format_time_and_rate(h, mins, rate):
+    if rate == "$0.00":
+        return "Free"
+    
+    time_string = ""
+    if h > 0:
+        time_string += f"{h} h "
+    if mins > 0:
+        time_string += f"{mins} mins"
+    
+    return f"{rate} per {time_string.strip()}" if time_string.strip() else rate
 
 def convert_to_hours(minutes):
     hours = minutes // 60
