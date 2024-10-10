@@ -39,8 +39,57 @@ DESTINATION, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART_SESSION = range(4)
 # Store user data
 user_data = {}
 
+# Timeout duration for inactive sessions
+TIMEOUT_DURATION = 300
+
+async def timeout(context: ContextTypes.DEFAULT_TYPE):
+    """Notify the user that the session has timed out and end the conversation."""
+    job = context.job
+    chat_id = job.data['chat_id']
+    user_data = job.data['user_data']
+    start_message_id = user_data.get('start_message_id')
+    destination_message_id = user_data.get('destination_message_id')
+
+    if start_message_id:
+        try:
+            await context.bot.delete_message(
+                chat_id=chat_id,
+                message_id=start_message_id
+            )
+        except Exception as e:
+            logger.error(f"Failed to delete start message: {e}")
+
+    destination_message_id = user_data.get('destination_message_id')
+    if destination_message_id:
+        try:
+            await context.bot.delete_message(chat_id=chat_id, message_id=destination_message_id)
+        except Exception as e:
+            logger.error(f"Error deleting the destination message: {e}")
+
+    await context.bot.send_message(
+        chat_id=chat_id,
+        text="⏳ *Session timed out.* Please start again if you'd like to continue.",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Start Session",callback_data="start",
+        )]]),
+        parse_mode="Markdown"
+    )
+    
+    user_data.clear()
+
+async def reset_timeout(context: ContextTypes.DEFAULT_TYPE):
+    """Reset the timeout duration for the user's session."""
+    chat_id = context.user_data['chat_id']
+
+    if 'timeout_job' in context.user_data:
+        old_job = context.user_data['timeout_job']
+        old_job.schedule_removal()
+
+    new_job = context.job_queue.run_once(timeout, TIMEOUT_DURATION, data={'chat_id': chat_id, 'user_data': context.user_data})
+    context.user_data['timeout_job'] = new_job
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Send a welcome message and ask for user's destination."""
+    chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
     keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -62,13 +111,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             reply_markup=reply_markup
         )
         context.user_data['start_message_id'] = sent_message.message_id
-    
+
     context.user_data['start_message_edited_status'] = False
+    context.user_data['chat_id'] = chat_id
+
+    await reset_timeout(context)
+    
     return DESTINATION
 
 async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle destination input and return a list of suggestions"""
-
+    await reset_timeout(context)
+    context.job_queue.stop()
     if context.user_data.get("start_message_edited_status") == False:
         sent_message_id = context.user_data.get('start_message_id')
         if sent_message_id:
@@ -95,7 +149,6 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         suggestions = google_maps.get_autocomplete_place(user_input)
 
         if suggestions:
-            
             # Create a list of buttons with suggestions for the user to choose from
             keyboard = [[InlineKeyboardButton(suggestion['description'], callback_data=suggestion['place_id'])]
             for suggestion in suggestions]
@@ -108,12 +161,15 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            await context.bot.edit_message_text(
+            destination_message = await context.bot.edit_message_text(
                 chat_id=update.effective_chat.id,
                 message_id=loading_message.message_id,
                 text="🌐 *Please select your destination below:*", 
                 reply_markup=reply_markup,
-                parse_mode="Markdown")
+                parse_mode="Markdown"
+            )
+
+            context.user_data['destination_message_id'] = destination_message.message_id
         else:
             await context.bot.edit_message_text(
                 chat_id=update.effective_chat.id,
@@ -135,6 +191,9 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
     print(f"Callback data received: {destination_id}")
 
     # Check if the destination_id matches any special cases
+    if destination_id == "start":
+        return await start(update, context)
+
     if destination_id == "search_again":
         keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
 
@@ -157,52 +216,58 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
     # Debugging to check if place details are fetched
     print(f"Destination selected. Fetching details for place ID: {destination_id}")
 
-    # Fetch destination details using the Google Maps API
-    global destination_details
-    destination_details = google_maps.get_details_place(destination_id)
+    try:
+        # Fetch destination details using the Google Maps API
+        global destination_details
+        destination_details = google_maps.get_details_place(destination_id)
 
-    if destination_details:
-        lat = destination_details['geometry']['location']['lat']
-        lng = destination_details['geometry']['location']['lng']
-        place_name = destination_details.get('name', 'Unknown location')
-        address = destination_details.get('formatted_address', 'No address available')
+        if destination_details:
+            lat = destination_details['geometry']['location']['lat']
+            lng = destination_details['geometry']['location']['lng']
+            place_name = destination_details.get('name', 'Unknown location')
+            address = destination_details.get('formatted_address', 'No address available')
 
-        context.user_data['destination_lat'] = lat
-        context.user_data['destination_long'] = lng
-        context.user_data['destination_address'] = place_name + " " + address
+            context.user_data['destination_lat'] = lat
+            context.user_data['destination_long'] = lng
+            context.user_data['destination_address'] = place_name + " " + address
 
-        # Display the destination details to the user
-        destination_address = await query.edit_message_text(
-            f"📍 *{place_name} {address}*\n\n",
-            parse_mode="Markdown"
-            )
-        context.user_data['destination_address_id'] = destination_address.message_id
+            # Display the destination details to the user
+            destination_address = await query.edit_message_text(
+                f"📍 *{place_name} {address}*\n\n",
+                parse_mode="Markdown"
+                )
+            context.user_data['destination_address_id'] = destination_address.message_id
 
-        # Generate static map URL and send the map to the user
-        static_map_url = google_maps.generate_static_map_url(lat, lng)
-        map_message = await context.bot.send_photo(chat_id=query.message.chat_id, photo=static_map_url)
-        context.user_data['static_map_message_id'] = map_message.message_id
+            # Generate static map URL and send the map to the user
+            static_map_url = google_maps.generate_static_map_url(lat, lng)
+            map_message = await context.bot.send_photo(chat_id=query.message.chat_id, photo=static_map_url)
+            context.user_data['static_map_message_id'] = map_message.message_id
 
-        # Debugging: Check if the photo is being sent
-        print("Static map photo sent")
+            # Debugging: Check if the photo is being sent
+            print("Static map photo sent")
 
-        # Create a keyboard with Yes/No options for the user to confirm
-        keyboard = [
-            [InlineKeyboardButton("✅ Yes", callback_data="confirm_yes"), InlineKeyboardButton("❌ No", callback_data="confirm_no")],
-            [InlineKeyboardButton("🛑 End Session", callback_data="end")]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+            # Create a keyboard with Yes/No options for the user to confirm
+            keyboard = [
+                [InlineKeyboardButton("✅ Yes", callback_data="confirm_yes"), InlineKeyboardButton("❌ No", callback_data="confirm_no")],
+                [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
 
-        # Send the confirmation message
-        await query.message.reply_text("💬 *Is this the correct destination?*", reply_markup=reply_markup, parse_mode="Markdown")
+            # Send the confirmation message
+            await query.message.reply_text("💬 *Is this the correct destination?*", reply_markup=reply_markup, parse_mode="Markdown")
 
-        return CONFIRM_DESTINATION
-    else:
+            return CONFIRM_DESTINATION
+        else:
+            await query.edit_message_text("❌ An error occurred. Please try again.")
+            return DESTINATION
+    except Exception as e:
+        logger.error(f"An error occurred in get_details_place: {e}")
         await query.edit_message_text("❌ An error occurred. Please try again.")
         return DESTINATION
 
 async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Confirm the destination and ask for live location."""
+    context.job_queue.stop()
     query = update.callback_query
     await query.answer()
 
@@ -434,6 +499,11 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
 
+    destination_lat = context.user_data.get('destination_lat')
+    destination_long = context.user_data.get('destination_long')
+
+    approaching_message_sent = False
+
     sent_new = False
     # Begin monitoring the user's proximity
     while True:
@@ -450,119 +520,238 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 
         carpark_lat = selected_carpark['location']['value']['coordinates'][1]
         carpark_long = selected_carpark['location']['value']['coordinates'][0]
-        distance = geodesic(live_location, (carpark_lat, carpark_long)).km
+        distance_to_carpark = geodesic(live_location, (carpark_lat, carpark_long)).km
+        distance_to_destination = geodesic(live_location, (destination_lat, destination_long)).km
 
         # Debugging: print distance calculation
-        print(f"Distance from carpark: {distance:.2f} km")
+        print(Fore.RED + f"Distance from carpark: {distance_to_carpark:.2f} km")
+        print(Fore.RED + f"Distance from destination: {distance_to_destination:.2f} km")
 
-        # Trigger warning if within 4km and less than 10 parking spots
-        if distance <= 4.0:
-            available_lots = selected_carpark['ParkingAvailability']['value']
+        # Check if the user has reached the destination
+        if distance_to_carpark <= 0.1:
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text=f"🚗 You have reached your destination! 🏁 Ending the session now. Safe travels!",
+                parse_mode='Markdown'
+            )
+            await end(update, context)
+            break
 
+        # Trigger warning if within 2km and less than 10 parking spots
+        carpark_name = selected_carpark['CarparkName']['value'].title()
+        available_lots = selected_carpark['ParkingAvailability']['value']
+
+        if distance_to_carpark <= 2.0 and not approaching_message_sent:
             if available_lots < 10:
-                carpark_name = selected_carpark['CarparkName']['value'].title()
-                await context.bot.send_message(
+                next_best_carpark = find_next_best_carpark(context.user_data['closest_carparks'], selected_carpark)
+
+                if next_best_carpark:
+                    next_carpark_name = next_best_carpark['CarparkName']['value'].title()
+                    next_carpark_lat = next_best_carpark['location']['value']['coordinates'][1]
+                    next_carpark_long = next_best_carpark['location']['value']['coordinates'][0]
+
+                    google_maps_link = (
+                        f"https://www.google.com/maps/dir/?api=1&origin={live_location[0]},{live_location[1]}"
+                        f"&waypoints={next_carpark_lat},{next_carpark_long}"
+                        f"&destination={context.user_data.get('destination_lat')},{context.user_data.get('destination_long')}&travelmode=driving"
+                    )
+
+                    await context.bot.send_message(
+                        chat_id=chat_id,
+                        text=(
+                            f"🚗 You are approaching your destination, but ⚠️ warning! The carpark '{carpark_name}' "
+                            f"has less than 10 available lots left. We suggest using the next closest carpark '{next_carpark_name}' instead.\n\n"
+                            f"[Click here to view the route]({google_maps_link})"
+                        ),
+                        parse_mode='Markdown',
+                        disable_web_page_preview=True
+                    )
+                else:
+                    await context.bot.send_message(
                     chat_id=chat_id,
-                    text=f"⚠️ *Warning!* The carpark '{carpark_name}' has less than 10 available lots left. Drive carefully!",
+                    text=f"🚗 You are approaching your destination, but ⚠️ warning! The carpark '{carpark_name}' has less than 10 available lots left. Drive carefully!",
                     parse_mode='Markdown'
                 )
-                break
-        
-        for advisory in traffic_advisories:
-            advisory_coordinates = advisory['Location']['value']['coordinates']
-            advisory_lat = advisory_coordinates[1]
-            advisory_long = advisory_coordinates[0]
-            distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
-
-            print(Fore.BLUE + f"Distance to advisory {advisory['id']}: {distance_to_advisory:.2f} km")
-
-            if distance_to_advisory <= warning_distance_km:
-                advisory_message = advisory['Message']['value']
-                await context.bot.send_message(
-                    chat_id=chat_id,
-                    text=f"🚧 *Traffic Advisory:* {advisory_message}",
-                    parse_mode='Markdown'
-                )
-        weather = [
-        {
-            "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-10-08T12:23:56_2024-10-08T14:23:56",
-            "type": "WeatherForecast",
-            "Area": {
-                "type": "Property",
-                "value": "Bedok"
-            },
-            "forecast": {
-                "type": "Property",
-                "value": "Heavy Rain"
-            },
-            "location": {
-                "type": "GeoProperty",
-                "value": {
-                    "type": "Point",
-                    "coordinates": [
-                        103.924,
-                        1.321
-                    ]
-                }
-            }
-        }
-        ]
-        carpark_location = current_carpark['location']['value']['coordinates']
-
-        query = update.callback_query
-        await query.answer()
-
-        for area in weather:
-            carpark_coordinates = (carpark_location[1], carpark_location[0])
-            forecast_coordinates= (area["location"]["value"]["coordinates"][1], area["location"]["value"]["coordinates"][0])
-
-            distance = geodesic(carpark_coordinates, forecast_coordinates).km
-
-            check_distance_list = [0.5, 1.0, 1.5, 2.0]
-            new_carpark = None
-            for check_distance in check_distance_list: 
-                if distance < check_distance and area["forecast"]["value"] in rain_values:
-                    rain_value = area["forecast"]["value"]
-                    print("=====================================")
-                    print("im in!")
-                    print("rain_value:", rain_value)
-            if current_carpark["Sheltered"]["value"] == False:    
-                new_carpark = find_closest_carpark(sheltered_carpark_list, destination_details['geometry']['location']['lat'], destination_details['geometry']['location']['lng'])
-                print(new_carpark)
-
-                lat = new_carpark["location"]["value"]["coordinates"][1] 
-                long = new_carpark["location"]["value"]["coordinates"][0]
-                google_maps_link = (
-                    f"https://www.google.com/maps/dir/?api=1&origin={live_location[0]},{live_location[1]}"
-                    f"&waypoints={lat},{long}"
-                    f"&destination={context.user_data.get('destination_lat')},{context.user_data.get('destination_long')}&travelmode=driving"
-                )
-
-                await query.message.reply_text(
-                    f"🛣️ *Here is your route:*\n\n"
-                    f"📍 Start: {user_address}\n"
-                    f"🅿️ Stop: {new_carpark['CarparkName']['value'].title()} (Carpark)\n"
-                    f"🏁 End: {destination_address}\n\n"
-                    f"[Click here to view the route]({google_maps_link})", 
-                    parse_mode='Markdown', 
-                    disable_web_page_preview=True
-                )
-                sent_new = True
             else:
                 await context.bot.send_message(
-                    chat_id=update.effective_chat.id, 
-                    text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 
-                    parse_mode='Markdown')
+                    chat_id=chat_id,
+                    text=f"🚗 You are approaching your destination, and the carpark '{carpark_name}' currently has {available_lots} available lots. Drive carefully!",
+                    parse_mode='Markdown'
+                )
+
+            approaching_message_sent = True
+        
+        # for advisory in traffic_advisories:
+        #     advisory_coordinates = advisory['Location']['value']['coordinates']
+        #     advisory_lat = advisory_coordinates[1]
+        #     advisory_long = advisory_coordinates[0]
+        #     distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
+
+        #     print(Fore.BLUE + f"Distance to advisory {advisory['id']}: {distance_to_advisory:.2f} km")
+
+        #     if distance_to_advisory <= warning_distance_km:
+        #         advisory_message = advisory['Message']['value']
+        #         await context.bot.send_message(
+        #             chat_id=chat_id,
+        #             text=f"🚧 *Traffic Advisory:* {advisory_message}",
+        #             parse_mode='Markdown'
+        #         )
+        # weather = [
+        # {
+        #     "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-10-08T12:23:56_2024-10-08T14:23:56",
+        #     "type": "WeatherForecast",
+        #     "Area": {
+        #         "type": "Property",
+        #         "value": "Bedok"
+        #     },
+        #     "forecast": {
+        #         "type": "Property",
+        #         "value": "Heavy Rain"
+        #     },
+        #     "location": {
+        #         "type": "GeoProperty",
+        #         "value": {
+        #             "type": "Point",
+        #             "coordinates": [
+        #                 103.924,
+        #                 1.321
+        #             ]
+        #         }
+        #     }
+        # }
+        # ]
+        # carpark_location = current_carpark['location']['value']['coordinates']
+
+        # query = update.callback_query
+        # await query.answer()
+
+        # for area in weather:
+        #     carpark_coordinates = (carpark_location[1], carpark_location[0])
+        #     forecast_coordinates= (area["location"]["value"]["coordinates"][1], area["location"]["value"]["coordinates"][0])
+
+        #     distance = geodesic(carpark_coordinates, forecast_coordinates).km
+
+        #     check_distance_list = [0.5, 1.0, 1.5, 2.0]
+        #     new_carpark = None
+        #     for check_distance in check_distance_list: 
+        #         if distance < check_distance and area["forecast"]["value"] in rain_values:
+        #             rain_value = area["forecast"]["value"]
+        #             print("=====================================")
+        #             print("im in!")
+        #             print("rain_value:", rain_value)
+        #     if current_carpark["Sheltered"]["value"] == False:    
+        #         new_carpark = find_closest_carpark(sheltered_carpark_list, destination_details['geometry']['location']['lat'], destination_details['geometry']['location']['lng'])
+        #         print(new_carpark)
+
+        #         lat = new_carpark["location"]["value"]["coordinates"][1] 
+        #         long = new_carpark["location"]["value"]["coordinates"][0]
+        #         google_maps_link = (
+        #             f"https://www.google.com/maps/dir/?api=1&origin={live_location[0]},{live_location[1]}"
+        #             f"&waypoints={lat},{long}"
+        #             f"&destination={context.user_data.get('destination_lat')},{context.user_data.get('destination_long')}&travelmode=driving"
+        #         )
+
+        #         await query.message.reply_text(
+        #             f"🛣️ *Here is your route:*\n\n"
+        #             f"📍 Start: {user_address}\n"
+        #             f"🅿️ Stop: {new_carpark['CarparkName']['value'].title()} (Carpark)\n"
+        #             f"🏁 End: {destination_address}\n\n"
+        #             f"[Click here to view the route]({google_maps_link})", 
+        #             parse_mode='Markdown', 
+        #             disable_web_page_preview=True
+        #         )
+        #         sent_new = True
+        #     else:
+        #         await context.bot.send_message(
+        #             chat_id=update.effective_chat.id, 
+        #             text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 
+        #             parse_mode='Markdown')
 
         # Sleep for 5 seconds before checking again    
         await asyncio.sleep(5)
-        if sent_new == True:
-            break
+        # if sent_new == True:
+        #     break
+
+async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Monitor traffic advisories along the route."""
+    chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
+    # traffic_advisories = get_traffic_advisories()
+
+    mock_traffic_advisories = {
+        "id": "urn:ngsi-ld:TrafficAdvisories:EVMS_RD10",
+        "type": "TrafficAdvisories",
+        "Message": {
+            "type": "Property",
+            "value": "DRIVE SAFELY,SPEED CAMERAS,IN TUNNEL"
+        },
+        "Location": {
+            "type": "GeoProperty",
+            "value": {
+                "type": "Point",
+                "coordinates": [
+                    103.875955,
+                    1.29548
+                ]
+            }
+        }
+    }
+
+    while True:
+        live_location = context.user_data.get('live_location')
+
+        # if not live_location:
+        #     await context.bot.send_message(chat_id=chat_id, text="⚠️ Error: Couldn't retrieve your live location.")
+        #     break
+
+        # Example logic for traffic advisory monitoring
+        # for advisory in traffic_advisories:
+        #     advisory_coordinates = advisory['Location']['value']['coordinates']
+        #     advisory_lat = advisory_coordinates[1]
+        #     advisory_long = advisory_coordinates[0]
+        #     distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
+
+        #     print(Fore.RED + str(distance_to_advisory))
+
+        #     if distance_to_advisory <= 1.0:
+        #         advisory_message = advisory['Message']['value']
+        #         await context.bot.send_message(
+        #             chat_id=chat_id,
+        #             text=f"🚧 Traffic advisory: {advisory_message}",
+        #             parse_mode='Markdown'
+        #         )
         
+        advisory_coordinates = mock_traffic_advisories['Location']['value']['coordinates']
+        advisory_lat = advisory_coordinates[1]
+        advisory_long = advisory_coordinates[0]
+        distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
+
+        print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")
+
+        if distance_to_advisory <= 1.0:
+            advisory_message = mock_traffic_advisories['Message']['value']
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text=f"🚧 Traffic advisory: {advisory_message}",
+                parse_mode='Markdown'
+            )
+            break
+
+        await asyncio.sleep(5)
+
+async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
+    """Run all monitoring tasks concurrently."""
+    await asyncio.gather(
+        monitor_carpark_availability(update, context, selected_carpark),
+        monitor_traffic_advisories(update, context)
+    )
+
 async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected carpark and return a Google Maps route."""
     query = update.callback_query
     await query.answer()
+
+    if query.data == "start":
+        return await start(update, context)
 
     if query.data == "end":
         static_map_message_id = context.user_data.get('static_map_message_id')
@@ -656,8 +845,9 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     context.user_data['google_route_id'] = google_route_id.message_id
     
-    asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
-    
+    # asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
+    asyncio.create_task(monitor_all(update, context, selected_carpark))
+
     global current_carpark
     current_carpark = selected_carpark
     
@@ -665,21 +855,75 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle ending the session and provide a restart button."""
+    # destination_address_id = context.user_data.get('destination_address_id')
+    # if destination_address_id:
+    #     try:
+    #         await context.bot.delete_message(
+    #             chat_id=update.effective_chat.id,
+    #             message_id=destination_address_id
+    #         )
+    #     except BadRequest as e:
+    #         logger.error(f"Failed to delete destination address message: {e}")
+    
+    # static_map_message_id = context.user_data.get('static_map_message_id')
+    # if static_map_message_id:
+    #     try: 
+    #         await context.bot.delete_message(
+    #             chat_id=update.effective_chat.id,
+    #             message_id=static_map_message_id
+    #         )
+    #     except BadRequest as e:
+    #         logger.error(f"Failed to delete static map message: {e}")
+
     live_location_message_id = context.user_data.get('live_location_message_id')
     if live_location_message_id:
-        await context.bot.delete_message(
-            chat_id=update.effective_chat.id,
-            message_id=live_location_message_id
-        )
+        try: 
+            await context.bot.delete_message(
+                chat_id=update.effective_chat.id,
+                message_id=live_location_message_id
+            )
+        except BadRequest as e:
+            logger.error(f"Failed to delete live location message: {e}")
+
+    google_route_id = context.user_data.get('google_route_id')
+    if google_route_id:
+        try:
+            await context.bot.edit_message_reply_markup(
+                chat_id=update.effective_chat.id,
+                message_id=google_route_id,
+                reply_markup=None
+            )
+        except BadRequest as e:
+            logger.error(f"Failed to delete Google route message: {e}")
 
     context.user_data.clear()
 
     if update.message:
         await update.message.reply_text('👋 *Goodbye!* I look forward to assisting you again.', parse_mode="Markdown", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Start Session", callback_data="start")]]))
+
     elif update.callback_query:
         query = update.callback_query
-        await query.answer()
-        await query.edit_message_text("👋 *Goodbye!* I look forward to assisting you again.", parse_mode="Markdown", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Start Session", callback_data="start")]]))
+        try: 
+            await query.answer()
+
+            if query.message:
+                await query.edit_message_text("👋 *Goodbye!* I look forward to assisting you again.", parse_mode="Markdown", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Start Session", callback_data="start")]])
+                )
+            else:
+                await context.bot.send_message(
+                    chat_id=query.message.chat_id,
+                    text="👋 *Goodbye!* I look forward to assisting you again.",
+                    parse_mode="Markdown",
+                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Start Session", callback_data="start")]])
+                )
+        except BadRequest as e:
+            logger.error(f"Failed to edit message or answer callback query: {e}")
+            await context.bot.send_message(
+                chat_id=query.message.chat_id,
+                text="👋 *Goodbye!* I look forward to assisting you again.",
+                parse_mode="Markdown",
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Start Session", callback_data="start")]])
+            )
 
     return RESTART_SESSION
 
@@ -773,6 +1017,25 @@ def find_rate_based_on_time(carpark, vehicle_type, current_time, today):
             return rate_info
         
     return None
+
+def find_next_best_carpark(carparks, current_carpark):
+    """Find the next best carpark with more than 10 available lots."""
+    best_carpark = None
+    min_distance = float('inf')
+
+    for carpark in carparks:
+        if carpark == current_carpark:
+            continue
+        
+        available_lots = carpark['ParkingAvailability']['value']
+        if available_lots > 10:
+            distance = carpark['distance']  # Assuming you already calculated distances
+
+            if distance < min_distance:
+                min_distance = distance
+                best_carpark = carpark
+
+    return best_carpark
 
 def main() -> None:
     """Run the bot."""
