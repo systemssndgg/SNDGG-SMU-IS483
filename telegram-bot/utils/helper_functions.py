@@ -1,3 +1,6 @@
+from geopy.distance import geodesic
+from datetime import datetime
+
 
 def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, selected_preference):
     closest_three_carparks = []

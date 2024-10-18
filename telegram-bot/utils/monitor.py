@@ -5,10 +5,12 @@ from telegram.ext import ContextTypes
 from telegram.error import BadRequest
 
 import asyncio
-
+import logging
 import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
+
+from utils.helper_functions import find_next_best_carpark
 
 
 async def monitor_carpark_availability(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
@@ -172,30 +174,10 @@ async def monitor_live_location_changes(update: Update, context: ContextTypes.DE
 async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE):
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
 
-    weather = [
-        {
-            "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-10-08T12:23:56_2024-10-08T14:23:56",
-            "type": "WeatherForecast",
-            "Area": {
-                "type": "Property",
-                "value": "Bedok"
-            },
-            "forecast": {
-                "type": "Property",
-                "value": "Heavy Rain"
-            },
-            "location": {
-                "type": "GeoProperty",
-                "value": {
-                    "type": "Point",
-                    "coordinates": [
-                        103.924,
-                        1.321
-                    ]
-                }
-            }
-        }
-        ]
+    # Logging setup
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
     carpark_location = current_carpark['location']['value']['coordinates']
     sent_new = False
     query = update.callback_query
@@ -277,3 +259,11 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE):
             break
 
 
+async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
+    """Run all monitoring tasks concurrently."""
+    await asyncio.gather(
+        monitor_carpark_availability(update, context, selected_carpark),
+        monitor_traffic_advisories(update, context),
+        monitor_weather(update, context),
+        monitor_live_location_changes(update, context)
+    )
