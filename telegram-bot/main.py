@@ -1,5 +1,6 @@
 import constants
 from handlers.telegram_handlers import start, get_destination, end
+from utils.monitor import monitor_carpark_availability
 
 from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, ContextTypes, ConversationHandler, MessageHandler, filters
 
