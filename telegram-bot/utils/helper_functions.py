@@ -71,7 +71,7 @@ def find_closest_carpark(carparks_list, dest_lat, dest_long):
 
         # Add the sorted carparks to the final_three_carparks list
         selected_carpark.extend(closest_three_carparks)
-        print("selected_carpark:", selected_carpark[0])
+        # print("selected_carpark:", selected_carpark[0])
         return selected_carpark[0]
     
 

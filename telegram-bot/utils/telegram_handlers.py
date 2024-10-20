@@ -32,6 +32,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Send a welcome message and ask for user's destination."""
     keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
+
     
     if update.message: 
         message = await update.message.reply_text(
@@ -247,7 +248,7 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
     print(f"User selected: {query.data}")
 
     if context.user_data.get("confirm_destination") == "confirm_yes":
-        print(f"User selected preference {query.data}")
+        print(f"User selected preference: {query.data}")
         print("Asking for live location.")
         
         keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
@@ -341,7 +342,6 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             )
 
         return await end(update, context)
-
     # Handle both regular and live location updates
     if update.message and update.message.location:
         live_location = (update.message.location.latitude, update.message.location.longitude)
@@ -532,11 +532,11 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     context.user_data['google_route_id'] = google_route_id.message_id
     
-    # asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
-    asyncio.create_task(monitor_all(update, context, selected_carpark))
-
     global current_carpark
     current_carpark = selected_carpark
+
+    # asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
+    asyncio.create_task(monitor_all(update, context, current_carpark))
     
     return LIVE_LOCATION
 
