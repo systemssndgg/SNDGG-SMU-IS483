@@ -39,7 +39,7 @@ DESTINATION, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART, USER_PREFERENCE = rang
 
 def main() -> None:
     """Run the bot."""
-    application = ApplicationBuilder().token(constants.TELEGRAM_BOT_KEY).build()
+    application = ApplicationBuilder().token(constants.TELEGRAM_BOT_KEY).read_timeout(60).build()
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
