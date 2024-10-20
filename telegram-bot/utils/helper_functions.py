@@ -1,5 +1,6 @@
 from geopy.distance import geodesic
 from datetime import datetime
+import numpy as np
 
 
 def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, selected_preference):
@@ -238,3 +239,71 @@ def find_next_best_carpark(carparks, current_carpark):
                 best_carpark = carpark
 
     return best_carpark
+
+
+def get_top_carparks(carparks, user_preferences, num_cp_to_return):
+    '''
+        Function to get the top N carparks based on user preferences using Z-Score Normalization and Weighted Scoring.
+
+        INPUTS SPECIFICATIONS ===============================================================
+        Carparks: List of carpark dictionaries in this format:
+            [
+                {'name': 'Carpark 1', 'price': 1.5, 'distance': 0.9, 'available_lots': 10, 'is_sheltered': True},
+                {'name': 'Carpark 2', 'price': 2.1, 'distance': 0.8, 'available_lots': 20, 'is_sheltered': False},
+                ...
+            ]
+        
+        User preferences: Dictionary of user preferences in this format:
+            {
+                'price': 0.5,
+                'distance': 0.2,
+                'available_lots': 0.2,
+                'is_sheltered': 0.1,
+            }
+        
+        num_cp_to_return: Number of top carparks to return (e.g., 3)
+
+        Returns: List of top N carpark dictionaries in the same format as the input carparks. (First item in the list is the best carpark)
+    '''
+
+    # Convert carpark data into a NumPy array
+    carparks_np = np.array([[cp['price'], cp['distance'], cp['available_lots'], int(cp['is_sheltered'])] for cp in carparks])
+
+    # Convert the user preferences data into a NumPy array
+    user_preferences_np = np.array([user_preferences['price'], user_preferences['distance'], user_preferences['available_lots'], user_preferences['is_sheltered']])
+
+
+    # Z-SCORE NORMALIZATION =================================================
+    # Calculate the mean and standard deviation of each feature
+    mean = np.mean(carparks_np, axis=0)
+    std = np.std(carparks_np, axis=0)
+
+    # Apply Z-Score normalization: (x - mean) / std
+    normalized_carparks = (carparks_np - mean) / std
+
+    # Invert Z-scores for price and distance (we want lower values to result in higher scores)
+    normalized_carparks[:, 0] *= -1  # Invert price scores
+    normalized_carparks[:, 1] *= -1  # Invert distance scores
+
+    # Sheltered status does not need Z-score normalization as it is binary (0 or 1)
+    normalized_carparks[:, 3] = carparks_np[:, 3]  # Keep the sheltered status unchanged
+
+
+    # WEIGHTED SCORING ======================================================
+    # Apply weights
+    weighted_scores = normalized_carparks * user_preferences_np
+
+    # Sum up weighted scores for each carpark
+    total_scores = np.sum(weighted_scores, axis=1)
+
+
+    # RETURN TOP N CARPARKS =================================================
+    # Sort the carparks by their total scores (descending order)
+    sorted_indices = np.argsort(-total_scores)
+
+    # Get top 3 carpark dictionaries
+    # top_3_carparks = [carparks[i] for i in sorted_indices[:3]]
+    top_N_carparks = [carparks[i] for i in sorted_indices[:num_cp_to_return]]
+
+    # Return
+    return top_N_carparks
