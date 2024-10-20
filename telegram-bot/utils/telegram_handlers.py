@@ -33,7 +33,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    
     if update.message: 
         message = await update.message.reply_text(
          "👋 *Welcome!* Where would you like to go today?\n\n"
@@ -56,6 +55,30 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle destination input and return a list of suggestions"""
     if update.message and update.message.text:
+        message_id = context.user_data.get('message_id')
+        rejected_destination_id = context.user_data.get('rejected_destination_id')
+        print(rejected_destination_id)
+
+        if message_id:
+            try:
+                await context.bot.edit_message_reply_markup(
+                    chat_id=update.effective_chat.id,
+                    message_id=message_id,
+                    reply_markup=None
+                )
+            except BadRequest as e:
+                print(f"Failed to delete message: {e}")
+        
+        if rejected_destination_id:
+            try:
+                await context.bot.edit_message_reply_markup(
+                    chat_id=update.effective_chat.id,
+                    message_id=rejected_destination_id,
+                    reply_markup=None
+                )
+            except BadRequest as e:
+                print(f"Failed to delete message: {e}")
+            
         user_input = update.message.text
         loading_message = await update.message.reply_text("🔄 Fetching suggestions for your destination...")
         suggestions = get_autocomplete_place(user_input)
@@ -69,13 +92,15 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await context.bot.edit_message_text(
+        destinations = await context.bot.edit_message_text(
             chat_id=update.effective_chat.id,
             message_id=loading_message.message_id,
             text="🌐 *Please select your destination below:*", 
             reply_markup=reply_markup,
             parse_mode="Markdown"
         )
+
+        context.user_data['destinations_id'] = destinations.message_id
 
         return DESTINATION
 
@@ -135,7 +160,6 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
             context.user_data['destination_long'] = lng
             context.user_data['destination_address'] = place_name + " " + address
 
-            # Display the destination details to the user
             destination_address = await query.edit_message_text(
                 f"📍 *{place_name} {address}*\n\n",
                 parse_mode="Markdown"
@@ -221,14 +245,26 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 message_id=static_map_message_id
             )
 
-        await query.edit_message_text(
+        rejected_destination = await query.edit_message_text(
             "❌ *Destination rejected.* Let's search again. Where would you like to go?\n\n"
             "Please type your destination.",
             parse_mode="Markdown",
             reply_markup=reply_markup
         )
 
+        context.user_data['rejected_destination_id'] = rejected_destination.message_id
+
         return DESTINATION
+
+    elif query.data == "end":
+        static_map_message_id = context.user_data.get('static_map_message_id')
+        if static_map_message_id:
+            await context.bot.delete_message(
+                chat_id=query.message.chat_id,
+                message_id=static_map_message_id
+            )
+
+        return await end(update, context)
 
 async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Confirm the destination and ask for live location."""
@@ -306,11 +342,11 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
                 chat_id=query.message.chat_id,
                 message_id=static_map_message_id
             )
-        if destination_address_id:
-            await context.bot.delete_message(
-                chat_id=query.message.chat_id,
-                message_id=destination_address_id
-            )
+        # if destination_address_id:
+        #     await context.bot.delete_message(
+        #         chat_id=query.message.chat_id,
+        #         message_id=destination_address_id
+        #     )
 
         return await end(update, context)
 
@@ -450,16 +486,6 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             except BadRequest as e:
                 logger.error(f"Failed to delete carpark options message: {e}")
 
-        destination_address_id = context.user_data.get('destination_address_id')
-        if destination_address_id:
-            try:
-                await context.bot.delete_message(
-                    chat_id=update.effective_chat.id,
-                    message_id=destination_address_id
-                )
-            except BadRequest as e:
-                logger.error(f"Failed to delete destination address message: {e}")
-
         return await end(update, context)
 
     carpark_options_message_id = context.user_data.get('carpark_options_message_id')
@@ -549,20 +575,17 @@ async def restart_session(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """End the session and provide a restart button."""
-    message_id = context.user_data.get('message_id')
+    # context.user_data.clear()
 
-    try:
-        await context.bot.edit_message_text(
-            chat_id=update.effective_chat.id,
-            message_id=message_id,
-            text="👋 *Goodbye!* I look forward to assisting you again.",
-            parse_mode='Markdown',
-            reply_markup=None)
-    except BadRequest as e:
-        await update.callback_query.message.reply_text(
-            # TODO: Add error message instead 
-            "👋 *Goodbye!* I look forward to assisting you again.", parse_mode='Markdown',
-            reply_markup=None
-    )
+    if update.callback_query:
+        query = update.callback_query
+        try:
+            await query.answer()
+
+            if query.message:
+                await query.edit_message_text(
+                    "👋 *Goodbye!* I look forward to assisting you again.\n\nTo start a new session, please enter /start or press the menu button on the left.", parse_mode="Markdown", reply_markup=None)
+        except BadRequest as e:
+            print(f"Failed to delete message: {e}")
     
     return ConversationHandler.END
