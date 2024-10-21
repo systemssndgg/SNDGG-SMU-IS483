@@ -184,7 +184,7 @@ def geoquery_ngsi_point(
     print(url)
     response = requests.request("GET", url, headers=headers, data=payload)
 
-    print(response.text)
+    # print(response.text)
 
     # Save the response to a file as a JSON array
     try:

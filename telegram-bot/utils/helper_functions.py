@@ -3,6 +3,8 @@ from datetime import datetime
 import numpy as np
 import random
 
+from utils.google_maps import get_route_duration
+
 
 def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, selected_preference):
     closest_three_carparks = []
@@ -13,7 +15,7 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, sele
         carpark_dict = carpark.to_dict()
         lat = carpark_dict["location"]["value"]["coordinates"][1]
         long = carpark_dict["location"]["value"]["coordinates"][0]
-        distance = geodesic((dest_lat, dest_long), (lat, long)).km
+        distance = geodesic((dest_lat, dest_long), (lat, long)).km #distance from carpark to user's final destination
         distance_dict[carpark_dict["CarparkName"]["value"]] = distance
         carpark_dict["distance"] = distance
         if "Car" in carpark_dict["Pricing"]["value"] and carpark_dict["ParkingAvailability"]["value"] > 0:
@@ -52,6 +54,7 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, sele
 
 
 def find_closest_carpark(carparks_list, dest_lat, dest_long):
+    """Find closest carpark in the event that it rains and originally selected carpark is not sheltered"""
     in_list = False
     for carpark in carparks_list:
         if carpark["Sheltered"]["value"] == True:
@@ -127,23 +130,28 @@ def find_rate_based_on_time(carpark, vehicle_type, current_time, today):
     return None
 
 
-def aggregate_message(closest_three_carparks, selected_preference):
+def aggregate_message(closest_three_carparks, selected_preference, live_location_lat, live_location_long):
     carparks_message = "🚗 *The 3 possible carparks near your destination are:*\n\n"
 
     today = datetime.today().weekday()
     current_time = datetime.now().time()
 
     price_dict = {}
+    duration_list = []
 
     for count, carpark in enumerate(closest_three_carparks, 1):
         carpark_name = carpark['CarparkName']['value'].title()
         if 'Pricing' in carpark and 'Car' in carpark['Pricing']["value"]:
-        
+            dest_lat = carpark['location']['value']['coordinates'][1]
+            dest_long = carpark['location']['value']['coordinates'][0]
+            duration = get_route_duration(live_location_lat, live_location_long, dest_lat, dest_long, travel_mode="driving")
+            duration_list.append(duration)
             carparks_message += (
                     f"*{count}. {carpark_name}*\n"
                     f"🅿️ *Available Lots:* {carpark['ParkingAvailability']['value']}\n"
                     f"📏 *Distance:* {carpark['distance']:.2f} km\n"
                     f"☂️ *Sheltered:* {'Yes' if carpark['Sheltered']['value'] else 'No'}\n"
+                    f"⌛ *Duration:* {duration} mins\n"
                 )
 
 
@@ -204,21 +212,35 @@ def aggregate_message(closest_three_carparks, selected_preference):
     if selected_preference == "cheapest":
         # find out if all prices are the same
         price_list = list(price_dict.values())
-        print(price_list)
-
         if len(set(price_list))==1:
             cheapest_carpark_message = f"💸 *All carparks have the same price at {price_list[0]} per 30 mins* \n\n"
             final_message = cheapest_carpark_message + carparks_message
             return final_message
-        else:
+        elif len(set(price_list))>1:
             lowest_value_key = min(price_dict, key=price_dict.get)
             lowest_value = price_dict[lowest_value_key]
-            print("Lowest Value:", lowest_value)
-            print("Lowest Value Key:", lowest_value_key)
-        cheapest_carpark_message = f"💸 *The cheapest carpark is: {lowest_value_key} at {lowest_value} per 30 mins* \n\n"
-        final_message = cheapest_carpark_message + carparks_message 
-        return final_message
-    
+            # print("Lowest Value:", lowest_value)
+            # print("Lowest Value Key:", lowest_value_key)
+            cheapest_carpark_message = f"💸 *The cheapest carpark is: {lowest_value_key} at {lowest_value} per 30 mins* \n\n"
+            final_message = cheapest_carpark_message + carparks_message 
+            return final_message
+            
+    elif selected_preference == "fastest":
+        # print(duration_list)
+        if len(set(duration_list))==1:
+            print("8================================D")
+            fastest_carpark_message = f"*All carparks have the same duration of {duration_list[0]} mins* \n\n"
+            final_message = fastest_carpark_message + carparks_message
+            return final_message
+        elif len(set(duration_list))>1:
+            print("aiyayayyayy")
+            print("a================================")
+            index_min_duration = duration_list.index(min(duration_list))
+            fastest_carpark = closest_three_carparks[index_min_duration]["CarparkName"]["value"]
+            fastest_carpark_message = f"*The Fastest carpark is: {fastest_carpark} with a travelling time of {duration_list[index_min_duration]} mins* \n\n"
+            final_message = fastest_carpark_message + carparks_message
+            return final_message
+
     print("Carpark Message from aggregate_message:", carparks_message)
 
     return carparks_message
@@ -371,3 +393,16 @@ def get_distance_btw(location1, location2):
 
     # Placeholder to return straight line distance between two locations (Can maybe change to Google Maps API later)
     return geodesic(location1, location2).km
+
+
+
+def is_word_present(sentence, word):
+    """ Function that returns true if the word is found """
+    sentence = sentence.upper()
+    # splitting the sentence to list
+    lis = sentence.split()
+    # checking if word is present
+    if(lis.count(word) > 0):
+        return True
+    else:
+        return False

@@ -10,7 +10,7 @@ import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
-from utils.helper_functions import find_next_best_carpark
+from utils.helper_functions import find_next_best_carpark, find_closest_carpark, is_word_present
 from utils.context_broker import retrieve_ngsi_type
 
 
@@ -111,8 +111,9 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
     chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
     # traffic_advisories = get_traffic_advisories()
 
-    mock_traffic_advisories = {
-        "id": "urn:ngsi-ld:TrafficAdvisories:EVMS_RD10",
+    mock_traffic_advisories = [
+    {
+        "id": "urn:ngsi-ld:TrafficAdvisories:EVMS_RS10",
         "type": "TrafficAdvisories",
         "Message": {
             "type": "Property",
@@ -123,14 +124,36 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
             "value": {
                 "type": "Point",
                 "coordinates": [
-                    103.875955,
-                    1.29548
+                    103.892766,
+                    1.334989
+                ]
+            }
+        }
+    },
+    {
+        "id": "urn:ngsi-ld:TrafficAdvisories:VMS_0008",
+        "type": "TrafficAdvisories",
+        "Message": {
+            "type": "Property",
+            "value": "ACCIDENT IN LANE,"
+        },
+        "Location": {
+            "type": "GeoProperty",
+            "value": {
+                "type": "Point",
+                "coordinates": [
+                    103.874857,
+                    1.314717
                 ]
             }
         }
     }
+    ]
+
+    keywords = ["ACCIDENT", "CLOSURE", "CONSTRUCTION", "JAM"]
 
     while True:
+        
         live_location = context.user_data.get('live_location')
         
         advisory_coordinates = mock_traffic_advisories['Location']['value']['coordinates']
@@ -139,15 +162,21 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
         distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
 
         print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")
+        
+        advisory_message = mock_traffic_advisories['Message']['value']
 
-        if distance_to_advisory <= 1.0:
-            advisory_message = mock_traffic_advisories['Message']['value']
-            await context.bot.send_message(
-                chat_id=chat_id,
-                text=f"🚧 Traffic advisory: {advisory_message}",
-                parse_mode='Markdown'
-            )
-            break
+        for word in keywords:
+            if is_word_present(advisory_message, word):
+                if distance_to_advisory <= 2.0:
+                    advisory_message = mock_traffic_advisories['Message']['value']
+                    await context.bot.send_message(
+                        chat_id=chat_id,
+                        text=f"🚧 Traffic advisory: {advisory_message}",
+                        parse_mode='Markdown'
+                    )
+                    break
+            else:
+                continue
 
         await asyncio.sleep(2)
 
@@ -172,7 +201,7 @@ async def monitor_live_location_changes(update: Update, context: ContextTypes.DE
         await asyncio.sleep(2)
 
 
-async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, current_carpark):
+async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, current_carpark, closest_three_carparks, destination_details, user_address, destination_address):
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
 
     weather = [
@@ -289,11 +318,11 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
             break
 
 
-async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
+async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address):
     """Run all monitoring tasks concurrently."""
     await asyncio.gather(
         monitor_carpark_availability(update, context, selected_carpark),
         monitor_traffic_advisories(update, context),
-        monitor_weather(update, context, selected_carpark),
+        monitor_weather(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address),
         monitor_live_location_changes(update, context)
     )

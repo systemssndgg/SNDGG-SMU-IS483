@@ -1,5 +1,7 @@
 import googlemaps
 import constants as constants
+from datetime import datetime
+import math
 
 gmaps = googlemaps.Client(key=constants.GOOGLE_MAPS_KEY)
 
@@ -39,3 +41,14 @@ def get_address_from_coordinates(lat, lng):
         return geocode_result[0]['formatted_address']
     else:
         return "Address not found"
+    
+def get_route_duration(lat, long, dest_lat, dest_long, travel_mode):
+    # travel_modes can be driving, biking, or walking
+    # https://developers.google.com/maps/documentation/distance-matrix/distance-matrix#mode
+    now = datetime.now()
+    coords_0 = f"{lat}, {long}"
+    coords_1 = f"{dest_lat}, {dest_long}"
+    directions_result = gmaps.directions(coords_0, coords_1, mode=travel_mode, departure_time=now, avoid='tolls')
+    # print("directions_result:", directions_result)
+    value = math.ceil(directions_result[0]['legs'][0]['duration']['value']/60)
+    return value

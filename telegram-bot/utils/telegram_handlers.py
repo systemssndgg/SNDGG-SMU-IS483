@@ -11,9 +11,9 @@ from telegram.error import BadRequest
 
 # import functions
 from utils.monitor import monitor_all
-from utils.helper_functions import find_closest_three_carparks,aggregate_message
+from utils.helper_functions import find_closest_three_carparks,aggregate_message, get_top_carparks
 from utils.context_broker import geoquery_ngsi_point
-from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates
+from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
 
 import asyncio
 
@@ -218,11 +218,13 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
         keyboard = [
             [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
+            [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
             [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
-            [InlineKeyboardButton("No Preference", callback_data="no_preference")],
+            [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
             [InlineKeyboardButton("🛑 End Session", callback_data="end")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
+        
 
         await query.message.reply_text(
             "😄 *Would you like to indicate a preference?*\n\n By default, it is sorted by distance",
@@ -278,8 +280,10 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
         user_preference = "💸 Cheapest"
     elif context.user_data.get("user_preference") == "sheltered":
         user_preference = "☂️ Sheltered"
-    elif context.user_data.get("user_preference") == "no_preference":
-        user_preference = "No Preference"
+    elif context.user_data.get("user_preference") == "fastest":
+        user_preference = "🏎️ Fastest"    
+    elif context.user_data.get("user_preference") == "shortest_walking_distance":
+        user_preference = "Shortest Walking Distance"
 
     print(f"User selected: {query.data}")
 
@@ -418,8 +422,10 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 dest_long=destination_long,
                 selected_preference=user_selected_preference
             )
+
+            # test = get_top_carparks(nearest_carparks, destination_lat, destination_long, user_selected_preference)
             
-            carparks_message = aggregate_message(closest_three_carparks, user_selected_preference)
+            carparks_message = aggregate_message(closest_three_carparks, user_selected_preference, live_location[0], live_location[1])
 
             # carparks_message = aggregate_message(closest_three_carparks, user_selected_preference)
             # escaped_message = escape_special_chars(carparks_message)
@@ -558,11 +564,11 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     context.user_data['google_route_id'] = google_route_id.message_id
     
-    global current_carpark
-    current_carpark = selected_carpark
+    # global current_carpark
+    # current_carpark = selected_carpark
 
     # asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
-    asyncio.create_task(monitor_all(update, context, current_carpark))
+    asyncio.create_task(monitor_all(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address))
     
     return LIVE_LOCATION
 
