@@ -14,6 +14,7 @@ from utils.monitor import monitor_all
 from utils.helper_functions import find_closest_three_carparks,aggregate_message, get_top_carparks
 from utils.context_broker import geoquery_ngsi_point
 from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
+from utils.firestore import check_user_exists, store_user_preference, get_user_preference, edit_user_preference
 
 import asyncio
 
@@ -21,9 +22,8 @@ import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
-
 # State definitions
-DESTINATION, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART, USER_PREFERENCE = range(5)
+DESTINATION, CONFIRM_DESTINATION, CONFIRM_PREFERENCE, STORE_PREFERENCE, EDIT_PREFERENCE, LIVE_LOCATION, RESTART, USER_PREFERENCE = range(8)
 
 # Store user data
 user_data = {}
@@ -208,7 +208,6 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     if query.data == "confirm_yes":
         print("User confirmed the location. Asking for User Preference.")
-
         confirm_destination_message_id = context.user_data.get('confirm_destination_message')
         if confirm_destination_message_id:
             await context.bot.delete_message(
@@ -216,23 +215,29 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 message_id=confirm_destination_message_id
             )
 
-        keyboard = [
-            [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
-            [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
-            [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
-            [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
-            [InlineKeyboardButton("🛑 End Session", callback_data="end")]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        
+        user_id = update.effective_user.id
+        user_in_db = check_user_exists(user_id)
 
-        await query.message.reply_text(
-            "😄 *Would you like to indicate a preference?*\n\n By default, it is sorted by distance",
-            parse_mode='Markdown',
-            reply_markup=reply_markup
-        )
-
-        return CONFIRM_DESTINATION
+        if user_in_db:
+            print("User exists in database. Fetching preference.")
+            return await confirm_destination(update, context)
+        else:
+            keyboard = [
+                [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
+                [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
+                [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
+                [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
+                [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await query.message.reply_text(
+                "😄 *Would you like to indicate a preference?*\n\n By default, it is sorted by distance",
+                parse_mode='Markdown',
+                reply_markup=reply_markup
+            )
+            
+            return CONFIRM_PREFERENCE
     
     elif context.user_data.get("confirm_destination") == "confirm_no":
         print("User rejected the location. Asking for a new destination.")
@@ -268,14 +273,13 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
         return await end(update, context)
 
-async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Confirm the destination and ask for live location."""
-    context.job_queue.stop()
+async def confirm_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Confirm the user's preference for carpark."""
     query = update.callback_query
     await query.answer()
     user_preference = None
+    context.user_data['user_preference'] = query.data
 
-    context.user_data["user_preference"] = query.data
     if context.user_data.get("user_preference") == "cheapest": 
         user_preference = "💸 Cheapest"
     elif context.user_data.get("user_preference") == "sheltered":
@@ -283,24 +287,155 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
     elif context.user_data.get("user_preference") == "fastest":
         user_preference = "🏎️ Fastest"    
     elif context.user_data.get("user_preference") == "shortest_walking_distance":
-        user_preference = "Shortest Walking Distance"
+        user_preference = "🚶‍♂️ Shortest Walking Distance"
 
     print(f"User selected: {query.data}")
 
-    if context.user_data.get("confirm_destination") == "confirm_yes":
-        print(f"User selected preference: {query.data}")
-        print("Asking for live location.")
-        
-        keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+    keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
-        confirm_preference = await query.edit_message_text(
-            f"You have selected *{user_preference}*",
+    confirm_preference = await query.edit_message_text(
+        f"Your preference is *{user_preference}*",
+        parse_mode="Markdown",
+        reply_markup=None
+    )
+
+    context.user_data['confirm_preference_message_id'] = confirm_preference.message_id
+    context.user_data['new_user_in_db'] = False
+
+    keyboard = [[InlineKeyboardButton("✅ Yes", callback_data="confirm_yes"), InlineKeyboardButton("❌ No", callback_data="confirm_no")], [InlineKeyboardButton("🛑 End Session", callback_data="end")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await context.bot.send_message(
+            text="💡 *Store Your Preference?*\n\n"
+                "Would you like me to save this preference for future sessions?",
+            chat_id=update.effective_chat.id,
+            parse_mode="Markdown",
+            reply_markup=reply_markup
+        )
+
+    return STORE_PREFERENCE
+
+async def store_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Store the user's preference for carpark."""
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == "confirm_yes":
+        context.user_data['new_user_in_db'] = True
+        user_id = update.effective_user.id
+        user_preference = context.user_data.get("user_preference")
+        store_user_preference(user_id, user_preference)
+
+        await query.edit_message_text(
+            text=("💾 *Preference Saved!*\n\n"
+                "I have stored your preference for future sessions. "
+                "Next time, I'll remember your choice! 😊"),
+            parse_mode="Markdown",
+            reply_markup=None
+        )
+        return await confirm_destination(update, context)
+    elif query.data == "confirm_no":
+        await query.edit_message_text(
+            text=("🚫 *Preference Not Saved.*\n\n"
+                "No worries! I'll help you find the best carpark without storing your preference. "
+                "You can set a new preference anytime! 👍"),
+            parse_mode="Markdown",
+            reply_markup=None
+        )
+        return await confirm_destination(update, context)
+    elif query.data == "end":
+        return await end(update, context)
+
+async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Ask the user to select a new preference."""
+    keyboard = [
+        [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
+        [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
+        [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
+        [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
+        [InlineKeyboardButton("🛑 Cancel", callback_data="cancel")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="🔄 *Please select your new preference:*",
+        parse_mode='Markdown',
+        reply_markup=reply_markup
+    )
+
+    return EDIT_PREFERENCE
+
+async def edit_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Edit the user's preference."""
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == "cancel":
+        await query.edit_message_text(
+            text="🚫 *Preference not changed.*",
+            parse_mode="Markdown",
+            reply_markup=None
+        )
+    else:
+        context.user_data['user_preference'] = query.data
+        user_id = update.effective_user.id
+
+        edit_user_preference(user_id, query.data)
+
+        if query.data == "cheapest":
+            user_preference = "💸 Cheapest"
+        elif query.data == "sheltered":
+            user_preference = "☂️ Sheltered"
+        elif query.data == "fastest":
+            user_preference = "🏎️ Fastest"
+        elif query.data == "shortest_walking_distance":
+            user_preference = "🚶‍♂️ Shortest Walking Distance"
+
+        await query.edit_message_text(
+            text=f"✅ *Preference updated to:* {user_preference}",
             parse_mode="Markdown",
             reply_markup=None
         )
 
-        context.user_data['confirm_preference_message_id'] = confirm_preference.message_id
+    return ConversationHandler.END
+
+async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Confirm the destination and ask for live location."""
+    # context.job_queue.stop()
+    query = update.callback_query
+    await query.answer()
+    new_user_in_db = context.user_data.get('new_user_in_db')
+
+    if context.user_data.get("confirm_destination") == "confirm_yes":
+        print("Asking for live location.")
+
+        user_id = update.effective_user.id
+        stored_user_preference = get_user_preference(user_id)
+        user_preference = None
+
+        if stored_user_preference == "cheapest": 
+            user_preference = "💸 Cheapest"
+        elif stored_user_preference == "sheltered":
+            user_preference = "☂️ Sheltered"
+        elif stored_user_preference == "fastest":
+            user_preference = "🏎️ Fastest"    
+        elif stored_user_preference == "shortest_walking_distance":
+            user_preference = "🚶‍♂️ Shortest Walking Distance"
+
+        print(f"User selected: {query.data}")
+
+        if user_preference and not new_user_in_db:
+            await context.bot.send_message(
+                chat_id=query.message.chat_id,
+                text=f"Your preference is *{user_preference}*",
+                parse_mode="Markdown",
+                reply_markup=None
+            )
+
+        keyboard = [[InlineKeyboardButton("✅ Yes", callback_data="confirm_yes"), InlineKeyboardButton("❌ No", callback_data="confirm_no")], [InlineKeyboardButton("🛑 End Session", callback_data="end")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
 
         confirm_destination = await context.bot.send_message(
             chat_id=query.message.chat_id,
@@ -316,7 +451,7 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
 
         return LIVE_LOCATION 
     
-    elif query.data == "confirm_no":
+    elif context.user_data.get("confirm_destination") == "confirm_no":
         print("User rejected the location. Asking for a new destination.")
 
         keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
@@ -338,7 +473,7 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
 
         return DESTINATION
     
-    elif query.data == "end":
+    elif context.user_data.get("confirm_destination") == "end":
         static_map_message_id = context.user_data.get('static_map_message_id')
         destination_address_id = context.user_data.get('destination_address_id')
         if static_map_message_id:

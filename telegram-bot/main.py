@@ -25,24 +25,21 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 # import functions
-from utils.telegram_handlers import start, get_destination, destination_selected, user_preference, confirm_destination, live_location, carpark_selected, restart_session ,end
+from utils.telegram_handlers import start, get_destination, destination_selected, user_preference, confirm_destination, confirm_preference, store_preference, preference, edit_preference, live_location, carpark_selected, restart_session, end
 # from utils.monitor import monitor_carpark_availability
 # from utils.helper_functions import find_closest_three_carparks, find_closest_carpark, format_time_and_rate, convert_to_hours, is_time_in_range, find_rate_based_on_time, aggregate_message, find_next_best_carpark
 # from utils.context_broker import geoquery_ngsi_point, retrieve_ngsi_type
 # from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates
 
-
-
-
 # State definitions
-DESTINATION, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART, USER_PREFERENCE = range(5)
+DESTINATION, CONFIRM_DESTINATION, CONFIRM_PREFERENCE, STORE_PREFERENCE, EDIT_PREFERENCE, LIVE_LOCATION, RESTART, USER_PREFERENCE = range(8)
 
 def main() -> None:
     """Run the bot."""
     application = ApplicationBuilder().token(constants.TELEGRAM_BOT_KEY).read_timeout(60).build()
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler('start', start), CommandHandler('preference', preference)],
         states={
             DESTINATION: [
                 MessageHandler(filters.LOCATION | filters.TEXT, get_destination),
@@ -54,6 +51,15 @@ def main() -> None:
             CONFIRM_DESTINATION: [
                 CallbackQueryHandler(confirm_destination),
             ],
+            CONFIRM_PREFERENCE: [
+                CallbackQueryHandler(confirm_preference),
+            ],
+            STORE_PREFERENCE: [
+                CallbackQueryHandler(store_preference),
+            ],
+            EDIT_PREFERENCE: [
+            CallbackQueryHandler(edit_preference),
+            ],
             LIVE_LOCATION: [
                 MessageHandler(filters.LOCATION | filters.TEXT, live_location),
                 CallbackQueryHandler(carpark_selected),
@@ -64,6 +70,7 @@ def main() -> None:
         },
         fallbacks=[CommandHandler('end', end),
         CallbackQueryHandler(end, pattern='^end$'),
+        CallbackQueryHandler(preference, pattern='^preference$'),
         ],
     )
 
