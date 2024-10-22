@@ -11,7 +11,7 @@ from telegram.error import BadRequest
 
 # import functions
 from utils.monitor import monitor_all
-from utils.helper_functions import find_closest_three_carparks,aggregate_message, get_top_carparks
+from utils.helper_functions import find_closest_three_carparks, aggregate_message, get_top_carparks
 from utils.context_broker import geoquery_ngsi_point
 from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
 
@@ -410,18 +410,54 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             lat=destination_lat,
             long=destination_long
         )
-        
+
         if len(nearest_carparks) == 0:
             await context.bot.send_message(chat_id=update.effective_chat.id, text="🚫 Sorry! No nearby carparks found.")
         else:
             user_selected_preference = context.user_data.get("user_preference")
+
+            # [HARDCODED] map user selected preference to preset user_pref (can be 'sheltered', 'cheapest', 'fastest', 'shortest_walking_distance)
+            user_pref = {}
+            remove_unsheltered = False
+
+            if (user_selected_preference == "cheapest"):
+                user_pref = {
+                    'price': 0.5,
+                    'walking_time': 0.1,
+                    'travel_time': 0.2,
+                    'available_lots': 0.1,
+                    'is_sheltered': 0.1,
+                }
+            elif (user_selected_preference == "fastest"):
+                user_pref = {
+                    'price': 0.2,
+                    'walking_time': 0.1,
+                    'travel_time': 0.5,
+                    'available_lots': 0.1,
+                    'is_sheltered': 0.1,
+                }
+            elif (user_selected_preference == "sheltered"):
+                user_pref = {
+                    'price': 0.2,
+                    'walking_time': 0.1,
+                    'travel_time': 0.2,
+                    'available_lots': 0.1,
+                    'is_sheltered': 0.4,
+                }
+
+                remove_unsheltered = True
+            elif (user_selected_preference == "shortest_walking_distance"):
+                user_pref = {
+                    'price': 0.2,
+                    'walking_time': 0.5,
+                    'travel_time': 0.1,
+                    'available_lots': 0.1,
+                    'is_sheltered': 0.1,
+                }
+            # [END] ========================================================================================================
+
             global closest_three_carparks
-            closest_three_carparks = find_closest_three_carparks(
-                nearest_carparks_list=nearest_carparks,
-                dest_lat=destination_lat,
-                dest_long=destination_long,
-                selected_preference=user_selected_preference
-            )
+            closest_three_carparks = get_top_carparks(live_location, nearest_carparks, user_pref, 3, remove_unsheltered=remove_unsheltered, min_avail_lots=10)
 
             # test = get_top_carparks(nearest_carparks, destination_lat, destination_long, user_selected_preference)
             
