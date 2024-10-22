@@ -147,12 +147,12 @@ def aggregate_message(closest_three_carparks, selected_preference, live_location
             duration = get_route_duration(live_location_lat, live_location_long, dest_lat, dest_long, travel_mode="driving")
             duration_list.append(duration)
             carparks_message += (
-                    f"*{count}. {carpark_name}*\n"
-                    f"🅿️ *Available Lots:* {carpark['ParkingAvailability']['value']}\n"
-                    f"📏 *Distance:* {carpark['distance']:.2f} km\n"
-                    f"☂️ *Sheltered:* {'Yes' if carpark['Sheltered']['value'] else 'No'}\n"
-                    f"⌛ *Duration:* {duration} mins\n"
-                )
+                f"*{count}. {carpark_name}*\n"
+                f"🅿️ *Available Lots:* {carpark['ParkingAvailability']['value']}\n"
+                f"🚶 *Walk to Destination* {round(carpark['walking_time'])} mins\n"
+                f"☂️ *Sheltered:* {'Yes' if carpark['Sheltered']['value'] else 'No'}\n"
+                f"⌛ *Drive Duration:* {duration} mins\n"
+            )
 
 
 
@@ -266,7 +266,7 @@ def find_next_best_carpark(carparks, current_carpark):
     return best_carpark
 
 
-def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return, num_hrs=2):
+def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return, min_avail_lots=10, num_hrs=2, remove_unsheltered=False):
     '''
         Function to get the top N carparks based on user preferences using Z-Score Normalization and Weighted Scoring.
         
@@ -299,43 +299,67 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
         [3] User preferences: Dictionary of user preferences in this format:
             {
                 'price': 0.5,
-                'distance': 0.2,
+                'walking_time': 0.2,    # Time to walk from carpark to destination
+                'travel_time': 0.1,     # Drive to carpark + Walk to destination (total time)
                 'available_lots': 0.2,
                 'is_sheltered': 0.1,
             }
         
         [4] num_cp_to_return: Number of top carparks to return (e.g., 3)
 
-        [5] num_hrs: Number of hours user intends to park for (default is 2 hours)
+        [5] min_avail_lots: Minimum number of available lots required for a carpark to be considered (default is 10)
+
+        [6] num_hrs: Number of hours user intends to park for (default is 2 hours)
 
         OUTPUT PARAMETERS SPECIFICATIONS ===============================================================
         Returns: List of top N carpark dictionaries in the same format as the input carparks. (First item in the list is the best carpark)
+
+            Added keys in each carpark dictionary:
+            - 'walking_time': Time to walk from live location to carpark
+            - 'drive_time': Time to drive to carpark
+            - 'travel_time': Time to drive to carpark + Time to walk from carpark to destination
     '''
+
+    # Filter out carparks that do not meet the minimum requirements
+    new_carparks = []
+
+    for cp in carparks:
+        if int(cp['ParkingAvailability']['value']) < min_avail_lots:
+            continue
+
+        if remove_unsheltered and not cp['Sheltered']['value']:
+            continue
+
+        new_carparks.append(cp)
+    
+    carparks = new_carparks
 
     # Convert carpark data into a NumPy array
     carparks_list = []
 
     for cp in carparks:
         # Extract the values from the carpark dictionary
-        price = find_price_per_hr(cp['Pricing']['value'], 2)   # Need to change this later to fetch
-        distance = get_distance_btw(live_location, (cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0]))
+        price = find_price_per_hr(cp, num_hrs, 'Car')   # Need to change this later to fetch
+        walk_time = get_route_duration(live_location[0], live_location[1], cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], travel_mode="walking")
+        drive_time = get_route_duration(live_location[0], live_location[1], cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], travel_mode="driving")
+        travel_time = walk_time + drive_time
         available_lots = int(cp['ParkingAvailability']['value'])
         is_sheltered = bool(cp['Sheltered']['value'])
-
-        # Debugging
-        print("\nDEBUGGING: Carpark Data")
-        print(is_sheltered)
-        print(type(is_sheltered))
         
         # Append the data as a list to the carparks_list
-        carparks_list.append([price, distance, available_lots, is_sheltered])
+        carparks_list.append([price, walk_time, travel_time, available_lots, is_sheltered])
 
     # Convert the list of lists into a NumPy array
     carparks_np = np.array(carparks_list)
 
     # Convert the user preferences data into a NumPy array
-    user_preferences_np = np.array([user_preferences['price'], user_preferences['distance'], user_preferences['available_lots'], user_preferences['is_sheltered']])
-
+    user_preferences_np = np.array([
+        user_preferences['price'],
+        user_preferences['walking_time'],
+        user_preferences['travel_time'],
+        user_preferences['available_lots'],
+        user_preferences['is_sheltered']
+    ])
 
     # Z-SCORE NORMALIZATION =================================================
     # Calculate the mean and standard deviation of each feature
@@ -345,13 +369,13 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
     # Apply Z-Score normalization: (x - mean) / std
     normalized_carparks = (carparks_np - mean) / std
 
-    # Invert Z-scores for price and distance (we want lower values to result in higher scores)
+    # Invert Z-scores for price, walking_time, travel_time (we want lower values to result in higher scores)
     normalized_carparks[:, 0] *= -1  # Invert price scores
-    normalized_carparks[:, 1] *= -1  # Invert distance scores
+    normalized_carparks[:, 1] *= -1  # Invert walking time scores
+    normalized_carparks[:, 2] *= -1  # Invert travel time scores
 
     # Sheltered status does not need Z-score normalization as it is binary (0 or 1)
-    normalized_carparks[:, 3] = carparks_np[:, 3]  # Keep the sheltered status unchanged
-
+    normalized_carparks[:, 4] = carparks_np[:, 4]  # Keep the sheltered status unchanged
 
     # WEIGHTED SCORING ======================================================
     # Apply weights
@@ -365,36 +389,54 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
     # Sort the carparks by their total scores (descending order)
     sorted_indices = np.argsort(-total_scores)
 
-    # Get top 3 carpark dictionaries
-    # top_3_carparks = [carparks[i] for i in sorted_indices[:3]]
-    top_N_carparks = [carparks[i] for i in sorted_indices[:num_cp_to_return]]
+    '''
+    [DEBUGGING] PRINT EACH CARPARK WITH SCORES AND VALUES (From carparks_np) ============================
+    for i in sorted_indices:
+        print(f"\n\nCarpark: {carparks[i]['CarparkName']['value']}")
+        print(f"Score: {total_scores[i]}")
+        print(f"\nPrice: {carparks_np[i][0]} | Normalised: {normalized_carparks[i][0]}")
+        print(f"Walk Time: {carparks_np[i][1]} | Normalised: {normalized_carparks[i][1]}")
+        print(f"Travel Time: {carparks_np[i][2]} | Normalised: {normalized_carparks[i][2]}")
+        print(f"Available Lots: {carparks_np[i][3]} | Normalised: {normalized_carparks[i][3]}")
+        print(f"Sheltered: {carparks_np[i][4]} | Normalised: {normalized_carparks[i][4]}")
+    '''
+
+    # Create the list of top N carparks and include walking_time and travel_time
+    top_N_carparks = []
+
+    for i in sorted_indices[:num_cp_to_return]:
+        carpark_dict = carparks[i].to_dict()  # Convert to dictionary
+        carpark_dict['walking_time'] = carparks_np[i][1]  # Add walking time
+        carpark_dict['travel_time'] = carparks_np[i][2]   # Add travel time
+        carpark_dict['drive_time'] = carparks_np[i][2] - carparks_np[i][1]  # Add drive time
+        top_N_carparks.append(carpark_dict)
 
     # Return
     return top_N_carparks
 
 
-def find_price_per_hr(pricing_dict, num_hrs):
+def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     '''
     To be implemented: Figure out price per hour based on input params
 
-    Expected return type: Float
+    INPUT PARAMETERS:
+    [1] carpark: Entire NGSI-LD carpark entity
+    [2] num_hrs: Number of hours user intends to park for
+    [3] vehicle_type: Type of vehicle ('Car', 'Motorcycle', 'Heavy Vehicle')
+
+    RETURNS:
+    float value >= 0.0 IF price information is available
+    -1.0 IF price information is not available
     '''
+
+    # TO IMPLEMENT LATER: FIGURE OUT HOW TO CALCULATE PRICE PER HOUR
+    today = datetime.today().weekday()
+    current_time = datetime.now().time()
+
+    price_info = find_rate_based_on_time(carpark=carpark, vehicle_type=vehicle_type, current_time=current_time, today=today)
 
     # Placeholder: Returns random float value between 0 and 5
     return round(random.uniform(0, 5), 2)
-
-
-def get_distance_btw(location1, location2):
-    '''
-    location1 and location2 should be tuples of latitude and longitude in this format: (1.332549, 103.739453)
-
-    returns the distance between two locations in km
-    '''
-
-    # Placeholder to return straight line distance between two locations (Can maybe change to Google Maps API later)
-    return geodesic(location1, location2).km
-
-
 
 def is_word_present(sentence, word):
     """ Function that returns true if the word is found """
