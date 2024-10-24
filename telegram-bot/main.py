@@ -35,7 +35,7 @@ from utils.telegram_handlers import start, get_destination, destination_selected
 
 
 # State definitions
-DESTINATION, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART, USER_PREFERENCE = range(5)
+DESTINATION, USER_PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART, = range(5)
 
 def main() -> None:
     """Run the bot."""
@@ -52,7 +52,7 @@ def main() -> None:
                 CallbackQueryHandler(user_preference),
             ],
             CONFIRM_DESTINATION: [
-                CallbackQueryHandler(confirm_destination),
+                CallbackQueryHandler(confirm_destination, pattern="^submit$"),
             ],
             LIVE_LOCATION: [
                 MessageHandler(filters.LOCATION | filters.TEXT, live_location),

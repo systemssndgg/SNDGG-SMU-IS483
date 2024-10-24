@@ -11,7 +11,7 @@ from telegram.error import BadRequest
 
 # import functions
 from utils.monitor import monitor_all
-from utils.helper_functions import find_closest_three_carparks, aggregate_message, get_top_carparks
+from utils.helper_functions import find_closest_three_carparks, aggregate_message, get_top_carparks, remove_selected_button
 from utils.context_broker import geoquery_ngsi_point
 from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
 
@@ -23,7 +23,7 @@ colorama.init(autoreset=True)
 
 
 # State definitions
-DESTINATION, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART, USER_PREFERENCE = range(5)
+DESTINATION, USER_PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, RESTART, = range(5)
 
 # Store user data
 user_data = {}
@@ -54,6 +54,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle destination input and return a list of suggestions"""
+    
+    # Logging setup
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
     if update.message and update.message.text:
         message_id = context.user_data.get('message_id')
         rejected_destination_id = context.user_data.get('rejected_destination_id')
@@ -106,9 +111,11 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected destination, search another destination, or cancel"""
+
     # Logging setup
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
+
     context.user_data['carpark_list_sent'] = False
 
     query = update.callback_query
@@ -201,106 +208,193 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
 
 async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Obtain User's preference for carpark"""
+    await context.job_queue.stop()
+    # Logging setup
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
     query = update.callback_query
     await query.answer()
 
-    context.user_data["confirm_destination"] = query.data
+    keyboard = [
+                [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
+                [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
+                [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
+                [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
+                [InlineKeyboardButton("🛑 End Session", callback_data="end"), InlineKeyboardButton("🔃 Reset", callback_data="reset")]
+            ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
-    if query.data == "confirm_yes":
-        print("User confirmed the location. Asking for User Preference.")
+    if 'preference_list' not in context.user_data:
+        context.user_data['preference_list'] = []
+        context.user_data
+    preference_list = context.user_data['preference_list']
 
-        confirm_destination_message_id = context.user_data.get('confirm_destination_message')
-        if confirm_destination_message_id:
-            await context.bot.delete_message(
-                chat_id=query.message.chat_id,
-                message_id=confirm_destination_message_id
+    try:
+        if query.data == "confirm_yes" or query.data == "reset":
+            if query.data == "reset":
+                context.user_data['preference_list'] = []
+                print("Preferences reset")
+                preference_message_id = context.user_data.get('preference_message_id')
+                first_preference_message_id = context.user_data.get('first_preference_message_id')
+                if preference_message_id or first_preference_message_id:
+                    if preference_message_id:
+                        await context.bot.delete_message(
+                            chat_id=query.message.chat_id,
+                            message_id=preference_message_id
+                        )
+                    elif first_preference_message_id:
+                        await context.bot.delete_message(
+                            chat_id=query.message.chat_id,
+                            message_id=first_preference_message_id
+                        )
+                
+            context.user_data["confirm_destination"] = query.data
+            print("Asking for User Preference.")
+            confirm_destination_message_id = context.user_data.get('confirm_destination_message')
+            if confirm_destination_message_id:
+                try:
+                    await context.bot.delete_message(
+                        chat_id=query.message.chat_id,
+                        message_id=confirm_destination_message_id
+                    )
+                except BadRequest as e:
+                    logger.error(f"Failed to delete confirm destination message: {e}")
+
+            first_preference_message = await query.message.reply_text(
+                "*Which of the following is most important to you?*\n\n",
+                parse_mode='Markdown',
+                reply_markup=reply_markup
             )
+            context.user_data['first_preference_message_id'] = first_preference_message.message_id
 
-        keyboard = [
-            [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
-            [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
-            [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
-            [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
-            [InlineKeyboardButton("🛑 End Session", callback_data="end")]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+            return USER_PREFERENCE
         
+        elif query.data in ["cheapest", "fastest", "sheltered", "shortest_walking_distance"]:
+            # Keep track of user's preference
+            if query.data not in preference_list:
+                preference_list.append(query.data)
+                print("preference list:" , preference_list)
 
-        await query.message.reply_text(
-            "😄 *Would you like to indicate a preference?*\n\n By default, it is sorted by distance",
-            parse_mode='Markdown',
-            reply_markup=reply_markup
-        )
+            new_keyboard = remove_selected_button(query)
 
-        return CONFIRM_DESTINATION
-    
-    elif context.user_data.get("confirm_destination") == "confirm_no":
-        print("User rejected the location. Asking for a new destination.")
+            if len(new_keyboard) > 2:
+                # Update the message with the modified checklist
+                preference_message = await context.bot.edit_message_text(
+                    chat_id=query.message.chat_id,
+                    message_id=query.message.message_id,
+                    text="*Which of the following is most important to you?*\n\n",
+                    parse_mode='Markdown',
+                    reply_markup=InlineKeyboardMarkup(new_keyboard)
+                )
+                context.user_data['preference_message_id'] = preference_message.message_id
+                
+                return USER_PREFERENCE
+            
+            else:
+                # Automatically append the last preference button to the list
+                if len(new_keyboard) == 2:
+                    last_preference = new_keyboard[0][0].callback_data
+                    if last_preference not in preference_list:
+                        preference_list.append(last_preference)
+                        print("preference list:", preference_list)
 
-        keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+                # Send the final preferences summary
+                preference_text = "\n".join(
+                    [f"{button.text} (Most Important)" if i == 0 else f"{button.text} (Least Important)" if i == len(preference_list) - 1 else f"{button.text}"
+                     for i, button in enumerate([button for row in keyboard for button in row if button.callback_data in preference_list])]
+                )
+                await context.bot.send_message(
+                    chat_id=query.message.chat_id,
+                    text=f"You've selected your preferences in the following order:\n\n{preference_text}."
+                )
+                print("User has chosen their preferences")
 
-        static_map_message_id = context.user_data.get('static_map_message_id')
-        if static_map_message_id:
-            await context.bot.delete_message(
-                chat_id=query.message.chat_id,
-                message_id=static_map_message_id
+                preference_message_id = context.user_data.get('preference_message_id')
+                if preference_message_id:
+                    try:
+                        await context.bot.delete_message(
+                            chat_id=query.message.chat_id,
+                            message_id=preference_message_id
+                        )
+                    except BadRequest as e:
+                        logger.error(f"Failed to delete preference message: {e}")
+                return await confirm_destination(update, context)
+                
+        elif query.data == "confirm_no":
+            print("User rejected the location. Asking for a new destination.")
+
+            keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+
+            static_map_message_id = context.user_data.get('static_map_message_id')
+            if static_map_message_id:
+                try:
+                    await context.bot.delete_message(
+                        chat_id=query.message.chat_id,
+                        message_id=static_map_message_id
+                    )
+                except BadRequest as e:
+                    logger.error(f"Failed to delete static map message: {e}")
+
+            rejected_destination = await query.edit_message_text(
+                "❌ *Destination rejected.* Let's search again. Where would you like to go?\n\n"
+                "Please type your destination.",
+                parse_mode="Markdown",
+                reply_markup=reply_markup
             )
 
-        rejected_destination = await query.edit_message_text(
-            "❌ *Destination rejected.* Let's search again. Where would you like to go?\n\n"
-            "Please type your destination.",
-            parse_mode="Markdown",
-            reply_markup=reply_markup
-        )
+            context.user_data['rejected_destination_id'] = rejected_destination.message_id
 
-        context.user_data['rejected_destination_id'] = rejected_destination.message_id
+            return DESTINATION
 
+        elif query.data == "end":
+            static_map_message_id = context.user_data.get('static_map_message_id')
+            if static_map_message_id:
+                try:
+                    await context.bot.delete_message(
+                        chat_id=query.message.chat_id,
+                        message_id=static_map_message_id
+                    )
+                except BadRequest as e:
+                    logger.error(f"Failed to delete static map message: {e}")
+            return await end(update, context)
+
+    except Exception as e:
+        logger.error(f"An error occurred in user_preference: {e}")
+        await query.edit_message_text("❌ An error occurred. Please try again.")
         return DESTINATION
 
-    elif query.data == "end":
-        static_map_message_id = context.user_data.get('static_map_message_id')
-        if static_map_message_id:
-            await context.bot.delete_message(
-                chat_id=query.message.chat_id,
-                message_id=static_map_message_id
-            )
-
-        return await end(update, context)
 
 async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Confirm the destination and ask for live location."""
+
+    # Logging setup
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger = logging.getLogger(__name__)
     context.job_queue.stop()
     query = update.callback_query
     await query.answer()
-    user_preference = None
 
-    context.user_data["user_preference"] = query.data
-    if context.user_data.get("user_preference") == "cheapest": 
-        user_preference = "💸 Cheapest"
-    elif context.user_data.get("user_preference") == "sheltered":
-        user_preference = "☂️ Sheltered"
-    elif context.user_data.get("user_preference") == "fastest":
-        user_preference = "🏎️ Fastest"    
-    elif context.user_data.get("user_preference") == "shortest_walking_distance":
-        user_preference = "Shortest Walking Distance"
-
-    print(f"User selected: {query.data}")
+    preference_list = context.user_data.get('preference_list')
 
     if context.user_data.get("confirm_destination") == "confirm_yes":
-        print(f"User selected preference: {query.data}")
+        print(f"User has chosen his preferences {preference_list}")
         print("Asking for live location.")
         
         keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        confirm_preference = await query.edit_message_text(
-            f"You have selected *{user_preference}*",
-            parse_mode="Markdown",
-            reply_markup=None
-        )
+        # selected_preferences = [key for key, value in preference_state.items() if value]
+        # preferences_text = ", ".join(selected_preferences).title()
 
-        context.user_data['confirm_preference_message_id'] = confirm_preference.message_id
+        # confirm_preference = await query.edit_message_text(
+        #     f"You have selected the following preferences:\n\n*{preferences_text}*",
+        #     parse_mode="Markdown",
+        #     reply_markup=None
+        # )
+
+        # context.user_data['confirm_preference_message_id'] = confirm_preference.message_id
 
         confirm_destination = await context.bot.send_message(
             chat_id=query.message.chat_id,
@@ -358,11 +452,12 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the live location input and find nearest carpark based on destination"""
-    confirm_destination_message_id = context.user_data.get('confirm_destination_message_id')
-
+    
     # Logging setup
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
+
+    confirm_destination_message_id = context.user_data.get('confirm_destination_message_id')
 
     if context.user_data.get('confirm_destination_edited_status') == False:
         if confirm_destination_message_id:
@@ -497,12 +592,13 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
 async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected carpark and return a Google Maps route."""
-    query = update.callback_query
-    await query.answer()
 
     # Logging setup
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
+
+    query = update.callback_query
+    await query.answer()
 
     if query.data == "start":
         return await start(update, context)

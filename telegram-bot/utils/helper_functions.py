@@ -2,9 +2,10 @@ from geopy.distance import geodesic
 from datetime import datetime
 import numpy as np
 import random
+import logging
 
 from utils.google_maps import get_route_duration
-
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, selected_preference):
     closest_three_carparks = []
@@ -345,7 +346,7 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
         travel_time = walk_time + drive_time
         available_lots = int(cp['ParkingAvailability']['value'])
         is_sheltered = bool(cp['Sheltered']['value'])
-        
+         
         # Append the data as a list to the carparks_list
         carparks_list.append([price, walk_time, travel_time, available_lots, is_sheltered])
 
@@ -448,3 +449,16 @@ def is_word_present(sentence, word):
         return True
     else:
         return False
+    
+def remove_selected_button(query):
+    """Remove the button that the user has selected"""
+    keyboard = query.message.reply_markup.inline_keyboard
+    new_keyboard = []
+    for row in keyboard:
+        new_row = []
+        for btn in row:
+            if btn.callback_data != query.data:
+                new_row.append(btn)
+        if new_row:  # Only add non-empty rows
+            new_keyboard.append(new_row)
+    return new_keyboard
