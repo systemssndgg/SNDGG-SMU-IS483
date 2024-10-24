@@ -326,23 +326,37 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
             - 'travel_time': Time to drive to carpark + Time to walk from carpark to destination
     '''
 
+    # Check if there are no carparks
+    if len(carparks) == 0:
+        return []
+
     # Filter out carparks that do not meet the minimum requirements
     new_carparks = []
+    rotten_carparks = []
 
     for cp in carparks:
         if int(cp['ParkingAvailability']['value']) < min_avail_lots:
+            rotten_carparks.append(cp)
             continue
 
         if remove_unsheltered and not cp['Sheltered']['value']:
+            rotten_carparks.append(cp)
             continue
 
         new_carparks.append(cp)
     
     carparks = new_carparks
 
-    # If carparks is empty, return empty list
-    if (len(carparks)==0):
-        return []
+    # If insufficient carparks meet the requirements, recurse with the rotten carparks to combine at the end of function
+    if len(carparks) < num_cp_to_return:
+        sorted_rotten_carparks = []
+
+        if len(rotten_carparks) > 0:
+            sorted_rotten_carparks = get_top_carparks(live_location, rotten_carparks, user_preferences, num_cp_to_return - len(carparks), min_avail_lots=0, num_hrs=num_hrs, remove_unsheltered=False)
+
+    # If there are no carparks meeting minimum criteria, return the rotten carparks
+    if len(carparks) == 0:
+        return sorted_rotten_carparks
 
     # Convert carpark data into a NumPy array
     carparks_list = []
@@ -420,6 +434,10 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
         carpark_dict['travel_time'] = carparks_np[i][2]   # Add travel time
         carpark_dict['drive_time'] = carparks_np[i][2] - carparks_np[i][1]  # Add drive time
         top_N_carparks.append(carpark_dict)
+    
+    # Combine the top N carparks with the rotten carparks
+    if len(carparks) < num_cp_to_return:
+        top_N_carparks.extend(sorted_rotten_carparks)
 
     # Return
     return top_N_carparks
