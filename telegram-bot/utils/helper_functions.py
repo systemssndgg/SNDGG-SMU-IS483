@@ -132,7 +132,12 @@ def find_rate_based_on_time(carpark, vehicle_type, current_time, today):
 
 
 def aggregate_message(closest_three_carparks, selected_preference, live_location_lat, live_location_long):
-    carparks_message = "🚗 *The 3 possible carparks near your destination are:*\n\n"
+    num_carparks = len(closest_three_carparks)
+
+    if (num_carparks == 0):
+        return "😭 Oh no, it seems there are no carparks currently available near your destination..."
+
+    carparks_message = f"🚗 *The {num_carparks} possible carparks near your destination are:*\n\n"
 
     today = datetime.today().weekday()
     current_time = datetime.now().time()
@@ -334,6 +339,10 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
         new_carparks.append(cp)
     
     carparks = new_carparks
+
+    # If carparks is empty, return empty list
+    if (len(carparks)==0):
+        return []
 
     # Convert carpark data into a NumPy array
     carparks_list = []

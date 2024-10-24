@@ -531,8 +531,6 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
             global closest_three_carparks
             closest_three_carparks = get_top_carparks(live_location, nearest_carparks, user_pref, 3, min_avail_lots=10)
-
-            # test = get_top_carparks(nearest_carparks, destination_lat, destination_long, user_selected_preference)
             
             carparks_message = aggregate_message(closest_three_carparks, user_selected_preference, live_location[0], live_location[1])
 
