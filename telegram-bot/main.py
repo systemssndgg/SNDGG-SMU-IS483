@@ -26,12 +26,6 @@ colorama.init(autoreset=True)
 
 # import functions
 from utils.telegram_handlers import start, get_destination, destination_selected, user_preference, confirm_destination, live_location, carpark_selected, restart_session ,end
-# from utils.monitor import monitor_carpark_availability
-# from utils.helper_functions import find_closest_three_carparks, find_closest_carpark, format_time_and_rate, convert_to_hours, is_time_in_range, find_rate_based_on_time, aggregate_message, find_next_best_carpark
-# from utils.context_broker import geoquery_ngsi_point, retrieve_ngsi_type
-# from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates
-
-
 
 
 # State definitions

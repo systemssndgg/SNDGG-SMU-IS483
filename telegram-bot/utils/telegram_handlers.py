@@ -301,12 +301,14 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
                 # Send the final preferences summary
                 preference_text = "\n".join(
-                    [f"{button.text} (Most Important)" if i == 0 else f"{button.text} (Least Important)" if i == len(preference_list) - 1 else f"{button.text}"
-                     for i, button in enumerate([button for row in keyboard for button in row if button.callback_data in preference_list])]
+                    [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else 
+                     f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(preference_list) - 1 else 
+                     f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)}"
+                     for i, pref in enumerate(preference_list)]
                 )
                 await context.bot.send_message(
                     chat_id=query.message.chat_id,
-                    text=f"You've selected your preferences in the following order:\n\n{preference_text}."
+                    text=f"You've selected your preferences in the following order:\n\n{preference_text}"
                 )
                 print("User has chosen their preferences")
 
@@ -336,6 +338,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     )
                 except BadRequest as e:
                     logger.error(f"Failed to delete static map message: {e}")
+            
 
             rejected_destination = await query.edit_message_text(
                 "❌ *Destination rejected.* Let's search again. Where would you like to go?\n\n"
@@ -384,17 +387,6 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
         
         keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-
-        # selected_preferences = [key for key, value in preference_state.items() if value]
-        # preferences_text = ", ".join(selected_preferences).title()
-
-        # confirm_preference = await query.edit_message_text(
-        #     f"You have selected the following preferences:\n\n*{preferences_text}*",
-        #     parse_mode="Markdown",
-        #     reply_markup=None
-        # )
-
-        # context.user_data['confirm_preference_message_id'] = confirm_preference.message_id
 
         confirm_destination = await context.bot.send_message(
             chat_id=query.message.chat_id,
@@ -709,7 +701,9 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             if query.message:
                 await query.edit_message_text(
                     "👋 *Goodbye!* I look forward to assisting you again.\n\nTo start a new session, please enter /start or press the menu button on the left.", parse_mode="Markdown", reply_markup=None)
+
         except BadRequest as e:
             print(f"Failed to delete message: {e}")
+            
     
     return ConversationHandler.END
