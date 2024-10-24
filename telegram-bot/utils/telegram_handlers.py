@@ -509,50 +509,36 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         if len(nearest_carparks) == 0:
             await context.bot.send_message(chat_id=update.effective_chat.id, text="🚫 Sorry! No nearby carparks found.")
         else:
-            user_selected_preference = context.user_data.get("user_preference")
+            # user_selected_preference is a list of user preferences in order of importance
+            # eg.  ['fastest', 'shortest_walking_distance', 'cheapest', 'sheltered']
+            user_selected_preference = context.user_data.get("preference_list")[:]
 
-            # [HARDCODED] map user selected preference to preset user_pref (can be 'sheltered', 'cheapest', 'fastest', 'shortest_walking_distance)
+            # Add available_lots to the user preference list as least preference (last item)
+            user_selected_preference.append('available_lots')
+
             user_pref = {}
-            remove_unsheltered = False
 
-            if (user_selected_preference == "cheapest"):
-                user_pref = {
-                    'price': 0.5,
-                    'walking_time': 0.1,
-                    'travel_time': 0.2,
-                    'available_lots': 0.1,
-                    'is_sheltered': 0.1,
-                }
-            elif (user_selected_preference == "fastest"):
-                user_pref = {
-                    'price': 0.2,
-                    'walking_time': 0.1,
-                    'travel_time': 0.5,
-                    'available_lots': 0.1,
-                    'is_sheltered': 0.1,
-                }
-            elif (user_selected_preference == "sheltered"):
-                user_pref = {
-                    'price': 0.2,
-                    'walking_time': 0.1,
-                    'travel_time': 0.2,
-                    'available_lots': 0.1,
-                    'is_sheltered': 0.4,
-                }
+            var_map = {
+                'fastest': 'travel_time',
+                'shortest_walking_distance': 'walking_time',
+                'cheapest': 'price',
+                'sheltered': 'is_sheltered',
+                'available_lots': 'available_lots'
+            }
+           
+            scoringWeights = [0.4, 0.25, 0.2, 0.1, 0.05] # In order of importance (1st = most important)
 
-                remove_unsheltered = True
-            elif (user_selected_preference == "shortest_walking_distance"):
-                user_pref = {
-                    'price': 0.2,
-                    'walking_time': 0.5,
-                    'travel_time': 0.1,
-                    'available_lots': 0.1,
-                    'is_sheltered': 0.1,
-                }
+            for i in range(len(user_selected_preference)):
+                user_pref_str = user_selected_preference[i]
+                attr_name = var_map[user_pref_str]
+                attr_weight = scoringWeights[i]
+
+                user_pref[attr_name] = attr_weight
+            
             # [END] ========================================================================================================
 
             global closest_three_carparks
-            closest_three_carparks = get_top_carparks(live_location, nearest_carparks, user_pref, 3, remove_unsheltered=remove_unsheltered, min_avail_lots=10)
+            closest_three_carparks = get_top_carparks(live_location, nearest_carparks, user_pref, 3, min_avail_lots=10)
 
             # test = get_top_carparks(nearest_carparks, destination_lat, destination_long, user_selected_preference)
             
