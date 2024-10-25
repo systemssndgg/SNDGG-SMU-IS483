@@ -415,7 +415,6 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
     # Return
     return top_N_carparks
 
-
 def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     '''
     To be implemented: Figure out price per hour based on input params
@@ -433,6 +432,74 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     # TO IMPLEMENT LATER: FIGURE OUT HOW TO CALCULATE PRICE PER HOUR
     today = datetime.today().weekday()
     current_time = datetime.now().time()
+    
+    # (1) Format the current time to the same format found in the entity - e.g. 15:00
+    current_time = current_time.strftime("%H:%M")
+
+    # (2) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
+    if 0 <= today <= 4:
+        day_type = "weekday"
+    elif today == 5:
+        day_type = "saturday"
+    else:
+        day_type = "sunday_public_holiday"
+    
+    # (3) Find the entry_fee based on the current time and day
+    entry_fee = carpark['Pricing']['value']['rates'][day_type]['flat_entry_fee']
+    if entry_fee != '-' or entry_fee != None:
+        entry_fee_start_time = entry_fee['start_time']
+        entry_fee_end_time = entry_fee['end_time']
+        if entry_fee_start_time <= current_time <= entry_fee_end_time:
+            entry_fee_price = entry_fee['price']
+        else:
+            entry_fee_price = None
+    
+    # (4) Find out if there's a first hour rate present
+    first_hour_rate = carpark['Pricing']['value']['rates'][day_type]['first_hour_rate']
+    if first_hour_rate != '-' or first_hour_rate != None:
+        first_hour_rate_price = first_hour_rate
+    else:
+        first_hour_rate_price = None
+    
+    # (5) Find out the usual rate per hour
+    time_based = carpark['Pricing']['value']['rates'][day_type]['time_based']
+    if time_based != '-' or time_based != None:
+        for time_slot in time_based:
+            if time_slot['start_time'] <= current_time <= time_slot['end_time']:
+                rate_per_hour = time_slot['rate_per_hour']
+                break
+            else:
+                rate_per_hour = None
+
+    # (6) Find out if there's a max_daily_fee
+    max_daily_fee = carpark['Pricing']['value']['rates'][day_type]['max_daily_fee']
+
+    # (7) Calculate the total price based on the number of hours
+    if entry_fee_price != None:
+        total_price = entry_fee_price
+    else:
+        total_price = 0.0
+
+    if first_hour_rate_price != None:
+        total_price += first_hour_rate_price
+    else:
+        total_price += 0.0
+
+    if rate_per_hour != None:
+        total_price += rate_per_hour * (num_hrs-1)
+    else:
+        total_price += 0.0
+    
+    if max_daily_fee != None:
+        if total_price > max_daily_fee:
+            total_price = max_daily_fee
+        
+    print(f"Entry Fee: {entry_fee_price}")
+    print(f"First Hour Rate: {first_hour_rate_price}")
+    print(f"Rate Per Hour: {rate_per_hour}")
+    print(f"Max Daily Fee: {max_daily_fee}")
+    print(f"Total price: {total_price}")
+    return total_price
 
     price_info = find_rate_based_on_time(carpark=carpark, vehicle_type=vehicle_type, current_time=current_time, today=today)
 
