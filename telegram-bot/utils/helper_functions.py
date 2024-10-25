@@ -3,6 +3,7 @@ from datetime import datetime
 import numpy as np
 import random
 import logging
+from typing import Union
 
 from utils.google_maps import get_route_duration
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
@@ -272,7 +273,7 @@ def find_next_best_carpark(carparks, current_carpark):
     return best_carpark
 
 
-def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return, min_avail_lots=10, num_hrs=2, remove_unsheltered=False):
+def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_preferences: dict, num_cp_to_return: int, min_avail_lots: int=10, num_hrs: int=2, remove_unsheltered: bool=False, strict_pref: bool=False):
     '''
         Function to get the top N carparks based on user preferences using Z-Score Normalization and Weighted Scoring.
         
@@ -317,6 +318,12 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
 
         [6] num_hrs: Number of hours user intends to park for (default is 2 hours)
 
+        [7] remove_unsheltered: Boolean to remove unsheltered carparks (default is False)
+
+        [8] strict_pref: Boolean to enforce strict preference (default is False)
+            - If True, only carparks that meet all user preferences (ie. min_avail_lots & remove_unsheltered) will be considered
+            - If False, carparks that do not meet all user preferences will be considered but with lower scores
+
         OUTPUT PARAMETERS SPECIFICATIONS ===============================================================
         Returns: List of top N carpark dictionaries in the same format as the input carparks. (First item in the list is the best carpark)
 
@@ -351,12 +358,15 @@ def get_top_carparks(live_location, carparks, user_preferences, num_cp_to_return
     if len(carparks) < num_cp_to_return:
         sorted_rotten_carparks = []
 
-        if len(rotten_carparks) > 0:
-            sorted_rotten_carparks = get_top_carparks(live_location, rotten_carparks, user_preferences, num_cp_to_return - len(carparks), min_avail_lots=0, num_hrs=num_hrs, remove_unsheltered=False)
+        if len(rotten_carparks) > 0  and (not strict_pref):
+            sorted_rotten_carparks = get_top_carparks(live_location, rotten_carparks, user_preferences, num_cp_to_return - len(carparks), min_avail_lots=0, num_hrs=num_hrs, remove_unsheltered=False, strict_pref=False)
 
     # If there are no carparks meeting minimum criteria, return the rotten carparks
     if len(carparks) == 0:
-        return sorted_rotten_carparks
+        if (not strict_pref):
+            return sorted_rotten_carparks
+        else:
+            return []
 
     # Convert carpark data into a NumPy array
     carparks_list = []
