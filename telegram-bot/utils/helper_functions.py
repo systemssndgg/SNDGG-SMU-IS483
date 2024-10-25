@@ -429,7 +429,6 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     -1.0 IF price information is not available
     '''
 
-    # TO IMPLEMENT LATER: FIGURE OUT HOW TO CALCULATE PRICE PER HOUR
     today = datetime.today().weekday()
     current_time = datetime.now().time()
     
@@ -500,11 +499,6 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     print(f"Max Daily Fee: {max_daily_fee}")
     print(f"Total price: {total_price}")
     return total_price
-
-    price_info = find_rate_based_on_time(carpark=carpark, vehicle_type=vehicle_type, current_time=current_time, today=today)
-
-    # Placeholder: Returns random float value between 0 and 5
-    return round(random.uniform(0, 5), 2)
 
 def is_word_present(sentence, word):
     """ Function that returns true if the word is found """
