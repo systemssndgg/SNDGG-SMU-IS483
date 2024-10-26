@@ -253,6 +253,115 @@ def aggregate_message(closest_three_carparks, selected_preference, live_location
     return carparks_message
 
 
+def aggregate_message_new(carparks_list: list, selected_preference: list):
+    '''
+    INPUT PARAMETERS:
+
+    [1] carparks_list: List of carpark entities in this format:
+    {
+        "id":"urn:ngsi-ld:Carpark:IMMBuilding53",
+        "type":"Carpark",
+        "CarparkName":{
+            "type":"Property",
+            "value":"IMM Building"
+        },
+        "location":{
+            "type":"GeoProperty",
+            "value":{
+                "type":"Point",
+                "coordinates":[
+                    103.746815,
+                    1.334847
+                ]
+            }
+        },
+        "ParkingCapacity":{
+            "type":"Property",
+            "value":"-"
+        },
+        "Sheltered":{
+            "type":"Property",
+            "value":false
+        },
+        "ParkingAvailability":{
+            "type":"Property",
+            "value":1090
+        },
+        "Pricing":{
+            ...
+        },
+        "@context":[
+            "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+        ],
+        "walking_time":38.0,    <-- Added key
+        "travel_time":47.0,     <-- Added key
+        "drive_time":9.0        <-- Added key
+    }
+
+    [2] selected_preference: User's selected preference in ordered list (1st item most important) (e.g., ['cheapest', 'fastest', 'shortest_walking_distance', 'sheltered', 'available_lots'])
+    '''
+
+    # Check if there are no carparks
+    if (len(carparks_list) == 0):
+        return "😭 Oh no, it seems there are no carparks currently available near your destination..."
+
+
+    # INITIALIZE VARIABLES ========================================
+
+    # Fill selected_preference with all needed values
+    for pref in ['cheapest', 'fastest', 'shortest_walking_distance', 'sheltered', 'available_lots']:
+        if pref not in selected_preference:
+            selected_preference.append(pref)
+
+    # Initialize preference message map with empty strings
+    pref_msg_map = {}
+
+    # Go through each carpark and fill in the preference message map
+    for cp in carparks_list:
+        cp_id = cp['id']
+
+        # Initialize preference message map for this carpark
+        pref_msg_map[cp_id] = {
+            'cheapest': "",
+            'fastest': "",
+            'shortest_walking_distance': "",
+            'sheltered': "",
+            'available_lots': ""
+        }
+
+        # (1) Fill price info (cheapest)
+        pref_msg_map[cp_id]['cheapest'] = get_price_str(cp)
+
+        # (2) Fill travel time info (fastest)
+        pref_msg_map[cp_id]['fastest'] = f"🏎️ *Drive:* {get_time_string(cp['drive_time'])}\n"
+
+        # (3) Fill walking time info (shortest_walking_distance)
+        pref_msg_map[cp_id]['shortest_walking_distance'] = f"🚶 *Walk to Destination:* {get_time_string(cp['walking_time'])}\n"
+
+        # (4) Fill sheltered info (sheltered)
+        pref_msg_map[cp_id]['sheltered'] = f"☂️ *Sheltered:* {'Yes' if cp['Sheltered']['value'] else 'No'}\n"
+
+        # (5) Fill available lots info (available_lots)
+        pref_msg_map[cp_id]['available_lots'] = f"🅿️ *Available Lots:* {cp['ParkingAvailability']['value']}\n"
+
+    
+    res_msg = f"🚗 *The {len(carparks_list)} possible carparks near your destination are:*\n\n"
+
+    # Go through each carpark and aggregate the message
+    for idx, cp in enumerate(carparks_list):
+        cp_id = cp['id']
+        cp_name = cp['CarparkName']['value']
+
+        res_msg += f"*{idx+1}. {cp_name}*\n"
+
+        for pref in selected_preference:
+            res_msg += pref_msg_map[cp_id][pref]
+
+        res_msg += "\n"
+    
+    return res_msg
+
+
 def find_next_best_carpark(carparks, current_carpark):
     """Find the next best carpark with more than 10 available lots."""
     best_carpark = None
@@ -273,7 +382,7 @@ def find_next_best_carpark(carparks, current_carpark):
     return best_carpark
 
 
-def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_preferences: dict, num_cp_to_return: int, min_avail_lots: int=10, num_hrs: int=2, remove_unsheltered: bool=False, strict_pref: bool=False):
+def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_preferences: dict, num_cp_to_return: int, min_avail_lots: int=10, num_hrs: int=2, remove_unsheltered: bool=False, strict_pref: bool=False, destination: Union[list, tuple]=None):
     '''
         Function to get the top N carparks based on user preferences using Z-Score Normalization and Weighted Scoring.
         
@@ -323,6 +432,10 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
         [8] strict_pref: Boolean to enforce strict preference (default is False)
             - If True, only carparks that meet all user preferences (ie. min_avail_lots & remove_unsheltered) will be considered
             - If False, carparks that do not meet all user preferences will be considered but with lower scores
+        
+        [9] destination: Tuple of latitude and longitude of the user's destination in this format: (1.332549, 103.739453)
+            - If destination is provided, the function will calculate the walking time from the carpark to the destination
+            - If destination is not provided, the function will default walking time to 0.0
 
         OUTPUT PARAMETERS SPECIFICATIONS ===============================================================
         Returns: List of top N carpark dictionaries in the same format as the input carparks. (First item in the list is the best carpark)
@@ -359,7 +472,7 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
         sorted_rotten_carparks = []
 
         if len(rotten_carparks) > 0  and (not strict_pref):
-            sorted_rotten_carparks = get_top_carparks(live_location, rotten_carparks, user_preferences, num_cp_to_return - len(carparks), min_avail_lots=0, num_hrs=num_hrs, remove_unsheltered=False, strict_pref=False)
+            sorted_rotten_carparks = get_top_carparks(live_location, rotten_carparks, user_preferences, num_cp_to_return - len(carparks), min_avail_lots=0, num_hrs=num_hrs, remove_unsheltered=False, strict_pref=False, destination=destination)
 
     # If there are no carparks meeting minimum criteria, return the rotten carparks
     if len(carparks) == 0:
@@ -374,7 +487,12 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     for cp in carparks:
         # Extract the values from the carpark dictionary
         price = find_price_per_hr(cp, num_hrs, 'Car') # Note: A -1 value indicates price information is not available
-        walk_time = get_route_duration(live_location[0], live_location[1], cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], travel_mode="walking")
+
+        if (destination):
+            walk_time = get_route_duration(cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], destination[0], destination[1], travel_mode="walking")
+        else:
+            walk_time = 0.0
+        
         drive_time = get_route_duration(live_location[0], live_location[1], cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], travel_mode="driving")
         travel_time = walk_time + drive_time
         available_lots = int(cp['ParkingAvailability']['value'])
@@ -399,7 +517,12 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     # Calculate the mean and standard deviation of each feature
     mean = np.mean(carparks_np, axis=0)
     std = np.std(carparks_np, axis=0)
-    missing_price_penalty = 0.05    # Penalty for missing price information: If price is missing, price = average price * (1 + penalty)
+
+    # Handle division by zero (i.e., std == 0)
+    std[std == 0] = 1  # To avoid division by zero, set any 0 std to 1 (no scaling will occur)
+
+    # Penalty for missing price information: If price is missing, price = average price * (1 + penalty)
+    missing_price_penalty = 0.05
 
     # Replace missing prices (indicated by -1) with the mean price + penalty
     for i in range(len(carparks_np)):
@@ -447,9 +570,9 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
 
     for i in sorted_indices[:num_cp_to_return]:
         carpark_dict = carparks[i].to_dict()  # Convert to dictionary
-        carpark_dict['walking_time'] = carparks_np[i][1]  # Add walking time
-        carpark_dict['travel_time'] = carparks_np[i][2]   # Add travel time
-        carpark_dict['drive_time'] = carparks_np[i][2] - carparks_np[i][1]  # Add drive time
+        carpark_dict['walking_time'] = float(carparks_np[i][1])  # Add walking time
+        carpark_dict['travel_time'] = float(carparks_np[i][2])   # Add travel time
+        carpark_dict['drive_time'] = float(carparks_np[i][2] - carparks_np[i][1])  # Add drive time
         top_N_carparks.append(carpark_dict)
     
     # Combine the top N carparks with the rotten carparks
@@ -592,6 +715,59 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
         return -1.0
 
 
+def get_price_str(carpark, vehicle_type='Car'):
+    '''
+    Returns the pricing info of carpark as a string
+    '''
+
+    today = datetime.today().weekday()
+    current_time = datetime.now().time()
+
+    if not is_ura_carpark(carpark):
+        # Handle Commercial carpark
+        return "💵 Commercial carpark price [Placeholder]\n"
+        
+    else:
+        # Handle URA carpark
+        # (1) Format the current time to the same format found in the entity - e.g. 1500
+        current_time = current_time.strftime("%H%M")
+
+        # (2) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
+        if 0 <= today <= 4:
+            day_type = "WeekdayRate"
+        elif today == 5:
+            day_type = "SaturdayRate"
+        else:
+            day_type = "SundayPHRate"
+
+        # Set mapping
+        day_map = {
+            "WeekdayRate": "weekday",
+            "SaturdayRate": "satday",
+            "SundayPHRate": "sunPH"
+        }
+
+        # (3) Find the correct rate data based on time and day    
+        all_timeslots = carpark['Pricing']['value'][vehicle_type]['TimeSlots']
+
+        # Loop through the time slots and find the correct time range
+        for e_timeslot in all_timeslots:
+            # Check if current_time is between start and end time
+            start_time = e_timeslot[day_type]['startTime']  # e.g. 0700
+            end_time = e_timeslot[day_type]['endTime']      # e.g. 1700
+
+            if int(start_time) <= int(current_time) <= int(end_time):
+                # Found the correct time slot
+                rate_str = e_timeslot[day_type][day_map[day_type] + 'Rate']                 # e.g. $1.20
+                time_interval_mins_str = e_timeslot[day_type][day_map[day_type] + 'Min']    # e.g. 30 Min
+
+                res = f"💵 *{day_type}:* {rate_str}/{time_interval_mins_str}\n🕙 *Rate Time:* {start_time} - {end_time}\n"
+                return res
+        
+        # If no rate is found, return -1.0
+        return "💵 No pricing info available for current time\n"
+        
+
 def is_word_present(sentence, word):
     """ Function that returns true if the word is found """
     sentence = sentence.upper()
@@ -628,3 +804,19 @@ def is_ura_carpark(carpark) -> bool:
     # If Pricing.value has a rates key, it is a Commercial carpark
     if 'rates' in carpark['Pricing']['value']:
         return False
+
+def get_time_string(duration_mins: float):
+    '''
+    Function to convert duration in minutes to a human-readable string
+    '''
+
+    if duration_mins < 60:
+        return f"{int(duration_mins)} mins"
+    else:
+        hours = int(duration_mins // 60)
+        mins = int(duration_mins % 60)
+
+        if mins == 0:
+            return f"{hours} hr"
+        else:
+            return f"{hours} hr {mins} mins"

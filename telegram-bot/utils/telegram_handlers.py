@@ -11,7 +11,7 @@ from telegram.error import BadRequest
 
 # import functions
 from utils.monitor import monitor_all
-from utils.helper_functions import find_closest_three_carparks, aggregate_message, get_top_carparks, remove_selected_button
+from utils.helper_functions import aggregate_message_new, get_top_carparks, remove_selected_button
 from utils.context_broker import geoquery_ngsi_point
 from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
 from utils.firestore import check_user_exists, get_user_preference, store_user_preference, edit_user_preference
@@ -263,6 +263,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         
         user_id = update.effective_user.id
         if check_user_exists(user_id):
+            # Runs if user exists in Firestore
             confirm_destination_message_id = context.user_data.get('confirm_destination_message')
             if confirm_destination_message_id:
                 try:
@@ -274,6 +275,10 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     logger.error(f"Failed to delete confirm destination message: {e}")
 
             stored_preference = get_user_preference(user_id)
+
+            # Set context.user_data['preference_list'] with the stored preference
+            context.user_data['preference_list'] = stored_preference
+
             preference_text = "\n".join(
                         [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else 
                         f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(stored_preference) - 1 else 
@@ -282,7 +287,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     )
             await context.bot.send_message(
                         chat_id=query.message.chat_id,
-                        text=f"You've selected your preferences in the following order:\n\n{preference_text}"
+                        text=f"Your stored preferences are:\n\n{preference_text}"
                     )
             return await confirm_destination(update, context)
         
@@ -719,9 +724,9 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             # [END] ========================================================================================================
 
             global closest_three_carparks
-            closest_three_carparks = get_top_carparks(live_location, nearest_carparks, user_pref, 3, min_avail_lots=10)
+            closest_three_carparks = get_top_carparks(live_location, nearest_carparks, user_pref, num_cp_to_return=3, min_avail_lots=10, destination=(destination_lat, destination_long))
             
-            carparks_message = aggregate_message(closest_three_carparks, user_selected_preference, live_location[0], live_location[1])
+            carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference)
 
             carpark_options_message_id = await context.bot.send_message(
                 chat_id=update.effective_chat.id,
