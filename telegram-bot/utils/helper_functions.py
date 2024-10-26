@@ -667,7 +667,11 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
             if total_price > max_daily_fee:
                 total_price = max_daily_fee
 
-        rate = total_price / num_hrs
+        if total_price == 0.0:
+            return -1.0
+        else:
+            rate = total_price / num_hrs
+        
         return rate
 
     # If the carpark is a URA carpark
@@ -725,7 +729,23 @@ def get_price_str(carpark, vehicle_type='Car'):
 
     if not is_ura_carpark(carpark):
         # Handle Commercial carpark
-        return "💵 Commercial carpark price [Placeholder]\n"
+
+        # (1) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
+        today = datetime.today().weekday()
+        if 0 <= today <= 4:
+            rateStr = carpark['Pricing']['value']['WeekdayStr']
+        elif today == 5:
+            rateStr = carpark['Pricing']['value']['SaturdayStr']
+            if rateStr == "Same as wkdays":
+                rateStr = carpark['Pricing']['value']['WeekdayStr']
+        else:
+            rateStr = carpark['Pricing']['value']['SundayPHStr']
+            if rateStr == "Same as wkdays":
+                rateStr = carpark['Pricing']['value']['WeekdayStr']
+            elif rateStr == "Same as Saturday":
+                rateStr = carpark['Pricing']['value']['SaturdayStr']
+        
+        return rateStr
         
     else:
         # Handle URA carpark

@@ -1,4 +1,4 @@
-import constants as constants 
+import mylibs.constants as constants 
 from landtransportsg import Traffic
 import requests
 from openai import OpenAI
@@ -141,7 +141,6 @@ price_dictionary = {
                 }
 
 # (1) Fetch carpark availability from the data.gov.sg API
-
 def fetch_carpark_availabilities():
     '''
     Inputs: None
@@ -175,39 +174,8 @@ def fetch_carpark_availabilities():
             entity_dict[entity['CarParkID']] = entity
         
         return entity_dict
-    
-# (2) Check if entities already exist in the broker
 
-def create_entities_in_broker(entities):
-    with Client(
-        hostname=broker_url,
-        port=broker_port,
-        tenant=broker_tenant,
-        port_temporal=temporal_port,
-    ) as client:
-        count = 0
-        for entity in entities:
-            ret = client.upsert(entity)
-            if ret:
-                count += 1
-    print("Uploaded ", count)
-    return ret
-
-def check_entity_exists(entity):
-    with Client(
-        hostname=broker_url,
-        port=broker_port,
-        tenant=broker_tenant,
-        port_temporal=temporal_port,
-    ) as client:
-        ret = client.query(entity)
-        # iterate through the list of entities returned
-        for i in range(len(ret)):
-            # match the entity to the name of the carpark
-            count = 1
-    return ret
-
-# (3) Fetch the carpark rates from data.gov if needed
+# (2) Fetch the carpark rates from data.gov if needed
 def fetch_carpark_rates():
     '''
     Inputs -> None
@@ -231,19 +199,68 @@ def fetch_carpark_rates():
         # iterate through the list of dictionaries
         return response['result']['records']
 
-# (4) Use LLM to format the data into a dict template
-def read_excel(file_path):
-    '''
-    Inputs: file_path : str : The path to the excel file to read
-    \nOutputs: data : list : A list of lists, where each list corresponds to a row, containing the data from the excel file
+# (3) Format the carpark rates using GPT-3
+# =============================================================================
+# In order to avoid repeated calls to GPT, we can save the formatted data to an Excel file and read from it.
+# For now, ensure that you have CommercialCarparkRates.xlsx, and FormattedCarparkRates.xlsx in the same directory as this script.
+# CarparkRates.csv is just the raw csv file from data.gov.
+# CommercialCarparkRates.xlsx is just a filtered version of CarparkRates.csv with only the 40 commercial carparks found in the DataMall API.
+# FormattedCarparkRates.xlsx is the formatted version of CommercialCarparkRates.xlsx using GPT.
+# =============================================================================
 
-    \nDescription: Reads the excel file at the given file path and returns the data in the form of a list of lists.
-    '''
-    workbook = openpyxl.load_workbook(file_path)
-    sheet = workbook.active
-    data = [row for row in sheet.iter_rows(values_only=True)]
-    return data
+# HELPER FUNCTIONS
+# =============================================================================
+# This function helps to generate the formatted excel file using GPT and CommercialCarparkRates.xlsx
+def generate_formatted_excel(file_path):
+    carpark_rates = read_excel("CommercialCarparkRates.xlsx")
+    response = format_carpark_rates(carpark_rates)
 
+    if os.path.exists(file_path):
+        workbook = openpyxl.load_workbook(file_path)
+        sheet = workbook.active
+    else:
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+
+    headers = ["Location", "Day", "Start Time", "End Time", "Rate Per Hour", "Flat Entry Start", "Flat Entry End", "Flat Entry Fee", "First Hour Rate", "Max Daily Fee"]
+    sheet.append(headers)
+
+    for location, carpark_data in response.items():
+        for day, rates in carpark_data['rates'].items():
+            time_based = rates.get('time_based', '-')
+            flat_entry_fee = rates.get('flat_entry_fee')
+            if isinstance(flat_entry_fee, dict):
+                flat_start = flat_entry_fee['start_time']
+                flat_end = flat_entry_fee['end_time']
+                flat_fee = flat_entry_fee['fee']
+            else:
+                flat_start = flat_end = flat_fee = '-'
+            first_hour_rate = rates.get('first_hour_rate', '-')
+            max_daily_fee = rates.get('max_daily_fee', '-')
+            
+            # If there is a time-based rate, write each period
+            if time_based and isinstance(time_based, list):
+                for tb in time_based:
+                    sheet.append([
+                        location, day, 
+                        tb.get('start_time', '-'), tb.get('end_time', '-'), tb.get('rate_per_hour', '-'),
+                        flat_start, flat_end, flat_fee,
+                        first_hour_rate if first_hour_rate is not None else '-',
+                        max_daily_fee if max_daily_fee is not None else '-'
+                    ])
+            else:
+                # If no time-based rate, write a single row with default values
+                sheet.append([
+                    location, day, '-', '-', '-', 
+                    flat_start, flat_end, flat_fee,
+                    first_hour_rate if first_hour_rate is not None else '-',
+                    max_daily_fee if max_daily_fee is not None else '-'
+                ])
+
+    workbook.save(file_path)
+    workbook.close()
+
+# This is a helper function to make a call to GPT-4o-mini
 def ask_gpt_json(system_prompt, user_prompt):
         '''
             Input:
@@ -287,6 +304,7 @@ def ask_gpt_json(system_prompt, user_prompt):
         response = json.loads(response)
         return response
 
+# This function formats the carpark rates using GPT-3
 def format_carpark_rates(carpark_rates):
     schema = '''
 {
@@ -402,7 +420,23 @@ def format_carpark_rates(carpark_rates):
 
     return response
 
-# Write the entity's attributes into a row in a new excel sheet 
+# This creates entities in the broker
+def create_entities_in_broker(entities):
+    with Client(
+        hostname=broker_url,
+        port=broker_port,
+        tenant=broker_tenant,
+        port_temporal=temporal_port,
+    ) as client:
+        count = 0
+        for entity in entities:
+            ret = client.upsert(entity)
+            if ret:
+                count += 1
+    print("Uploaded ", count)
+    return ret
+
+# This function writes the entity to an excel file
 def write_entity_to_excel(entity_dict, file_path):
     workbook = openpyxl.Workbook()
     sheet = workbook.active
@@ -418,6 +452,20 @@ def write_entity_to_excel(entity_dict, file_path):
 
     workbook.save(file_path)
 
+# This is a helper function to read the excel files
+def read_excel(file_path):
+    '''
+    Inputs: file_path : str : The path to the excel file to read
+    \nOutputs: data : list : A list of lists, where each list corresponds to a row, containing the data from the excel file
+
+    \nDescription: Reads the excel file at the given file path and returns the data in the form of a list of lists.
+    '''
+    workbook = openpyxl.load_workbook(file_path)
+    sheet = workbook.active
+    data = [row for row in sheet.iter_rows(values_only=True)]
+    return data
+
+# This function ties in everything to create the entities and push it to the context broker.
 def main():
     # Change this variable depending on if you're using gpt to format the data or calling it straight from the excel file.
     use_gpt = False
@@ -448,7 +496,7 @@ def main():
     else:
         try:
             # Open the Excel file
-            wb = openpyxl.load_workbook('formatted_carpark_rates.xlsx')
+            wb = openpyxl.load_workbook('FormattedCarparkRates.xlsx')
             ws = wb.active
 
             # Initialize the carpark rates dictionary
@@ -506,15 +554,6 @@ def main():
         except:
             print("Error reading from Excel file, check if the name of the file is correct, or if it's in the right directory.")
 
-    # print("Formatted carpark rates:")  
-    # print("=====================================")  
-    # print(formatted_carpark_rates)
-    # print("=====================================")
-
-    # print("Carpark availabilities:")
-    # print("=====================================")
-    # print(carpark_availabilities)
-    # print("=====================================")
     
     for key, value in carpark_availabilities.items():
         # initialize entity
@@ -544,12 +583,58 @@ def main():
         # Fetch the carpark rates
         for carpark_name, carpark_data in formatted_carpark_rates.items():
             if carpark_name.strip().lower() == value['Development'].strip().lower():
-                # print(f"CA_carpark_name: {value['Development']}")
-                # print(f"CR_carpark_name: {carpark_name}")
-                pricing = carpark_data
+                # Initialize the pricing dictionary
+                pricing = {}
+                # Add the formatted rates to the pricing dictionary
+                pricing['rates'] = carpark_data['rates']
+
+                # Add the raw rates to the pricing dictionary from data.mall.gov.sg
+                # Load the Excel file
+                file_path = 'CommercialCarparkRates.xlsx'
+                workbook = openpyxl.load_workbook(filename=file_path)
+                sheet = workbook.active
+
+                # Find the headers
+                headers = [cell.value for cell in sheet[1]]
+                # Find the column indices based on the headers
+                carpark_col = headers.index('carpark')
+                weekdays_rate_1_col = headers.index('weekdays_rate_1')
+                weekdays_rate_2_col = headers.index('weekdays_rate_2')
+                saturday_rate_col = headers.index('saturday_rate')
+                sunday_rate_col = headers.index('sunday_publicholiday_rate')
+
+                # Initialize variables to hold the rates for the specified carpark
+                weekday_rate_combined = None
+                saturday_rate = None
+                sunday_rate = None
+
+                # Iterate over the rows in the sheet, starting from the second row
+                for row in sheet.iter_rows(min_row=2, values_only=True):
+                    if row[carpark_col] == carpark_name:
+                        # Combine weekday rates
+                        weekday_rate_1 = row[weekdays_rate_1_col] or ""
+                        weekday_rate_2 = row[weekdays_rate_2_col] or ""
+                        weekday_rate_combined = f"{weekday_rate_1}; {weekday_rate_2}".strip("; ")
+
+                        # Extract Saturday and Sunday rates
+                        saturday_rate = row[saturday_rate_col]
+                        sunday_rate = row[sunday_rate_col]
+
+                        # Exit the loop once the carpark is found
+                        break 
+
+                # Display the results
+                if weekday_rate_combined or saturday_rate or sunday_rate:
+                    pricing['WeekdayStr'] = weekday_rate_combined
+                    pricing['SaturdayStr'] = saturday_rate
+                    pricing['SundayPHStr'] = sunday_rate
+                else:
+                    print(f"No data found for carpark: {carpark_name}")
+                    pricing['WeekdayStr'] = weekday_rate_combined
+                    pricing['SaturdayStr'] = saturday_rate
+                    pricing['SundayPHStr'] = sunday_rate
+                # Add the full pricing dictionary to the entity.
                 entity.prop('Pricing', pricing)
-                if carpark_name == "Bugis+":
-                    print(carpark_data)
             
         entity_dict[e_id] = entity
 
@@ -560,58 +645,6 @@ def main():
 
     return entity_dict
 
-# TEST CODE FOR SAVING LLM OUTPUT TO EXCEL
-# =============================================================================
-# def generate_formatted_excel(file_path):
-    # carpark_rates = read_excel("CommercialCarparkRates.xlsx")
-    # response = format_carpark_rates(carpark_rates)
-    # print(type(response))
-
-    # if os.path.exists(file_path):
-    #     workbook = openpyxl.load_workbook(file_path)
-    #     sheet = workbook.active
-    # else:
-    #     workbook = openpyxl.Workbook()
-    #     sheet = workbook.active
-
-    # headers = ["Location", "Day", "Start Time", "End Time", "Rate Per Hour", "Flat Entry Start", "Flat Entry End", "Flat Entry Fee", "First Hour Rate", "Max Daily Fee"]
-    # sheet.append(headers)
-
-    # for location, carpark_data in response.items():
-    #     for day, rates in carpark_data['rates'].items():
-    #         time_based = rates.get('time_based', '-')
-    #         flat_entry_fee = rates.get('flat_entry_fee')
-    #         if isinstance(flat_entry_fee, dict):
-    #             flat_start = flat_entry_fee['start_time']
-    #             flat_end = flat_entry_fee['end_time']
-    #             flat_fee = flat_entry_fee['fee']
-    #         else:
-    #             flat_start = flat_end = flat_fee = '-'
-    #         first_hour_rate = rates.get('first_hour_rate', '-')
-    #         max_daily_fee = rates.get('max_daily_fee', '-')
-            
-    #         # If there is a time-based rate, write each period
-    #         if time_based and isinstance(time_based, list):
-    #             for tb in time_based:
-    #                 sheet.append([
-    #                     location, day, 
-    #                     tb.get('start_time', '-'), tb.get('end_time', '-'), tb.get('rate_per_hour', '-'),
-    #                     flat_start, flat_end, flat_fee,
-    #                     first_hour_rate if first_hour_rate is not None else '-',
-    #                     max_daily_fee if max_daily_fee is not None else '-'
-    #                 ])
-    #         else:
-    #             # If no time-based rate, write a single row with default values
-    #             sheet.append([
-    #                 location, day, '-', '-', '-', 
-    #                 flat_start, flat_end, flat_fee,
-    #                 first_hour_rate if first_hour_rate is not None else '-',
-    #                 max_daily_fee if max_daily_fee is not None else '-'
-    #             ])
-
-    # workbook.save(file_path)
-    # workbook.close()
-# =============================================================================
 
 # TEST MAIN()
 # =============================================================================
