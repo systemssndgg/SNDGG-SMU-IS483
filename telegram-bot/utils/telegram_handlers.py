@@ -534,9 +534,6 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             
             carparks_message = aggregate_message(closest_three_carparks, user_selected_preference, live_location[0], live_location[1])
 
-            # carparks_message = aggregate_message(closest_three_carparks, user_selected_preference)
-            # escaped_message = escape_special_chars(carparks_message)
-
             carpark_options_message_id = await context.bot.send_message(
                 chat_id=update.effective_chat.id,
                 text=carparks_message,

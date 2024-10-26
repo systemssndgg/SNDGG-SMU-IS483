@@ -373,7 +373,7 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
 
     for cp in carparks:
         # Extract the values from the carpark dictionary
-        price = find_price_per_hr(cp, num_hrs, 'Car')   # Need to change this later to fetch
+        price = find_price_per_hr(cp, num_hrs, 'Car') # Note: A -1 value indicates price information is not available
         walk_time = get_route_duration(live_location[0], live_location[1], cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], travel_mode="walking")
         drive_time = get_route_duration(live_location[0], live_location[1], cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], travel_mode="driving")
         travel_time = walk_time + drive_time
@@ -399,6 +399,12 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     # Calculate the mean and standard deviation of each feature
     mean = np.mean(carparks_np, axis=0)
     std = np.std(carparks_np, axis=0)
+    missing_price_penalty = 0.05    # Penalty for missing price information: If price is missing, price = average price * (1 + penalty)
+
+    # Replace missing prices (indicated by -1) with the mean price + penalty
+    for i in range(len(carparks_np)):
+        if carparks_np[i][0] == -1:
+            carparks_np[i][0] = mean[0] * (1 + missing_price_penalty)
 
     # Apply Z-Score normalization: (x - mean) / std
     normalized_carparks = (carparks_np - mean) / std
@@ -426,16 +432,17 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     '''
     [DEBUGGING] PRINT EACH CARPARK WITH SCORES AND VALUES (From carparks_np) ============================
     for i in sorted_indices:
-        print(f"\n\nCarpark: {carparks[i]['CarparkName']['value']}")
+        print(f"\n\nCarpark: {carparks[i]['CarparkName']['value']} ======================")
         print(f"Score: {total_scores[i]}")
-        print(f"\nPrice: {carparks_np[i][0]} | Normalised: {normalized_carparks[i][0]}")
-        print(f"Walk Time: {carparks_np[i][1]} | Normalised: {normalized_carparks[i][1]}")
+        print(f"\nOriginal Price: {find_price_per_hr(carparks[i], num_hrs, 'Car')}")
+        print(f"Scored Price: {carparks_np[i][0]} | Normalised: {normalized_carparks[i][0]}")
+        print(f"\nWalk Time: {carparks_np[i][1]} | Normalised: {normalized_carparks[i][1]}")
         print(f"Travel Time: {carparks_np[i][2]} | Normalised: {normalized_carparks[i][2]}")
         print(f"Available Lots: {carparks_np[i][3]} | Normalised: {normalized_carparks[i][3]}")
         print(f"Sheltered: {carparks_np[i][4]} | Normalised: {normalized_carparks[i][4]}")
     '''
 
-    # Create the list of top N carparks and include walking_time and travel_time
+    # Create the list of top N carparks and include walking_time, travel_time, and drive_time
     top_N_carparks = []
 
     for i in sorted_indices[:num_cp_to_return]:
@@ -469,73 +476,121 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     today = datetime.today().weekday()
     current_time = datetime.now().time()
     
-    # (1) Format the current time to the same format found in the entity - e.g. 15:00
-    current_time = current_time.strftime("%H:%M")
+    # If the carpark is a Commercial carpark
+    if not is_ura_carpark(carpark):
+        # (1) Format the current time to the same format found in the entity - e.g. 15:00
+        current_time = current_time.strftime("%H:%M")
 
-    # (2) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
-    if 0 <= today <= 4:
-        day_type = "weekday"
-    elif today == 5:
-        day_type = "saturday"
-    else:
-        day_type = "sunday_public_holiday"
-    
-    # (3) Find the entry_fee based on the current time and day
-    entry_fee = carpark['Pricing']['value']['rates'][day_type]['flat_entry_fee']
-    if entry_fee != '-' or entry_fee != None:
-        entry_fee_start_time = entry_fee['start_time']
-        entry_fee_end_time = entry_fee['end_time']
-        if entry_fee_start_time <= current_time <= entry_fee_end_time:
-            entry_fee_price = entry_fee['price']
+        # (2) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
+        if 0 <= today <= 4:
+            day_type = "weekday"
+        elif today == 5:
+            day_type = "saturday"
         else:
-            entry_fee_price = None
-    
-    # (4) Find out if there's a first hour rate present
-    first_hour_rate = carpark['Pricing']['value']['rates'][day_type]['first_hour_rate']
-    if first_hour_rate != '-' or first_hour_rate != None:
-        first_hour_rate_price = first_hour_rate
-    else:
-        first_hour_rate_price = None
-    
-    # (5) Find out the usual rate per hour
-    time_based = carpark['Pricing']['value']['rates'][day_type]['time_based']
-    if time_based != '-' or time_based != None:
-        for time_slot in time_based:
-            if time_slot['start_time'] <= current_time <= time_slot['end_time']:
-                rate_per_hour = time_slot['rate_per_hour']
-                break
-            else:
-                rate_per_hour = None
+            day_type = "sunday_public_holiday"
 
-    # (6) Find out if there's a max_daily_fee
-    max_daily_fee = carpark['Pricing']['value']['rates'][day_type]['max_daily_fee']
+        # (3) Find the entry_fee based on the current time and day (entry_fee_price)
+        entry_fee_price = None
+        entry_fee = carpark['Pricing']['value']['rates'][day_type]['flat_entry_fee']
 
-    # (7) Calculate the total price based on the number of hours
-    if entry_fee_price != None:
-        total_price = entry_fee_price
-    else:
-        total_price = 0.0
+        if entry_fee != '-' and entry_fee != None:
+            entry_fee_start_time = entry_fee['start_time']
+            entry_fee_end_time = entry_fee['end_time']
 
-    if first_hour_rate_price != None:
-        total_price += first_hour_rate_price
-    else:
-        total_price += 0.0
-
-    if rate_per_hour != None:
-        total_price += rate_per_hour * (num_hrs-1)
-    else:
-        total_price += 0.0
-    
-    if max_daily_fee != None:
-        if total_price > max_daily_fee:
-            total_price = max_daily_fee
+            if entry_fee_start_time <= current_time <= entry_fee_end_time:
+                entry_fee_price = entry_fee['price']
         
-    print(f"Entry Fee: {entry_fee_price}")
-    print(f"First Hour Rate: {first_hour_rate_price}")
-    print(f"Rate Per Hour: {rate_per_hour}")
-    print(f"Max Daily Fee: {max_daily_fee}")
-    print(f"Total price: {total_price}")
-    return total_price
+        # (4) Find out if there's a first hour rate present (first_hour_rate)
+        first_hour_rate_price = None
+        first_hour_rate = carpark['Pricing']['value']['rates'][day_type]['first_hour_rate']
+
+        if first_hour_rate != '-' and first_hour_rate != None:
+            first_hour_rate_price = first_hour_rate
+        
+        # (5) Find out the usual rate per hour (rate_per_hour)
+        rate_per_hour = None
+        time_based = carpark['Pricing']['value']['rates'][day_type]['time_based']
+
+        if time_based != '-' and time_based != None:
+            for time_slot in time_based:
+                if time_slot['start_time'] <= current_time <= time_slot['end_time']:
+                    rate_per_hour = time_slot['rate_per_hour']
+                    break
+
+        # (6) Find out if there's a max_daily_fee (max_daily_fee)
+        max_daily_fee = None
+        max_daily_fee_temp = carpark['Pricing']['value']['rates'][day_type]['max_daily_fee']
+
+        if max_daily_fee_temp != '-' and max_daily_fee_temp != None:
+            max_daily_fee = max_daily_fee_temp
+
+        # (7) Calculate the total price based on the number of hours
+        if entry_fee_price != None:
+            total_price = entry_fee_price
+        else:
+            total_price = 0.0
+
+        if first_hour_rate_price != None:
+            total_price += first_hour_rate_price
+        else:
+            total_price += 0.0
+
+        if rate_per_hour != None:
+            total_price += rate_per_hour * (num_hrs-1)
+        else:
+            total_price += 0.0
+        
+        if max_daily_fee != None:
+            if total_price > max_daily_fee:
+                total_price = max_daily_fee
+
+        rate = total_price / num_hrs
+        return rate
+
+    # If the carpark is a URA carpark
+    else:
+        # (1) Format the current time to the same format found in the entity - e.g. 1500
+        current_time = current_time.strftime("%H%M")
+
+        # (2) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
+        if 0 <= today <= 4:
+            day_type = "WeekdayRate"
+        elif today == 5:
+            day_type = "SaturdayRate"
+        else:
+            day_type = "SundayPHRate"
+
+        # Set mapping
+        day_map = {
+            "WeekdayRate": "weekday",
+            "SaturdayRate": "satday",
+            "SundayPHRate": "sunPH"
+        }
+
+        # (3) Find the correct rate data based on time and day    
+        all_timeslots = carpark['Pricing']['value'][vehicle_type]['TimeSlots']
+
+        # Loop through the time slots and find the correct time range
+        for e_timeslot in all_timeslots:
+            # Check if current_time is between start and end time
+            start_time = e_timeslot[day_type]['startTime']  # e.g. 0700
+            end_time = e_timeslot[day_type]['endTime']      # e.g. 1700
+
+            if int(start_time) <= int(current_time) <= int(end_time):
+                # Found the correct time slot
+                rate = float(e_timeslot[day_type][day_map[day_type] + 'Rate'][1:])                      # e.g. 1.20
+                time_interval_mins = int(e_timeslot[day_type][day_map[day_type] + 'Min'].split(" ")[0]) # e.g. 30
+                
+                # Calculate the total price for 1hr. Note: If time_interval_mins is more than 60, assume entire rate must be charged for the hr
+                if time_interval_mins > 60:
+                    return rate
+                else:
+                    num_intervals_per_hr = 60 / time_interval_mins
+                    return rate * num_intervals_per_hr
+        
+        # If no rate is found, return -1.0
+        return -1.0
+
 
 def is_word_present(sentence, word):
     """ Function that returns true if the word is found """
@@ -560,3 +615,16 @@ def remove_selected_button(query):
         if new_row:  # Only add non-empty rows
             new_keyboard.append(new_row)
     return new_keyboard
+
+def is_ura_carpark(carpark) -> bool:
+    '''
+    Check if the carpark is a URA carpark or Commercial carpark
+    '''
+    
+    # If Pricing.value has a Car key, it is a URA carpark
+    if 'Car' in carpark['Pricing']['value']:
+        return True
+
+    # If Pricing.value has a rates key, it is a Commercial carpark
+    if 'rates' in carpark['Pricing']['value']:
+        return False
