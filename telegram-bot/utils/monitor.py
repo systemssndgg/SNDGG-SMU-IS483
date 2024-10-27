@@ -151,32 +151,33 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
 
     keywords = ["ACCIDENT", "CLOSURE", "CONSTRUCTION", "JAM"]
 
-    while True:
-        
+    sent_advisories = context.user_data.setdefault('sent_advisories', set())
+
+    while True:    
         live_location = context.user_data.get('live_location')
 
         for advisory in mock_traffic_advisories:  
+            advisory_id = advisory['id']
+            if advisory_id not in sent_advisories:
+                advisory_message = advisory['Message']['value']
+                advisory_coordinates = advisory['Location']['value']['coordinates']
+                advisory_lat = advisory_coordinates[1]
+                advisory_long = advisory_coordinates[0]
+                distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
 
-            advisory_message = advisory['Message']['value']
-
-            advisory_coordinates = advisory['Location']['value']['coordinates']
-            advisory_lat = advisory_coordinates[1]
-            advisory_long = advisory_coordinates[0]
-            distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
-            print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")        
-            
-            for word in keywords:
-                if is_word_present(advisory_message, word):
-                    if distance_to_advisory <= 2.0:
-                        advisory_message = advisory['Message']['value']
-                        await context.bot.send_message(
-                            chat_id=chat_id,
-                            text=f"🚧 Traffic advisory: {advisory_message}",
-                            parse_mode='Markdown'
-                        )
+                print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")        
+                
+                for word in keywords:
+                    if is_word_present(advisory_message, word):
+                        if distance_to_advisory <= 2.0:
+                            advisory_message = advisory['Message']['value']
+                            await context.bot.send_message(
+                                chat_id=chat_id,
+                                text=f"🚧 Traffic advisory: {advisory_message}",
+                                parse_mode='Markdown'
+                            )
+                            sent_advisories.add(advisory_id)
                         break
-                else:
-                    continue
 
         await asyncio.sleep(2)
 
