@@ -306,6 +306,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                 sent_new = True
                 break
             else:
+                rain_value = area["forecast"]["value"]
                 await context.bot.send_message(
                     chat_id=update.effective_chat.id, 
                     text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 

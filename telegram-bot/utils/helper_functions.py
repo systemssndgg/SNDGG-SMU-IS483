@@ -59,7 +59,7 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, sele
     return final_three_carparks
 
 
-def find_closest_carpark(carparks_list, dest_lat, dest_long):
+def find_closest_carpark(carparks_list, dest_lat, dest_long, nearest_carparks):
     """Find closest carpark in the event that it rains and originally selected carpark is not sheltered"""
     in_list = False
     for carpark in carparks_list:
@@ -81,7 +81,7 @@ def find_closest_carpark(carparks_list, dest_lat, dest_long):
         distance_dict.sort(key=lambda x: distance_dict[x["CarparkName"]["value"]])
 
         # Add the sorted carparks to the final_three_carparks list
-        selected_carpark.extend(closest_three_carparks)
+        selected_carpark.extend(carparks_list)
         # print("selected_carpark:", selected_carpark[0])
         return selected_carpark[0]
     

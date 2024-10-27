@@ -12,9 +12,9 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 import pandas as pd
 
-client = OpenAI(
-    api_key = constants.OPENAI_KEY
-)
+# client = OpenAI(
+#     api_key = constants.OPENAI_KEY
+# )
 
 API_KEY = constants.LTA_API_KEY
 ctx = constants.ctx
