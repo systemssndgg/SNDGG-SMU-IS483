@@ -825,11 +825,12 @@ def is_ura_carpark(carpark) -> bool:
     Check if the carpark is a URA carpark or Commercial carpark
     '''
 
-    # Handle edge cases where Commercial carpark does not have Pricing key
-    if (type(carpark) == dict) and ("Pricing" not in carpark): # If carpark is dictionary
-        return False
+    # Conver to dictionary if NGSI-LD entity
+    if not isinstance(carpark, dict):
+        carpark = carpark.to_dict()
 
-    if (type(carpark) != dict) and not hasattr(carpark, "Pricing"): # If carpark is NGSI-LD entity
+    # Handle edge cases where Commercial carpark does not have Pricing key
+    if 'Pricing' not in carpark: # If carpark is dictionary
         return False
     
     # If Pricing.value has a Car key, it is a URA carpark
