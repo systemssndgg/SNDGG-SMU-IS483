@@ -818,6 +818,7 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     context.user_data['selected_carpark_long'] = selected_carpark['location']['value']['coordinates'][0]
     context.user_data['selected_carpark'] = selected_carpark
     context.user_data['selected_carpark_name'] = selected_carpark['CarparkName']['value'].title()
+    context.user_data['selected_carpark_availability'] = selected_carpark['ParkingAvailability']['value']
 
     selected_carpark_name = selected_carpark['CarparkName']['value'].title()
     await query.message.reply_text(
@@ -888,6 +889,12 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             await query.answer()
 
             if query.message:
+                if context.user_data.get('live_location_message_id'):
+                    await context.bot.delete_message(
+                        chat_id=update.effective_chat.id,
+                        message_id=context.user_data['live_location_message_id']
+                    )
+        
                 await query.edit_message_text(
                     "👋 *Goodbye!* I look forward to assisting you again.\n\nTo start a new session, please enter /start or press the menu button on the left.", parse_mode="Markdown", reply_markup=None)
 
