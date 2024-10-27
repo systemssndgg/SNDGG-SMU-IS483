@@ -596,10 +596,6 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     -1.0 IF price information is not available
     '''
 
-    # If no pricing information is available, return -1.0
-    if not hasattr(carpark, "Pricing"):
-        return -1.0
-
     today = datetime.today().weekday()
     current_time = datetime.now().time()
     
@@ -711,6 +707,10 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
                 # Found the correct time slot
                 rate = float(e_timeslot[day_type][day_map[day_type] + 'Rate'][1:])                      # e.g. 1.20
                 time_interval_mins = int(e_timeslot[day_type][day_map[day_type] + 'Min'].split(" ")[0]) # e.g. 30
+
+                # If time interval is 0, assume it is per entry
+                if time_interval_mins == 0:
+                    return rate / num_hrs
                 
                 # Calculate the total price for 1hr. Note: If time_interval_mins is more than 60, assume entire rate must be charged for the hr
                 if time_interval_mins > 60:
@@ -733,10 +733,6 @@ def get_price_str(carpark, vehicle_type='Car'):
 
     if not is_ura_carpark(carpark):
         # Handle Commercial carpark
-
-        # Break if Pricing key is not present
-        if "Pricing" not in carpark:
-            return "💵 No pricing info available\n"
 
         # (1) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
         today = datetime.today().weekday()
@@ -824,14 +820,6 @@ def is_ura_carpark(carpark) -> bool:
     '''
     Check if the carpark is a URA carpark or Commercial carpark
     '''
-
-    # Conver to dictionary if NGSI-LD entity
-    if not isinstance(carpark, dict):
-        carpark = carpark.to_dict()
-
-    # Handle edge cases where Commercial carpark does not have Pricing key
-    if 'Pricing' not in carpark: # If carpark is dictionary
-        return False
     
     # If Pricing.value has a Car key, it is a URA carpark
     if 'Car' in carpark['Pricing']['value']:
