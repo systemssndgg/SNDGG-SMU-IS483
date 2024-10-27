@@ -8,6 +8,10 @@ from typing import Union
 from utils.google_maps import get_route_duration
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from telegram import Update
+from telegram.ext import ContextTypes, ConversationHandler
+from telegram.error import BadRequest
+
 def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, selected_preference):
     closest_three_carparks = []
     distance_dict = {}
@@ -844,3 +848,27 @@ def get_time_string(duration_mins: float):
             return f"{hours} hr"
         else:
             return f"{hours} hr {mins} mins"
+
+async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """End the session and provide a restart button."""
+
+    if context.user_data.get('live_location_message_id'):
+        await context.bot.delete_message(
+            chat_id=update.effective_chat.id,
+            message_id=context.user_data['live_location_message_id']
+        )
+
+    if context.user_data.get("google_route_id"):
+        await context.bot.edit_message_reply_markup(
+            chat_id=update.effective_chat.id,
+            message_id=context.user_data["google_route_id"],
+            reply_markup=None
+        )
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id, 
+        text="👋 *Goodbye!* I look forward to assisting you again.\n\nTo start a new session, please enter /start or press the menu button on the left.", parse_mode="Markdown",
+        reply_markup=None,
+    )
+            
+    return ConversationHandler.END

@@ -10,9 +10,8 @@ import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
-from utils.helper_functions import find_next_best_carpark, find_closest_carpark, is_word_present
+from utils.helper_functions import find_next_best_carpark, find_closest_carpark, is_word_present, end
 from utils.context_broker import retrieve_ngsi_type
-
 
 async def monitor_carpark_availability(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
     """Monitor the user's proximity to the selected carpark and alert if availability is low."""
@@ -58,7 +57,7 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 
         # Trigger warning if within 2km and less than 10 parking spots
         carpark_name = context.user_data.get('selected_carpark_name')
-        available_lots = context.user_data.get('selected_carpark_available_lots')
+        available_lots = context.user_data.get('selected_carpark_availability')
 
         if distance_to_carpark <= 2.0 and not approaching_message_sent:
             if available_lots < 10:
@@ -155,28 +154,29 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
     while True:
         
         live_location = context.user_data.get('live_location')
-        
-        advisory_coordinates = mock_traffic_advisories['Location']['value']['coordinates']
-        advisory_lat = advisory_coordinates[1]
-        advisory_long = advisory_coordinates[0]
-        distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
 
-        print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")
-        
-        advisory_message = mock_traffic_advisories['Message']['value']
+        for advisory in mock_traffic_advisories:  
 
-        for word in keywords:
-            if is_word_present(advisory_message, word):
-                if distance_to_advisory <= 2.0:
-                    advisory_message = mock_traffic_advisories['Message']['value']
-                    await context.bot.send_message(
-                        chat_id=chat_id,
-                        text=f"🚧 Traffic advisory: {advisory_message}",
-                        parse_mode='Markdown'
-                    )
-                    break
-            else:
-                continue
+            advisory_message = advisory['Message']['value']
+
+            advisory_coordinates = advisory['Location']['value']['coordinates']
+            advisory_lat = advisory_coordinates[1]
+            advisory_long = advisory_coordinates[0]
+            distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
+            print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")        
+            
+            for word in keywords:
+                if is_word_present(advisory_message, word):
+                    if distance_to_advisory <= 2.0:
+                        advisory_message = advisory['Message']['value']
+                        await context.bot.send_message(
+                            chat_id=chat_id,
+                            text=f"🚧 Traffic advisory: {advisory_message}",
+                            parse_mode='Markdown'
+                        )
+                        break
+                else:
+                    continue
 
         await asyncio.sleep(2)
 
@@ -320,9 +320,10 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
 
 async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address):
     """Run all monitoring tasks concurrently."""
+    print(Fore.CYAN + "Starting monitoring tasks...")
     await asyncio.gather(
         monitor_carpark_availability(update, context, selected_carpark),
         monitor_traffic_advisories(update, context),
         monitor_weather(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address),
-        monitor_live_location_changes(update, context)
+        monitor_live_location_changes(update, context),
     )

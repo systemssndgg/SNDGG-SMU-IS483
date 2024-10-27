@@ -32,7 +32,7 @@ DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENC
 
 def main() -> None:
     """Run the bot."""
-    application = ApplicationBuilder().token(constants.TELEGRAM_BOT_KEY).read_timeout(120).build()
+    application = ApplicationBuilder().token(constants.TELEGRAM_BOT_KEY).write_timeout(120).read_timeout(120).build()
 
     conv_handler = ConversationHandler(
         # entry_points=[CommandHandler('start', start)],
