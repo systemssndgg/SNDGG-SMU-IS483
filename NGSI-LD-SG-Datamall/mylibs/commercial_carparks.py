@@ -465,6 +465,58 @@ def read_excel(file_path):
     data = [row for row in sheet.iter_rows(values_only=True)]
     return data
 
+# Helper function to load the raw carpark rates from CommercialCarparkRates.xlsx
+def fetch_carpark_rates(carpark_name, file_path='CommercialCarparkRates.xlsx'):
+    workbook = openpyxl.load_workbook(filename=file_path)
+    sheet = workbook.active
+
+    # Find the headers and get column indices
+    headers = [cell.value for cell in sheet[1]]
+    carpark_col = headers.index('carpark')
+    weekdays_rate_1_col = headers.index('weekdays_rate_1')
+    weekdays_rate_2_col = headers.index('weekdays_rate_2')
+    saturday_rate_col = headers.index('saturday_rate')
+    sunday_rate_col = headers.index('sunday_publicholiday_rate')
+
+    # Initialize variables to hold the rates
+    weekday_rate_combined, saturday_rate, sunday_rate = None, None, None
+
+    # Iterate over the rows to find the specific carpark
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        if row[carpark_col] == carpark_name:
+            # Combine weekday rates
+            weekday_rate_1 = row[weekdays_rate_1_col] or ""
+            weekday_rate_2 = row[weekdays_rate_2_col] or ""
+            weekday_rate_combined = f"{weekday_rate_1}; {weekday_rate_2}".strip("; ")
+
+            # Extract Saturday and Sunday rates
+            saturday_rate = row[saturday_rate_col]
+            sunday_rate = row[sunday_rate_col]
+
+            break  # Exit the loop once the carpark is found
+
+    # Return the pricing as a dictionary
+    return {
+        'WeekdayStr': weekday_rate_combined or "-",
+        'SaturdayStr': saturday_rate or "-",
+        'SundayPHStr': sunday_rate or "-"
+    }
+
+# Helper function to create a carpark entity
+def create_entity(carpark_name, development, coordinates, available_lots, pricing):
+    e_id = carpark_name.replace(" ", "")
+    entity = Entity("Carpark", e_id, ctx=ctx)
+
+    # Set properties
+    entity.prop("CarparkName", carpark_name)
+    entity.gprop("location", (float(coordinates[0]), float(coordinates[1])))
+    entity.prop("ParkingCapacity", "-")
+    entity.prop("Sheltered", False)
+    entity.prop("ParkingAvailability", available_lots)
+    entity.prop('Pricing', pricing)
+
+    return e_id, entity
+
 # This function ties in everything to create the entities and push it to the context broker.
 def main():
     # Change this variable depending on if you're using gpt to format the data or calling it straight from the excel file.
@@ -556,87 +608,50 @@ def main():
 
     
     for key, value in carpark_availabilities.items():
-        # initialize entity
-        # e_id is the concatenation of the Development and CarParkID
-        e_id = value['Development'].replace(" ", "") + str(value['CarParkID'])
-        entity = Entity("Carpark", e_id, ctx=ctx)
-
-        # set properties
-
-        # CarparkName
-        entity.prop("CarparkName", value['Development'])
-
-        # Location
+        # Sentosa is a special edge case in the datasets that requires special handling
+        # Reason being that the datamall dataset provides the carpark availability for Sentosa as a whole, but data.gov dataset provides the rates for each carpark within Sentosa.
+        # As a result, the names are different and do not match either.
+        # To handle this, we check if the carpark_name is "Sentosa" and if the Development is "Sentosa" as well.
+        # If so, we set the pricing to the rates for Sentosa.
+        development = value['Development'].strip()
         coordinates = value['Location'].split(" ")
-        entity.gprop("location", (float(coordinates[0]), float(coordinates[1])))
+        available_lots = value['AvailableLots']
 
-        # ParkingCapacity
-        entity.prop("ParkingCapacity", "-")
+        # Check for the special case of Sentosa
+        if development.lower() == "sentosa":
+            sentosa_carparks = ["Sentosa (Beach and Imbiah car park)", "Sentosa (Tanjong & Palawan car park)"]
+            for sentosa_carpark_name in sentosa_carparks:
+                # Fetch pricing data for Sentosa-specific carparks
+                for carpark_name, carpark_data in formatted_carpark_rates.items():
+                    if carpark_name.strip().lower() == sentosa_carpark_name.strip().lower():
+                        # Initialize the pricing dictionary
+                        pricing = {}
+                        # Add the formatted rates to the pricing dictionary
+                        pricing['rates'] = carpark_data['rates']
 
-        # Sheltered
-        entity.prop("Sheltered", False)
+                raw_rates = fetch_carpark_rates(sentosa_carpark_name)
+                pricing['WeekdayStr'] = raw_rates['WeekdayStr']
+                pricing['SaturdayStr'] = raw_rates['SaturdayStr']
+                pricing['SundayPHStr'] = raw_rates['SundayPHStr']
+                # Create and store the entity
+                e_id, entity = create_entity(sentosa_carpark_name, "Sentosa", coordinates, available_lots, pricing)
+                entity_dict[e_id] = entity
+        else:
+            # General case for other carparks
+            for carpark_name, carpark_data in formatted_carpark_rates.items():
+                if carpark_name.strip().lower() == development.strip().lower():
+                    # Initialize the pricing dictionary
+                    pricing = {}
+                    # Add the formatted rates to the pricing dictionary
+                    pricing['rates'] = carpark_data['rates']
 
-        # ParkingAvailability
-        entity.prop("ParkingAvailability", value['AvailableLots'])
-
-        # Pricing
-        # Fetch the carpark rates
-        for carpark_name, carpark_data in formatted_carpark_rates.items():
-            if carpark_name.strip().lower() == value['Development'].strip().lower():
-                # Initialize the pricing dictionary
-                pricing = {}
-                # Add the formatted rates to the pricing dictionary
-                pricing['rates'] = carpark_data['rates']
-
-                # Add the raw rates to the pricing dictionary from data.mall.gov.sg
-                # Load the Excel file
-                file_path = 'CommercialCarparkRates.xlsx'
-                workbook = openpyxl.load_workbook(filename=file_path)
-                sheet = workbook.active
-
-                # Find the headers
-                headers = [cell.value for cell in sheet[1]]
-                # Find the column indices based on the headers
-                carpark_col = headers.index('carpark')
-                weekdays_rate_1_col = headers.index('weekdays_rate_1')
-                weekdays_rate_2_col = headers.index('weekdays_rate_2')
-                saturday_rate_col = headers.index('saturday_rate')
-                sunday_rate_col = headers.index('sunday_publicholiday_rate')
-
-                # Initialize variables to hold the rates for the specified carpark
-                weekday_rate_combined = None
-                saturday_rate = None
-                sunday_rate = None
-
-                # Iterate over the rows in the sheet, starting from the second row
-                for row in sheet.iter_rows(min_row=2, values_only=True):
-                    if row[carpark_col] == carpark_name:
-                        # Combine weekday rates
-                        weekday_rate_1 = row[weekdays_rate_1_col] or ""
-                        weekday_rate_2 = row[weekdays_rate_2_col] or ""
-                        weekday_rate_combined = f"{weekday_rate_1}; {weekday_rate_2}".strip("; ")
-
-                        # Extract Saturday and Sunday rates
-                        saturday_rate = row[saturday_rate_col]
-                        sunday_rate = row[sunday_rate_col]
-
-                        # Exit the loop once the carpark is found
-                        break 
-
-                # Display the results
-                if weekday_rate_combined or saturday_rate or sunday_rate:
-                    pricing['WeekdayStr'] = weekday_rate_combined
-                    pricing['SaturdayStr'] = saturday_rate
-                    pricing['SundayPHStr'] = sunday_rate
-                else:
-                    print(f"No data found for carpark: {carpark_name}")
-                    pricing['WeekdayStr'] = weekday_rate_combined
-                    pricing['SaturdayStr'] = saturday_rate
-                    pricing['SundayPHStr'] = sunday_rate
-                # Add the full pricing dictionary to the entity.
-                entity.prop('Pricing', pricing)
-            
-        entity_dict[e_id] = entity
+            raw_rates = fetch_carpark_rates(carpark_name)
+            pricing['WeekdayStr'] = raw_rates['WeekdayStr']
+            pricing['SaturdayStr'] = raw_rates['SaturdayStr']
+            pricing['SundayPHStr'] = raw_rates['SundayPHStr']
+            # Create and store the entity
+            e_id, entity = create_entity(carpark_name, value['Development'], coordinates, available_lots, pricing)
+            entity_dict[e_id] = entity
 
     try:
         create_entities_in_broker(entity_dict.values())
