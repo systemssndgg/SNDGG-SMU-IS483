@@ -618,7 +618,7 @@ def main():
         development = value['Development'].strip()
         coordinates = value['Location'].split(" ")
         available_lots = value['AvailableLots']
-
+    
         # Initialize the pricing dictionary
         pricing = {}
 
@@ -632,13 +632,13 @@ def main():
                         # Add the formatted rates to the pricing dictionary
                         pricing['rates'] = carpark_data['rates']
 
-                raw_rates = fetch_carpark_rates(sentosa_carpark_name)
-                pricing['WeekdayStr'] = clean_text(raw_rates['WeekdayStr'])
-                pricing['SaturdayStr'] = clean_text(raw_rates['SaturdayStr'])
-                pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
-                # Create and store the entity
-                e_id, entity = create_entity(sentosa_carpark_name, coordinates, available_lots, pricing)
-                entity_dict[e_id] = entity
+                        raw_rates = fetch_carpark_rates(sentosa_carpark_name)
+                        pricing['WeekdayStr'] = clean_text(raw_rates['WeekdayStr'])
+                        pricing['SaturdayStr'] = clean_text(raw_rates['SaturdayStr'])
+                        pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
+                        # Create and store the entity
+                        e_id, entity = create_entity(sentosa_carpark_name, coordinates, available_lots, pricing)
+                        entity_dict[e_id] = entity
         else:
             # General case for other carparks
             for carpark_name, carpark_data in formatted_carpark_rates.items():
@@ -646,14 +646,14 @@ def main():
                     # Add the formatted rates to the pricing dictionary
                     pricing['rates'] = carpark_data['rates']
 
-                raw_rates = fetch_carpark_rates(carpark_name)
-                pricing['WeekdayStr'] = clean_text(raw_rates['WeekdayStr'])
-                pricing['SaturdayStr'] = clean_text(raw_rates['SaturdayStr'])
-                pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
+                    raw_rates = fetch_carpark_rates(carpark_name)
+                    pricing['WeekdayStr'] = clean_text(raw_rates['WeekdayStr'])
+                    pricing['SaturdayStr'] = clean_text(raw_rates['SaturdayStr'])
+                    pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
 
-                # Create and store the entity
-                e_id, entity = create_entity(carpark_name, coordinates, available_lots, pricing)
-                entity_dict[e_id] = entity
+                    # Create and store the entity
+                    e_id, entity = create_entity(carpark_name, coordinates, available_lots, pricing)
+                    entity_dict[e_id] = entity
             
     try:
         create_entities_in_broker(entity_dict.values())
