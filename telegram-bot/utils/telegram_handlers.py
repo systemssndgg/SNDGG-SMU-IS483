@@ -555,9 +555,15 @@ async def edit_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     preference_list = context.user_data.get('menu_preference_list')
     print(f"Editing user preference for user {user_id}")
     
-    edit_user_preference(user_id, preference_list)
+    user_id = update.effective_user.id
+    if check_user_exists(user_id):
+        edit_user_preference(user_id, preference_list)
+        await loading_message.edit_text("✅ Your preference has been updated.")
+    else:
+        store_user_preference(user_id, preference_list)
+        await loading_message.edit_text("✅ Your preference has been stored.")
 
-    await loading_message.edit_text("✅ Your preference has been updated.")
+    context.user_data.get('menu_preference_list').clear()
 
     return ConversationHandler.END
 
