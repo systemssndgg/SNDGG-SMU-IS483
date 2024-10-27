@@ -30,10 +30,14 @@ def get_details_place(destination_id):
         return None
 
 def generate_static_map_url(lat, lng):
-    static_map_url = (
-        f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lng}&zoom=15&size=600x400&markers=color:red%7Clabel:A%7C{lat},{lng}&key={constants.GOOGLE_MAPS_KEY}"
-    )
-    return static_map_url
+    try:
+        static_map_url = (
+            f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lng}&zoom=15&size=600x400&markers=color:red%7Clabel:A%7C{lat},{lng}&key={constants.GOOGLE_MAPS_KEY}"
+        )
+        return static_map_url
+    except Exception as e:
+        print(f"An error occurred in generate_static_map_url: {e}")
+        return None
 
 def get_address_from_coordinates(lat, lng):
     geocode_result = gmaps.reverse_geocode((lat, lng))
