@@ -596,6 +596,10 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
     -1.0 IF price information is not available
     '''
 
+    # If no pricing information is available, return -1.0
+    if not hasattr(carpark, "Pricing"):
+        return -1.0
+
     today = datetime.today().weekday()
     current_time = datetime.now().time()
     
@@ -730,6 +734,10 @@ def get_price_str(carpark, vehicle_type='Car'):
     if not is_ura_carpark(carpark):
         # Handle Commercial carpark
 
+        # Break if Pricing key is not present
+        if "Pricing" not in carpark:
+            return "💵 No pricing info available\n"
+
         # (1) Format the current day to either 'weekday', 'saturday', or 'sunday_public_holiday'
         today = datetime.today().weekday()
         if 0 <= today <= 4:
@@ -745,7 +753,7 @@ def get_price_str(carpark, vehicle_type='Car'):
             elif rateStr == "Same as Saturday":
                 rateStr = carpark['Pricing']['value']['SaturdayStr']
         
-        return rateStr
+        return f"💵 *Rate: *{rateStr}\n"
         
     else:
         # Handle URA carpark
@@ -816,6 +824,14 @@ def is_ura_carpark(carpark) -> bool:
     '''
     Check if the carpark is a URA carpark or Commercial carpark
     '''
+
+    # Conver to dictionary if NGSI-LD entity
+    if not isinstance(carpark, dict):
+        carpark = carpark.to_dict()
+
+    # Handle edge cases where Commercial carpark does not have Pricing key
+    if 'Pricing' not in carpark: # If carpark is dictionary
+        return False
     
     # If Pricing.value has a Car key, it is a URA carpark
     if 'Car' in carpark['Pricing']['value']:
