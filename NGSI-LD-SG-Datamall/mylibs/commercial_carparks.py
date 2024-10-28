@@ -12,9 +12,9 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 import pandas as pd
 
-# client = OpenAI(
-#     api_key = constants.OPENAI_KEY
-# )
+client = OpenAI(
+    api_key = constants.OPENAI_KEY
+)
 
 API_KEY = constants.LTA_API_KEY
 ctx = constants.ctx
@@ -511,7 +511,7 @@ def create_entity(carpark_name, coordinates, available_lots, pricing):
     entity.prop("CarparkName", carpark_name)
     entity.gprop("location", (float(coordinates[0]), float(coordinates[1])))
     entity.prop("ParkingCapacity", "-")
-    entity.prop("Sheltered", False)
+    entity.prop("Sheltered", True)
     entity.prop("ParkingAvailability", available_lots)
     entity.prop('Pricing', pricing)
 

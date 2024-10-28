@@ -90,9 +90,9 @@ def get_carpark(ura_token):
                 entity.prop("ParkingCapacity", carpark.get("parkCapacity", 0))
 
                 # Mock sheltered status
-                # entity.prop("Sheltered", True if count % 2 == 0 else False)
-                entity.prop("Sheltered", False if count % 2 == 0 else True)
-                count += 1
+                entity.prop("Sheltered", False)
+                # entity.prop("Sheltered", False if count % 2 == 0 else True)
+                # count += 1
 
 
                 # Parking availability

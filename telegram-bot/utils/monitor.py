@@ -201,8 +201,9 @@ async def monitor_live_location_changes(update: Update, context: ContextTypes.DE
         
         await asyncio.sleep(2)
 
+# def find_closest_carpark(carparks_list, live_location, geoquery_nearest_carparks, user_preference, destination, num_cp_return=1, min_avail_lots=0, remove_unsheltered=True, strict_pref=True):
 
-async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, current_carpark, closest_three_carparks, destination_details, user_address, destination_address):
+async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, current_carpark, closest_three_carparks, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination):
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
 
     weather = [
@@ -258,7 +259,14 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                     rain_value = area["forecast"]["value"]
                     print("rain_value:", rain_value)
             if current_carpark["Sheltered"]["value"] == False:    
-                new_carpark = find_closest_carpark(closest_three_carparks, destination_details['geometry']['location']['lat'], destination_details['geometry']['location']['lng'])
+                live_location = (context.user_data.get('live_location')[0], context.user_data.get('live_location')[1]) 
+                destination = (context.user_data.get('destination_lat'), context.user_data.get('destination_long'))
+                user_preference = context.user_data.get('user_preference')
+
+                new_carpark = find_closest_carpark(closest_three_carparks, live_location,geoquery_nearest_carparks, user_preference , destination, num_cp_return=1, min_avail_lots=0, remove_unsheltered=True, strict_pref=True)
+                    
+
+                print("new_carpark:", new_carpark)
 
                 lat = new_carpark["location"]["value"]["coordinates"][1] 
                 long = new_carpark["location"]["value"]["coordinates"][0]
@@ -320,12 +328,16 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
             break
 
 
-async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address):
+async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination):
     """Run all monitoring tasks concurrently."""
     print(Fore.CYAN + "Starting monitoring tasks...")
     await asyncio.gather(
         monitor_carpark_availability(update, context, selected_carpark),
         monitor_traffic_advisories(update, context),
-        monitor_weather(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address),
+        # monitor_weather(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address, geoquery_nearest_carparks, ),
+
+        monitor_weather(update, context, selected_carpark, closest_three_carparks, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination),
+
+
         monitor_live_location_changes(update, context),
     )

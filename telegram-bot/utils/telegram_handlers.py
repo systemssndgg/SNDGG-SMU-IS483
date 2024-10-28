@@ -690,15 +690,15 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     destination_lat = context.user_data.get('destination_lat')
     destination_long = context.user_data.get('destination_long')
     if destination_lat and destination_long:
-        global nearest_carparks
-        nearest_carparks = geoquery_ngsi_point(
+        global geoquery_nearest_carparks
+        geoquery_nearest_carparks = geoquery_ngsi_point(
             input_type="Carpark",
             maxDistance=3000,
             lat=destination_lat,
             long=destination_long
         )
 
-        if len(nearest_carparks) == 0:
+        if len(geoquery_nearest_carparks) == 0:
             await context.bot.send_message(chat_id=update.effective_chat.id, text="🚫 Sorry! No nearby carparks found.")
         else:
             # user_selected_preference is a list of user preferences in order of importance
@@ -730,7 +730,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             # [END] ========================================================================================================
 
             global closest_three_carparks
-            closest_three_carparks = get_top_carparks(live_location, nearest_carparks, user_pref, num_cp_to_return=3, min_avail_lots=10, destination=(destination_lat, destination_long))
+            closest_three_carparks = get_top_carparks(live_location, geoquery_nearest_carparks, user_pref, num_cp_to_return=3, min_avail_lots=10, destination=(destination_lat, destination_long))
             
             carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference)
 
@@ -874,7 +874,7 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     # current_carpark = selected_carpark
 
     # asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
-    asyncio.create_task(monitor_all(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address))
+    asyncio.create_task(monitor_all(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address, geoquery_nearest_carparks, live_location, context.user_data['preference_list'], (destination_lat, destination_long)))
     
     return LIVE_LOCATION
 
