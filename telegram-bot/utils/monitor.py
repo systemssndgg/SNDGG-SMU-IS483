@@ -251,7 +251,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
             forecast_coordinates= (area["location"]["value"]["coordinates"][1], area["location"]["value"]["coordinates"][0])
 
             distance = geodesic(carpark_coordinates, forecast_coordinates).km
-            
+            rain_value = area["forecast"]["value"]
             check_distance_list = [0.5, 1.0, 1.5, 2.0]
             new_carpark = None
             for check_distance in check_distance_list: 
@@ -267,6 +267,14 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                     
 
                 print("new_carpark:", new_carpark)
+                if new_carpark == []:
+                    rain_value = area["forecast"]["value"]
+                    await context.bot.send_message(
+                    chat_id=update.effective_chat.id, 
+                    text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 
+                    parse_mode='Markdown')
+                    sent_new = True
+                    break
 
                 lat = new_carpark["location"]["value"]["coordinates"][1] 
                 long = new_carpark["location"]["value"]["coordinates"][0]

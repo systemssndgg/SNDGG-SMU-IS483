@@ -70,27 +70,9 @@ def find_closest_carpark(carparks_list, live_location, geoquery_nearest_carparks
         
     
     if in_list == False:
-        print(geoquery_nearest_carparks)
         sheltered_carpark = get_top_carparks(live_location, geoquery_nearest_carparks, user_preference, num_cp_return, min_avail_lots=min_avail_lots, remove_unsheltered=remove_unsheltered, strict_pref=strict_pref, destination=destination)
-        
-        print(sheltered_carpark)
+    
         return sheltered_carpark
-        # distance_dict = {}
-        # selected_carpark = []
-        
-        # lat = carpark["location"]["value"]["coordinates"][1]
-        # long = carpark["location"]["value"]["coordinates"][0]
-
-        # for carpark in geoquery_nearest_carparks:
-        #     distance = geodesic((dest_lat, dest_long), (lat, long)).km
-        #     distance_dict[carpark["CarparkName"]["value"]] = distance
-            
-        # distance_dict.sort(key=lambda x: distance_dict[x["CarparkName"]["value"]])
-
-        # Add the sorted carparks to the final_three_carparks list
-        selected_carpark.extend(carparks_list)
-        # print("selected_carpark:", selected_carpark[0])
-        return selected_carpark[0]
     
 
 def format_time_and_rate(h, mins, rate):
@@ -478,8 +460,8 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     
     carparks = new_carparks
 
-    print("\n\nCARPARKS: ", carparks)
-    print("\n\nROTTEN CARPARKS: ", rotten_carparks)
+    # print("\n\nCARPARKS: ", carparks)
+    # print("\n\nROTTEN CARPARKS: ", rotten_carparks)
 
     # If insufficient carparks meet the requirements, recurse with the rotten carparks to combine at the end of function
     if len(carparks) < num_cp_to_return:
@@ -569,15 +551,15 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     '''
     [DEBUGGING] PRINT EACH CARPARK WITH SCORES AND VALUES (From carparks_np) ============================
     '''
-    for i in sorted_indices:
-        print(f"\n\nCarpark: {carparks[i]['CarparkName']['value']} ======================")
-        print(f"Score: {total_scores[i]}")
-        print(f"\nOriginal Price: {find_price_per_hr(carparks[i], num_hrs, 'Car')}")
-        print(f"Scored Price: {carparks_np[i][0]} | Normalised: {normalized_carparks[i][0]}")
-        print(f"\nWalk Time: {carparks_np[i][1]} | Normalised: {normalized_carparks[i][1]}")
-        print(f"Travel Time: {carparks_np[i][2]} | Normalised: {normalized_carparks[i][2]}")
-        print(f"Available Lots: {carparks_np[i][3]} | Normalised: {normalized_carparks[i][3]}")
-        print(f"Sheltered: {carparks_np[i][4]} | Normalised: {normalized_carparks[i][4]}")
+    # for i in sorted_indices:
+    #     print(f"\n\nCarpark: {carparks[i]['CarparkName']['value']} ======================")
+    #     print(f"Score: {total_scores[i]}")
+    #     print(f"\nOriginal Price: {find_price_per_hr(carparks[i], num_hrs, 'Car')}")
+    #     print(f"Scored Price: {carparks_np[i][0]} | Normalised: {normalized_carparks[i][0]}")
+    #     print(f"\nWalk Time: {carparks_np[i][1]} | Normalised: {normalized_carparks[i][1]}")
+    #     print(f"Travel Time: {carparks_np[i][2]} | Normalised: {normalized_carparks[i][2]}")
+    #     print(f"Available Lots: {carparks_np[i][3]} | Normalised: {normalized_carparks[i][3]}")
+    #     print(f"Sheltered: {carparks_np[i][4]} | Normalised: {normalized_carparks[i][4]}")
 
     # Create the list of top N carparks and include walking_time, travel_time, and drive_time
     top_N_carparks = []
