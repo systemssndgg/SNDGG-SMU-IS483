@@ -86,11 +86,15 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             
         user_input = update.message.text
         loading_message = await update.message.reply_text("🔄 Fetching suggestions for your destination...")
+        context.user_data['destination_data'] = {}
         suggestions = get_autocomplete_place(user_input)
 
-        keyboard = [[InlineKeyboardButton(suggestion['description'], callback_data=suggestion['place_id'][:64])]
-        for suggestion in suggestions]
-
+        keyboard = []
+        for index, suggestion in enumerate(suggestions):
+            short_id = f"dest_{index}"
+            context.user_data['destination_data'][short_id] = suggestion['place_id']
+            keyboard.append([InlineKeyboardButton(suggestion['description'], callback_data=short_id)])
+        
         keyboard.append([InlineKeyboardButton("🔍 Search another destination", callback_data="search_again")])
 
         keyboard.append([InlineKeyboardButton("🛑 End Session", callback_data="end")])
@@ -121,7 +125,11 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
     query = update.callback_query
     await query.answer()
 
-    destination_id = query.data
+    short_id = query.data
+    if context.user_data.get('destination_data', {}).get(short_id):
+        destination_id = context.user_data.get('destination_data', {}).get(short_id)
+    else:
+        destination_id = query.data
 
     # Debug print statements to check callback data
     print(f"Callback data received: {destination_id}")
