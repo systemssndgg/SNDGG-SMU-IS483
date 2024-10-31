@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "4000:3000"
+    networks:
+      - grafana-network
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Optional: Set the Grafana admin password
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+networks:
+  grafana-network:
+    driver: bridge
+
+volumes:
+  grafana-data:

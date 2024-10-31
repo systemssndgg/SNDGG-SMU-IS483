@@ -141,18 +141,18 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/ld+json"
+								"value": "application/ld+json",
+								"type": "text"
 							},
 							{
 								"key": "NGSILD-Tenant",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -295,18 +295,18 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/ld+json"
+								"value": "application/ld+json",
+								"type": "text"
 							},
 							{
 								"key": "NGSILD-Tenant",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							}
 						],
 						"url": {
@@ -437,13 +437,13 @@
 						"header": [
 							{
 								"key": "fiware-service",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -745,13 +745,13 @@
 						"header": [
 							{
 								"key": "fiware-service",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -870,7 +870,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"temperature\": 30,\r\n    \"pressure\": 55,\r\n    \"humidity\": 66,\r\n    \"bearing\": 123\r\n}",
+							"raw": "{\r\n    \"temperature\": 55,\r\n    \"pressure\": 55,\r\n    \"humidity\": 66,\r\n    \"bearing\": 123\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1427,7 +1427,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Room:Room001",
+									"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Room:Room002",
 									"host": [
 										"{{gateway}}"
 									],
@@ -1437,7 +1437,7 @@
 										"ngsi-ld",
 										"v1",
 										"entities",
-										"urn:ngsi-ld:Room:Room001"
+										"urn:ngsi-ld:Room:Room002"
 									]
 								}
 							},
@@ -1678,24 +1678,73 @@
 					"response": []
 				},
 				{
+					"name": "Find temperature from entities located in room 1 Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?q=temperature>25;locatedIn==%22urn:ngsi-ld:Room:Room001%22",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Device",
+									"disabled": true
+								},
+								{
+									"key": "q",
+									"value": "temperature>25;locatedIn==%22urn:ngsi-ld:Room:Room001%22"
+								}
+							]
+						},
+						"description": "This request gets all entities located in room 1 that have the \"temperature\" property. Even though there are also robots and cameras in room 1, those entities are not included as they lack the \"temperature\" property."
+					},
+					"response": []
+				},
+				{
 					"name": "Find Humidity from entities located in room 1",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "NGSILD-Tenant",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							},
 							{
 								"key": "Link",
-								"type": "text",
-								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
 							}
 						],
 						"url": {
@@ -2109,18 +2158,18 @@
 						"header": [
 							{
 								"key": "NGSILD-Tenant",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							},
 							{
 								"key": "Link",
-								"type": "text",
-								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -2339,7 +2388,7 @@
 					"response": []
 				},
 				{
-					"name": "Send command from broker (x1)",
+					"name": "Send command from broker (Get temp)",
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -2361,7 +2410,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \" \"\r\n\r\n}",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"20\"\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3205,7 +3254,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"description\": \"Subscribe to temperature going above 35\",\r\n  \"type\": \"Subscription\",\r\n  \"entities\": [{\"type\": \"Device\"}],\r\n  \"watchedAttributes\": [\"temperature\"],\r\n  \"q\": \"temperature>35;locatedIn==%22urn:ngsi-ld:Room:Room001%22\",\r\n  \"notification\": {\r\n    \"format\": \"keyValues\",\r\n    \"attributes\": [\"temperature\"],\r\n    \"endpoint\": {\r\n      \"uri\": \"https://asia-southeast1-composite-silo-413107.cloudfunctions.net/temperature_update\",\r\n      \"accept\": \"application/json\"\r\n    }\r\n  },\r\n  \"@context\": \"{{context-ld}}\"\r\n}\r\n",
+							"raw": "{\r\n  \"description\": \"Subscribe to temperature going above 45\",\r\n  \"type\": \"Subscription\",\r\n  \"entities\": [{\"type\": \"Device\"}],\r\n  \"watchedAttributes\": [\"temperature\"],\r\n  \"q\": \"temperature>35;locatedIn==%22urn:ngsi-ld:Room:Room001%22\",\r\n  \"notification\": {\r\n    \"format\": \"keyValues\",\r\n    \"attributes\": [\"temperature\"],\r\n    \"endpoint\": {\r\n      \"uri\": \"https://asia-southeast1-composite-silo-413107.cloudfunctions.net/temperature_update\",\r\n      \"accept\": \"application/json\"\r\n    }\r\n  },\r\n  \"@context\": \"{{context-ld}}\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3398,6 +3447,35 @@
 							]
 						},
 						"description": "This subscription sends a notification each time the `names` property is updated. It then sends the `names` and `locatedIn` properties to a google cloud URL, which invokes a command to all Robots that are located in the same room as the camera."
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"data\": [\r\n    {\r\n      \"temperature\": 30.2\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://asia-southeast1-composite-silo-413107.cloudfunctions.net/temperature_update",
+							"protocol": "https",
+							"host": [
+								"asia-southeast1-composite-silo-413107",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"temperature_update"
+							]
+						}
 					},
 					"response": []
 				}
@@ -3661,7 +3739,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://35.240.151.148/api/temporal/entities?type=Camera&timeproperty=observedAt&timerel=after&timeAt=2024-04-09T16:00:00.000Z&options=temporalValues&id=urn%3Angsi-ld%3ACamera%3ACamera001&attrs=imagepath",
+							"raw": "http://35.240.151.148/api/temporal/entities?type=Robot&timeproperty=observedAt&timerel=before&timeAt=2024-05-04T17:00:00.000Z&options=temporalValues&id=urn:ngsi-ld:Robot:Robot001&attrs=imagepath&lastN=5",
 							"protocol": "http",
 							"host": [
 								"35",
@@ -3677,7 +3755,7 @@
 							"query": [
 								{
 									"key": "type",
-									"value": "Camera"
+									"value": "Robot"
 								},
 								{
 									"key": "timeproperty",
@@ -3685,11 +3763,11 @@
 								},
 								{
 									"key": "timerel",
-									"value": "after"
+									"value": "before"
 								},
 								{
 									"key": "timeAt",
-									"value": "2024-04-09T16:00:00.000Z"
+									"value": "2024-05-04T17:00:00.000Z"
 								},
 								{
 									"key": "options",
@@ -3697,11 +3775,15 @@
 								},
 								{
 									"key": "id",
-									"value": "urn%3Angsi-ld%3ACamera%3ACamera001"
+									"value": "urn:ngsi-ld:Robot:Robot001"
 								},
 								{
 									"key": "attrs",
 									"value": "imagepath"
+								},
+								{
+									"key": "lastN",
+									"value": "5"
 								}
 							]
 						}
@@ -3726,23 +3808,23 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/ld+json"
+								"value": "application/ld+json",
+								"type": "text"
 							},
 							{
 								"key": "NGSILD-Tenant",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:BusStop:rn:ngsi-ld:Busstop:BusStop01012\",\r\n  \"type\": \"BusStop\",\r\n  \"@context\": [\r\n    \"https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld\"\r\n  ],\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.852536,\r\n        1.296848\r\n      ]\r\n    }\r\n  },\r\n  \"BusStopCode\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"01012\"\r\n  },\r\n  \"RoadName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Victoria St\"\r\n  },\r\n  \"Description\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Hotel Grand Pacific\"\r\n  },\r\n  \"Latitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 1.29684825487647\r\n  },\r\n  \"Longitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 103.85253591654006\r\n  }\r\n}",
+							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:BusStop:rn:ngsi-ld:Busstop:BusStop01012\",\r\n  \"type\": \"BusStop\",\r\n  \"@context\": [\r\n    \"http://34.126.76.13/context.jsonld\"\r\n  ],\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.852536,\r\n        1.296848\r\n      ]\r\n    }\r\n  },\r\n  \"BusStopCode\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"01012\"\r\n  },\r\n  \"RoadName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Victoria St\"\r\n  },\r\n  \"Description\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Hotel Grand Pacific\"\r\n  },\r\n  \"Latitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 1.29684825487647\r\n  },\r\n  \"Longitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 103.85253591654006\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3779,18 +3861,18 @@
 						"header": [
 							{
 								"key": "NGSILD-Tenant",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
 							},
 							{
 								"key": "Link",
-								"type": "text",
-								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\""
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
 							}
 						],
 						"url": {
@@ -3818,33 +3900,77 @@
 					"response": []
 				},
 				{
-					"name": "Deleting an bus stop",
+					"name": "View all bus stops Copy",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"content-type": true
 						}
 					},
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [
 							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/ld+json"
-							},
-							{
 								"key": "NGSILD-Tenant",
-								"type": "text",
-								"value": "openiot"
+								"value": "openiot",
+								"type": "text"
 							},
 							{
 								"key": "fiware-servicepath",
-								"type": "text",
-								"value": "/"
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=BusStop",
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:BusStop:rn:ngsi-ld:Busstop:BusStop01012",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:BusStop:rn:ngsi-ld:Busstop:BusStop01012"
+							]
+						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "View None",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=None",
 							"host": [
 								"{{gateway}}"
 							],
@@ -3859,11 +3985,113 @@
 							"query": [
 								{
 									"key": "type",
-									"value": "BusStop"
+									"value": "None"
 								}
 							]
 						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "Deleting an bus stop",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:BusStop:rn:ngsi-ld:Busstop:BusStop01012",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:BusStop:rn:ngsi-ld:Busstop:BusStop01012"
+							]
+						},
 						"description": "Delete a created entity by specifying the id"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test image AI",
+			"item": [
+				{
+					"name": "Validate",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"images\": [\r\n        {\"url\": \"https://storage.googleapis.com/ngsi-ld/snapshots/2024-06-06%2015_24_50.mp4\", \"date\": \"2024-06-06T07:26:13.533Z\"},\r\n        {\"url\": \"https://storage.googleapis.com/ngsi-ld/snapshots/2024-06-06%2014_58_40.mp4\", \"date\": \"2024-06-06T07:00:03.792Z\"}\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://35.187.246.9:5000/validate",
+							"protocol": "http",
+							"host": [
+								"35",
+								"187",
+								"246",
+								"9"
+							],
+							"port": "5000",
+							"path": [
+								"validate"
+							]
+						},
+						"description": "This request adds a Room entity using a payload in the normalized-json format. This is the most explicit way of creating an entity, through explicitly stating the type of each attribute."
 					},
 					"response": []
 				}
@@ -3893,23 +4121,32 @@
 	"variable": [
 		{
 			"key": "context-ld",
-			"value": "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld"
+			"value": "http://34.126.76.13/context.jsonld",
+			"disabled": true
 		},
 		{
 			"key": "gateway",
-			"value": "http://34.87.161.144"
+			"value": "http://34.87.161.144",
+			"disabled": true
 		},
 		{
 			"key": "gateway",
-			"value": "http://localhost"
+			"value": "http://localhost",
+			"disabled": true
 		},
 		{
 			"key": "gateway",
-			"value": "http://34.143.201.28"
+			"value": "http://34.143.201.28",
+			"disabled": true
 		},
 		{
 			"key": "gateway",
 			"value": "http://35.240.151.148"
+		},
+		{
+			"key": "context-ld",
+			"value": "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld",
+			"type": "string"
 		}
 	]
 }

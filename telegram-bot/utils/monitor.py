@@ -265,8 +265,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
 
                 new_carpark = find_closest_carpark(closest_three_carparks, live_location,geoquery_nearest_carparks, user_preference , destination, num_cp_return=1, min_avail_lots=0, remove_unsheltered=True, strict_pref=True)
                     
-
-                print("new_carpark:", new_carpark)
+                
                 if new_carpark == []:
                     rain_value = area["forecast"]["value"]
                     await context.bot.send_message(
@@ -274,6 +273,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                     text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 
                     parse_mode='Markdown')
                     sent_new = True
+                    print("No sheltered carpark found")
                     break
 
                 lat = new_carpark["location"]["value"]["coordinates"][1] 
@@ -318,6 +318,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                     disable_web_page_preview=True,
                     reply_markup=reply_markup
                 )
+                print("new_carpark:", new_carpark)
 
                 sent_new = True
                 break

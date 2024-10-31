@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "1ea2456a-939f-4e2c-94d9-7d93409f6eb2",
+		"_postman_id": "166a5949-c181-41e0-a7a9-4f20d806e8a4",
 		"name": "NGSI-LD Test Suite Localhost LTA Datamall",
 		"description": "Sample operations to help understand the NGSI-LD API.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23492608"
+		"_exporter_id": "6685473"
 	},
 	"item": [
 		{
@@ -38,7 +38,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:BusStop:BusStop01012\",\r\n  \"type\": \"BusStop\",\r\n  \"@context\": [\r\n    \"https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld\"\r\n  ],\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.852536,\r\n        1.296848\r\n      ]\r\n    }\r\n  },\r\n  \"BusStopCode\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"01012\"\r\n  },\r\n  \"RoadName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Victoria St\"\r\n  },\r\n  \"Description\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Hotel Grand Pacific\"\r\n  },\r\n  \"Latitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 1.29684825487647\r\n  },\r\n  \"Longitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 103.85253591654006\r\n  }\r\n}",
+							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:BusStop:BusStop01012\",\r\n  \"type\": \"BusStop\",\r\n  \"@context\": [\r\n    \"http://34.126.76.13/context.jsonld\"\r\n  ],\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.852536,\r\n        1.296848\r\n      ]\r\n    }\r\n  },\r\n  \"BusStopCode\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"01012\"\r\n  },\r\n  \"RoadName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Victoria St\"\r\n  },\r\n  \"Description\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Hotel Grand Pacific\"\r\n  },\r\n  \"Latitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 1.29684825487647\r\n  },\r\n  \"Longitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 103.85253591654006\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,7 +91,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"@context\": \"https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld\",\r\n  \"id\": \"urn:ngsi-ld:Carpark:SingaporeFlyer6\",\r\n  \"type\": \"Carpark\",\r\n  \"CarParkID\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"6\"\r\n  },\r\n  \"Region\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Marina\"\r\n  },\r\n  \"DevelopmentName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Singapore Flyer\"\r\n  },\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.86311,\r\n        1.28944\r\n      ]\r\n    }\r\n  },\r\n  \"ParkingAvalibility\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 270\r\n  },\r\n  \"LotType\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"C\"\r\n  },\r\n  \"ParkingSiteOwner\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"LTA\"\r\n  }\r\n}",
+							"raw": "{\r\n  \"@context\": \"http://34.126.76.13/context.jsonld\",\r\n  \"id\": \"urn:ngsi-ld:Carpark:SingaporeFlyer6\",\r\n  \"type\": \"Carpark\",\r\n  \"CarParkID\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"6\"\r\n  },\r\n  \"Region\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Marina\"\r\n  },\r\n  \"DevelopmentName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Singapore Flyer\"\r\n  },\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.86311,\r\n        1.28944\r\n      ]\r\n    }\r\n  },\r\n  \"ParkingAvalibility\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 270\r\n  },\r\n  \"LotType\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"C\"\r\n  },\r\n  \"ParkingSiteOwner\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"LTA\"\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -597,176 +597,8 @@
 						"description": "Delete a created entity by specifying the id"
 					},
 					"response": []
-				},
-				{
-					"name": "New Request",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
 				}
 			]
-		},
-		{
-			"name": "InsightGrid Entities",
-			"item": []
-		},
-		{
-			"name": "View all Weather Forecast",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "NGSILD-Tenant",
-						"value": "openiot",
-						"type": "text"
-					},
-					{
-						"key": "fiware-servicepath",
-						"value": "/",
-						"type": "text"
-					},
-					{
-						"key": "link",
-						"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=WeatherForecast",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"api",
-						"broker",
-						"ngsi-ld",
-						"v1",
-						"entities",
-						""
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "WeatherForecast"
-						}
-					]
-				},
-				"description": "View the created entities (which are of type Room)"
-			},
-			"response": []
-		},
-		{
-			"name": "View all Traffic Advisories",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "NGSILD-Tenant",
-						"value": "openiot",
-						"type": "text"
-					},
-					{
-						"key": "fiware-servicepath",
-						"value": "/",
-						"type": "text"
-					},
-					{
-						"key": "Link",
-						"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
-						"type": "text"
-					},
-					{
-						"key": "Fiware-Service",
-						"value": "example",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"url": {
-					"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=Carpark",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"api",
-						"broker",
-						"ngsi-ld",
-						"v1",
-						"entities",
-						""
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "Carpark"
-						}
-					]
-				},
-				"description": "View the created entities (which are of type Room)"
-			},
-			"response": []
-		},
-		{
-			"name": "View all Carparks",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "NGSILD-Tenant",
-						"value": "openiot",
-						"type": "text"
-					},
-					{
-						"key": "fiware-servicepath",
-						"value": "/",
-						"type": "text"
-					},
-					{
-						"key": "Link",
-						"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=Carpark",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"api",
-						"broker",
-						"ngsi-ld",
-						"v1",
-						"entities",
-						""
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "Carpark"
-						}
-					]
-				},
-				"description": "View the created entities (which are of type Room)"
-			},
-			"response": []
 		}
 	],
 	"event": [
@@ -792,7 +624,8 @@
 	"variable": [
 		{
 			"key": "context-ld",
-			"value": "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld"
+			"value": "http://34.126.76.13/context.jsonld",
+			"disabled": true
 		},
 		{
 			"key": "gateway",
@@ -818,6 +651,11 @@
 			"value": "http://localhost:8026",
 			"type": "string",
 			"disabled": true
+		},
+		{
+			"key": "context-ld",
+			"value": "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld",
+			"type": "string"
 		}
 	]
 }

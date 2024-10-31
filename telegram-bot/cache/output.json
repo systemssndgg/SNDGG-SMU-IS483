@@ -1,24 +1,24 @@
 [
   {
-    "id": "urn:ngsi-ld:Carpark:ALJUNIEDROADOFFSTREETA0046",
+    "id": "urn:ngsi-ld:Carpark:ALIWALSTREETA0004",
     "type": "Carpark",
     "CarparkName": {
       "type": "Property",
-      "value": "ALJUNIED ROAD OFF STREET"
+      "value": "ALIWAL STREET "
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.881788,
-          1.313892
+          103.860841,
+          1.302642
         ]
       }
     },
     "ParkingCapacity": {
       "type": "Property",
-      "value": 13
+      "value": 69
     },
     "Sheltered": {
       "type": "Property",
@@ -26,7 +26,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 8
+      "value": 0
     },
     "Pricing": {
       "type": "Property",
@@ -36,21 +36,987 @@
             {
               "WeekdayRate": {
                 "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
                 "endTime": "1700",
                 "weekdayMin": "30 mins",
                 "weekdayRate": "$0.60"
               },
               "SaturdayRate": {
-                "startTime": "0700",
+                "startTime": "0830",
                 "endTime": "1700",
                 "satdayMin": "30 mins",
                 "satdayRate": "$0.60"
               },
               "SundayPHRate": {
-                "startTime": "0700",
+                "startTime": "0830",
                 "endTime": "1700",
                 "sunPHMin": "30 mins",
                 "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "weekdayMin": "810 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "satdayMin": "810 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "sunPHMin": "810 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:AMOYSTREETA0006",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "AMOY STREET "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.847231,
+          1.281185
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 81
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "weekdayMin": "810 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "satdayMin": "810 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "sunPHMin": "810 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$2.40"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$2.40"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ANNSIANGROADA0008",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ANN SIANG ROAD "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.845853,
+          1.280881
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 26
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": []
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$2.40"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$2.40"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ARABSTREETA0010",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ARAB STREET "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.858208,
+          1.302259
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 70
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "weekdayMin": "810 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "satdayMin": "810 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "sunPHMin": "810 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:ARMENIANSTREETOFFSTREETA0011",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "ARMENIAN STREET OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.848866,
+          1.293925
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 45
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 36
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "1100",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "1100",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "1100",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1100",
+                "endTime": "1400",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.40"
+              },
+              "SaturdayRate": {
+                "startTime": "1100",
+                "endTime": "1400",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.40"
+              },
+              "SundayPHRate": {
+                "startTime": "1100",
+                "endTime": "1400",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1400",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.40"
+              },
+              "SaturdayRate": {
+                "startTime": "1400",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.40"
+              },
+              "SundayPHRate": {
+                "startTime": "1400",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.75"
               }
             },
             {
@@ -116,586 +1082,25 @@
           ]
         },
         "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:BACKLANEBETONANROAD-JOOCHIATROADBL212",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "BACKLANE BET ONAN ROAD - JOO CHIAT ROAD"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.901637,
-          1.309954
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 6
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": []
-        },
-        "Motorcycle": {
           "TimeSlots": [
             {
               "WeekdayRate": {
                 "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "weekdayMin": "810 mins",
+                "endTime": "2230",
+                "weekdayMin": "930 mins",
                 "weekdayRate": "$0.65"
               },
               "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "satdayMin": "810 mins",
+                "startTime": "0700",
+                "endTime": "2230",
+                "satdayMin": "930 mins",
                 "satdayRate": "$0.65"
               },
               "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "sunPHMin": "810 mins",
+                "startTime": "0700",
+                "endTime": "2230",
+                "sunPHMin": "930 mins",
                 "sunPHRate": "$0.65"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CHANGIROAD(BETJALANKEMBANGAN-STILLROAD)C0113",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "CHANGI ROAD (BET JALAN KEMBANGAN-STILL ROAD)"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.91011,
-          1.318616
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 61
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CHANGIROADSERVICEROADC0114",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "CHANGI ROAD SERVICE ROAD"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.907333,
-          1.317904
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 38
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CEYLONROADC0118",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "CEYLON ROAD "
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.898841,
-          1.311111
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 11
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CEYLONROADOFFSTREETC0119",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "CEYLON ROAD OFF STREET "
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.899433,
-          1.309854
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 24
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 4
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2230",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2230",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2230",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2230",
-                "endTime": "0700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "2230",
-                "endTime": "0700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "2230",
-                "endTime": "0700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
               }
             },
             {
@@ -703,209 +1108,20 @@
                 "startTime": "2230",
                 "endTime": "0700",
                 "weekdayMin": "510 mins",
-                "weekdayRate": "$5.00"
+                "weekdayRate": "$0.65"
               },
               "SaturdayRate": {
                 "startTime": "2230",
                 "endTime": "0700",
                 "satdayMin": "510 mins",
-                "satdayRate": "$5.00"
+                "satdayRate": "$0.65"
               },
               "SundayPHRate": {
                 "startTime": "2230",
                 "endTime": "0700",
                 "sunPHMin": "510 mins",
-                "sunPHRate": "$5.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CHANGIROAD(BETJOOCHIATROAD-STILLROAD)C0132",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "CHANGI ROAD (BET JOO CHIAT ROAD-STILL ROAD)"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.902487,
-          1.317123
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 61
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "weekdayMin": "810 mins",
-                "weekdayRate": "$0.65"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "satdayMin": "810 mins",
-                "satdayRate": "$0.65"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "sunPHMin": "810 mins",
                 "sunPHRate": "$0.65"
               }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
             }
           ]
         },
@@ -916,25 +1132,25 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:CRANEROADC0135",
+    "id": "urn:ngsi-ld:Carpark:ARABSTREET-QUEENSTREETOFFSTREETA0017",
     "type": "Carpark",
     "CarparkName": {
       "type": "Property",
-      "value": "CRANE ROAD "
+      "value": "ARAB STREET - QUEEN STREET OFF STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.89954,
-          1.3129
+          103.857025,
+          1.302941
         ]
       }
     },
     "ParkingCapacity": {
       "type": "Property",
-      "value": 4
+      "value": 148
     },
     "Sheltered": {
       "type": "Property",
@@ -942,964 +1158,7 @@
     },
     "ParkingAvailability": {
       "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CEYLONLANEC0136",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "CEYLON LANE "
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.900658,
-          1.311255
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 6
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:CHANGIROAD-JALANWAKAFFOFFSTREETC0147",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "CHANGI ROAD - JALAN WAKAFF OFF STREET"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.910748,
-          1.318599
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 15
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:DUNMANROADFOODCENTREOFFSTREETD0027",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "DUNMAN ROAD FOOD CENTRE OFF STREET"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.901706,
-          1.3095
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 10
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "weekdayMin": "810 mins",
-                "weekdayRate": "$0.65"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "satdayMin": "810 mins",
-                "satdayRate": "$0.65"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "sunPHMin": "810 mins",
-                "sunPHRate": "$0.65"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:EUNOSROAD7-EUNOSAVE6HVPE0010",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "EUNOS ROAD 7 - EUNOS AVE 6 HVP"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.893072,
-          1.322418
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 145
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": []
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$1.20"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$1.20"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$1.20"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "1900",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$1.20"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "1900",
-                "satdayMin": "30 mins",
-                "satdayRate": "$1.20"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "1900",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$1.20"
-              }
-            }
-          ]
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:EASTCOASTROAD(HAIGROAD-TELOKKURAUROAD)E0017",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "EAST COAST ROAD (HAIG ROAD-TELOK KURAU ROAD)"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.90261,
-          1.303385
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 63
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$0.60"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "weekdayMin": "810 mins",
-                "weekdayRate": "$0.65"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "satdayMin": "810 mins",
-                "satdayRate": "$0.65"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "sunPHMin": "810 mins",
-                "sunPHRate": "$0.65"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": []
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:EASTCOASTPARKSERVICEROADE0025",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "EAST COAST PARK SERVICE ROAD"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.929582,
-          1.307265
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 5
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 0
-    },
-    "Pricing": {
-      "type": "Property",
-      "value": {
-        "Car": {
-          "TimeSlots": []
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$1.20"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$1.20"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$1.20"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$1.20"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "satdayMin": "30 mins",
-                "satdayRate": "$1.20"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "2200",
-                "sunPHMin": "30 mins",
-                "sunPHRate": "$1.20"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:EASTCOASTPARKE1OFFSTREETE0027",
-    "type": "Carpark",
-    "CarparkName": {
-      "type": "Property",
-      "value": "EAST COAST PARK E1 OFF STREET"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.929993,
-          1.306893
-        ]
-      }
-    },
-    "ParkingCapacity": {
-      "type": "Property",
-      "value": 549
-    },
-    "Sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "ParkingAvailability": {
-      "type": "Property",
-      "value": 537
+      "value": 125
     },
     "Pricing": {
       "type": "Property",
@@ -2039,25 +1298,150 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:EANKIAMPLACEE0031",
+    "id": "urn:ngsi-ld:Carpark:AMOYSTREETOFFSTREETA0021",
     "type": "Carpark",
     "CarparkName": {
       "type": "Property",
-      "value": "EAN KIAM PLACE "
+      "value": "AMOY STREET OFF STREET "
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.90194,
-          1.304915
+          103.847177,
+          1.28079
         ]
       }
     },
     "ParkingCapacity": {
       "type": "Property",
-      "value": 26
+      "value": 16
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 12
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.50"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2230",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2230",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2230",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "weekdayMin": "510 mins",
+                "weekdayRate": "$5.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "satdayMin": "510 mins",
+                "satdayRate": "$5.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "sunPHMin": "510 mins",
+                "sunPHRate": "$5.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": []
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BAGHDADSTREETB0002",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BAGHDAD STREET "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.85997,
+          1.301348
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 20
     },
     "Sheltered": {
       "type": "Property",
@@ -2164,25 +1548,25 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:EASTCOASTROAD(BETFRANKELAVE-SIGLAPRD)E0033",
+    "id": "urn:ngsi-ld:Carpark:BANDASTREET-SAGOLANEOFFSTREETB0005",
     "type": "Carpark",
     "CarparkName": {
       "type": "Property",
-      "value": "EAST COAST ROAD (BET FRANKEL AVE-SIGLAP RD)"
+      "value": "BANDA STREET - SAGO LANE OFF STREET"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.92258,
-          1.312018
+          103.8439,
+          1.281255
         ]
       }
     },
     "ParkingCapacity": {
       "type": "Property",
-      "value": 4
+      "value": 29
     },
     "Sheltered": {
       "type": "Property",
@@ -2196,73 +1580,6 @@
       "type": "Property",
       "value": {
         "Car": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "1700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "1700",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "1700",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "1700",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
-        },
-        "Motorcycle": {
-          "TimeSlots": []
-        },
-        "Heavy Vehicle": {
           "TimeSlots": [
             {
               "WeekdayRate": {
@@ -2300,25 +1617,193 @@
               "SundayPHRate": {
                 "startTime": "0830",
                 "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
                 "sunPHMin": "0 mins",
                 "sunPHRate": "$0.00"
               }
             },
             {
               "WeekdayRate": {
-                "startTime": "1700",
+                "startTime": "0830",
+                "endTime": "2200",
+                "weekdayMin": "810 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "satdayMin": "810 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "sunPHMin": "810 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
                 "endTime": "0700",
                 "weekdayMin": "0 mins",
                 "weekdayRate": "$0.00"
               },
               "SaturdayRate": {
-                "startTime": "1700",
+                "startTime": "2200",
                 "endTime": "0700",
                 "satdayMin": "0 mins",
                 "satdayRate": "$0.00"
               },
               "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$2.40"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$2.40"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
                 "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
                 "endTime": "0700",
                 "sunPHMin": "0 mins",
                 "sunPHRate": "$0.00"
@@ -2330,25 +1815,25 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:EVERITTROADNORTHE0034",
+    "id": "urn:ngsi-ld:Carpark:BUKITPASOHROADB0018",
     "type": "Carpark",
     "CarparkName": {
       "type": "Property",
-      "value": "EVERITT ROAD NORTH "
+      "value": "BUKIT PASOH ROAD "
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.901511,
-          1.315994
+          103.840744,
+          1.278946
         ]
       }
     },
     "ParkingCapacity": {
       "type": "Property",
-      "value": 9
+      "value": 35
     },
     "Sheltered": {
       "type": "Property",
@@ -2388,13 +1873,13 @@
                 "startTime": "0830",
                 "endTime": "1700",
                 "weekdayMin": "30 mins",
-                "weekdayRate": "$0.60"
+                "weekdayRate": "$1.20"
               },
               "SaturdayRate": {
                 "startTime": "0830",
                 "endTime": "1700",
                 "satdayMin": "30 mins",
-                "satdayRate": "$0.60"
+                "satdayRate": "$1.20"
               },
               "SundayPHRate": {
                 "startTime": "0830",
@@ -2516,25 +2001,25 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:EVERITTROADE0035",
+    "id": "urn:ngsi-ld:Carpark:BUSSORAHSTREETB0020",
     "type": "Carpark",
     "CarparkName": {
       "type": "Property",
-      "value": "EVERITT ROAD "
+      "value": "BUSSORAH STREET "
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.901609,
-          1.314275
+          103.860045,
+          1.300952
         ]
       }
     },
     "ParkingCapacity": {
       "type": "Property",
-      "value": 24
+      "value": 13
     },
     "Sheltered": {
       "type": "Property",
@@ -2632,68 +2117,7 @@
           ]
         },
         "Motorcycle": {
-          "TimeSlots": [
-            {
-              "WeekdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "0700",
-                "endTime": "0830",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "weekdayMin": "810 mins",
-                "weekdayRate": "$0.65"
-              },
-              "SaturdayRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "satdayMin": "810 mins",
-                "satdayRate": "$0.65"
-              },
-              "SundayPHRate": {
-                "startTime": "0830",
-                "endTime": "2200",
-                "sunPHMin": "810 mins",
-                "sunPHRate": "$0.65"
-              }
-            },
-            {
-              "WeekdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "weekdayMin": "0 mins",
-                "weekdayRate": "$0.00"
-              },
-              "SaturdayRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "satdayMin": "0 mins",
-                "satdayRate": "$0.00"
-              },
-              "SundayPHRate": {
-                "startTime": "2200",
-                "endTime": "0700",
-                "sunPHMin": "0 mins",
-                "sunPHRate": "$0.00"
-              }
-            }
-          ]
+          "TimeSlots": []
         },
         "Heavy Vehicle": {
           "TimeSlots": []
@@ -2702,19 +2126,19 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:EASTCOASTROAD(BETSIGLAPRD-JALANJAMAL)E0037",
+    "id": "urn:ngsi-ld:Carpark:BALILANEB0025",
     "type": "Carpark",
     "CarparkName": {
       "type": "Property",
-      "value": "EAST COAST ROAD (BET SIGLAP RD-JALAN JAMAL)"
+      "value": "BALI LANE "
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.924643,
-          1.312239
+          103.858409,
+          1.301155
         ]
       }
     },
@@ -2819,6 +2243,1129 @@
         },
         "Motorcycle": {
           "TimeSlots": []
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BLAIRROADB0045",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BLAIR ROAD "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.836183,
+          1.276161
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 43
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": []
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BANDASTREETB0052",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BANDA STREET "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.843605,
+          1.281184
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 20
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": []
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$2.40"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$2.40"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$1.20"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BOONTATSTREETB0073",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BOON TAT STREET "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.84809,
+          1.281401
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 17
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$1.20"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$1.20"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "weekdayMin": "810 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "satdayMin": "810 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "sunPHMin": "810 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BEACHROADB0084",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BEACH ROAD "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.860494,
+          1.30072
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 8
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2200",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": []
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BAGHDADSTREETOFFSTREETB0087",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BAGHDAD STREET OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.860375,
+          1.301303
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 25
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 10
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "1100",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "1100",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "1100",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1100",
+                "endTime": "1700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.75"
+              },
+              "SaturdayRate": {
+                "startTime": "1100",
+                "endTime": "1700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.75"
+              },
+              "SundayPHRate": {
+                "startTime": "1100",
+                "endTime": "1700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.75"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "2230",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "2230",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.75"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "2230",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.75"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "weekdayMin": "30 mins",
+                "weekdayRate": "$0.60"
+              },
+              "SaturdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "satdayMin": "30 mins",
+                "satdayRate": "$0.60"
+              },
+              "SundayPHRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "sunPHMin": "30 mins",
+                "sunPHRate": "$0.60"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "weekdayMin": "510 mins",
+                "weekdayRate": "$5.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "satdayMin": "510 mins",
+                "satdayRate": "$5.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "sunPHMin": "510 mins",
+                "sunPHRate": "$5.00"
+              }
+            }
+          ]
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "2230",
+                "weekdayMin": "930 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "2230",
+                "satdayMin": "930 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "2230",
+                "sunPHMin": "930 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "weekdayMin": "510 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "satdayMin": "510 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "2230",
+                "endTime": "0700",
+                "sunPHMin": "510 mins",
+                "sunPHRate": "$0.65"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BACKLANEBETCECILSTREET-MARKETSTREETBL001",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BACKLANE BET CECIL STREET-MARKET STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.850895,
+          1.282487
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 5
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": []
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "weekdayMin": "510 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "satdayMin": "510 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "1700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "1700",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "1700",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "1700",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BACKLANEBETNORTHCANALROAD-CIRCULARRDBL008",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BACKLANE BET NORTH CANAL ROAD-CIRCULAR RD"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.848218,
+          1.286581
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 26
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": []
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "weekdayMin": "810 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "satdayMin": "810 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "sunPHMin": "810 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
+        },
+        "Heavy Vehicle": {
+          "TimeSlots": []
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BACKLANEBETHONGKONGST-CARPENTERSTREETBL009",
+    "type": "Carpark",
+    "CarparkName": {
+      "type": "Property",
+      "value": "BACKLANE BET HONGKONG ST-CARPENTER STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.848096,
+          1.287721
+        ]
+      }
+    },
+    "ParkingCapacity": {
+      "type": "Property",
+      "value": 7
+    },
+    "Sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "ParkingAvailability": {
+      "type": "Property",
+      "value": 0
+    },
+    "Pricing": {
+      "type": "Property",
+      "value": {
+        "Car": {
+          "TimeSlots": []
+        },
+        "Motorcycle": {
+          "TimeSlots": [
+            {
+              "WeekdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "0700",
+                "endTime": "0830",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "weekdayMin": "810 mins",
+                "weekdayRate": "$0.65"
+              },
+              "SaturdayRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "satdayMin": "810 mins",
+                "satdayRate": "$0.65"
+              },
+              "SundayPHRate": {
+                "startTime": "0830",
+                "endTime": "2200",
+                "sunPHMin": "810 mins",
+                "sunPHRate": "$0.65"
+              }
+            },
+            {
+              "WeekdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "weekdayMin": "0 mins",
+                "weekdayRate": "$0.00"
+              },
+              "SaturdayRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "satdayMin": "0 mins",
+                "satdayRate": "$0.00"
+              },
+              "SundayPHRate": {
+                "startTime": "2200",
+                "endTime": "0700",
+                "sunPHMin": "0 mins",
+                "sunPHRate": "$0.00"
+              }
+            }
+          ]
         },
         "Heavy Vehicle": {
           "TimeSlots": []
