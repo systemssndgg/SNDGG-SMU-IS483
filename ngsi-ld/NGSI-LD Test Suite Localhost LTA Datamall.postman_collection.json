@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "166a5949-c181-41e0-a7a9-4f20d806e8a4",
+		"_postman_id": "1ea2456a-939f-4e2c-94d9-7d93409f6eb2",
 		"name": "NGSI-LD Test Suite Localhost LTA Datamall",
 		"description": "Sample operations to help understand the NGSI-LD API.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "6685473"
+		"_exporter_id": "23492608"
 	},
 	"item": [
 		{
@@ -597,8 +597,176 @@
 						"description": "Delete a created entity by specifying the id"
 					},
 					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
+		},
+		{
+			"name": "InsightGrid Entities",
+			"item": []
+		},
+		{
+			"name": "View all Weather Forecast",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "NGSILD-Tenant",
+						"value": "openiot",
+						"type": "text"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/",
+						"type": "text"
+					},
+					{
+						"key": "link",
+						"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=WeatherForecast",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"api",
+						"broker",
+						"ngsi-ld",
+						"v1",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "WeatherForecast"
+						}
+					]
+				},
+				"description": "View the created entities (which are of type Room)"
+			},
+			"response": []
+		},
+		{
+			"name": "View all Traffic Advisories",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "NGSILD-Tenant",
+						"value": "openiot",
+						"type": "text"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/",
+						"type": "text"
+					},
+					{
+						"key": "Link",
+						"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					},
+					{
+						"key": "Fiware-Service",
+						"value": "example",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=Carpark",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"api",
+						"broker",
+						"ngsi-ld",
+						"v1",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Carpark"
+						}
+					]
+				},
+				"description": "View the created entities (which are of type Room)"
+			},
+			"response": []
+		},
+		{
+			"name": "View all Carparks",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "NGSILD-Tenant",
+						"value": "openiot",
+						"type": "text"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/",
+						"type": "text"
+					},
+					{
+						"key": "Link",
+						"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=Carpark",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"api",
+						"broker",
+						"ngsi-ld",
+						"v1",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Carpark"
+						}
+					]
+				},
+				"description": "View the created entities (which are of type Room)"
+			},
+			"response": []
 		}
 	],
 	"event": [

@@ -36,7 +36,7 @@ def get_ura_token():
     else:
         return None
 
-def get_carpark(ura_token):
+def get_ura_carparks(ura_token):
     # retrieve carpark availabilities
     carpark_availability_response = requests.get(CARPARK_AVAILABILITY_URL, headers={
         "Content-Type": "application/json",

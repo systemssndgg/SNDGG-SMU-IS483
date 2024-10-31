@@ -6,3 +6,5 @@ airflow_requirements.txt
 mylibs/__pycache__
 mylibs/.DS_Store
 .DS_Store
+*.pyc
+__pycache__/

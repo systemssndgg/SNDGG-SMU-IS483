@@ -1,5 +1,5 @@
-from mylibs.weather_forecast import get_two_hour_weather
-from mylibs.weather_observed import get_weather_observed
+from mylibs.weather import get_two_hour_weather
+from mylibs.weather import get_weather_observed
 from mylibs.ngsi_ld import create_entities_in_broker
 
 # Code to run ==================================================
