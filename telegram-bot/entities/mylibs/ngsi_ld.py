@@ -1,4 +1,4 @@
-import mylibs.constants as constants
+import constants as constants
 from landtransportsg import Traffic
 import requests
 import urllib.parse

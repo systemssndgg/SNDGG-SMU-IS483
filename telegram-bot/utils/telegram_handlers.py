@@ -222,7 +222,6 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     logger = logging.getLogger(__name__)
 
     query = update.callback_query
-    print("I'm in user_preference", query)
     await query.answer()
     context.user_data["confirm_destination"] = query.data
 
@@ -584,7 +583,6 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
     await context.job_queue.stop()
     query = update.callback_query
     await query.answer()
-    print("I'm in store_destination", query.data)
 
     preference_list = context.user_data.get('preference_list')
 
@@ -828,11 +826,12 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     closest_three_carparks = context.user_data['closest_carparks']
     selected_carpark = closest_three_carparks[selected_carpark_index]
 
+    context.user_data['selected_carpark_id'] = selected_carpark['id']
     context.user_data['selected_carpark_lat'] = selected_carpark['location']['value']['coordinates'][1]
     context.user_data['selected_carpark_long'] = selected_carpark['location']['value']['coordinates'][0]
     context.user_data['selected_carpark'] = selected_carpark
     context.user_data['selected_carpark_name'] = selected_carpark['CarparkName']['value'].title()
-    context.user_data['selected_carpark_availability'] = selected_carpark['ParkingAvailability']['value']
+    # context.user_data['selected_carpark_availability'] = selected_carpark['ParkingAvailability']['value']
 
     selected_carpark_name = selected_carpark['CarparkName']['value'].title()
     await query.message.reply_text(

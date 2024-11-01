@@ -242,3 +242,27 @@ gq = "geometry=Point&georel=near%3BmaxDistance==800&coordinates=%5B103.83359,1.3
 geoquery_ngsi_point(input_type = "Carpark", maxDistance=100 , lat = 103.83359, long= 1.3071)
 
 """
+
+def retrieve_entity_entry(entity_id: str):
+    """Retrieves a specific entry of a given entity from the context broker"""
+    broker_url = "http://localhost"
+    url = f"{broker_url}/api/broker/ngsi-ld/v1/entities/{entity_id}"
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/ld+json",
+        "NGSILD-Tenant": "openiot",
+        "fiware-servicepath": "/",
+        "Link": f'<{constants.ctx}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        entity_entry = response.json()
+        # print("Entity retrieved: ", entity_entry)
+        return entity_entry
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except Exception as err:
+        print(f"Other error occurred: {err}")
+    return None

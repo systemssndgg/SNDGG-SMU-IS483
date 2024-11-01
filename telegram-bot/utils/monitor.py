@@ -1,4 +1,3 @@
-
 from geopy.distance import geodesic
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
@@ -11,7 +10,8 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 from utils.helper_functions import find_next_best_carpark, find_closest_carpark, is_word_present, end
-from utils.context_broker import retrieve_ngsi_type
+from entities.import_entities import import_Carpark_entity, import_TrafficAdvisories_entity, import_WeatherForecast_entity
+from utils.context_broker import retrieve_entity_entry
 
 async def monitor_carpark_availability(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
     """Monitor the user's proximity to the selected carpark and alert if availability is low."""
@@ -25,6 +25,10 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
     sent_new = False
     # Begin monitoring the user's proximity
     while True:
+        # update Carpark_entity
+        import_Carpark_entity()
+        selected_carpark_updated = retrieve_entity_entry(context.user_data['selected_carpark_id'])
+
         # Continuously get updated live location
         live_location = context.user_data.get('live_location')
 
@@ -57,8 +61,8 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 
         # Trigger warning if within 2km and less than 10 parking spots
         carpark_name = context.user_data.get('selected_carpark_name')
-        available_lots = context.user_data.get('selected_carpark_availability')
-
+        available_lots = selected_carpark_updated['ParkingAvailability']['value']
+        
         if distance_to_carpark <= 2.0 and not approaching_message_sent:
             if available_lots < 10:
                 next_best_carpark = find_next_best_carpark(context.user_data['closest_carparks'], selected_carpark)
@@ -100,7 +104,7 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
             approaching_message_sent = True
         
         # Sleep for 5 seconds before checking again    
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
         if sent_new == True:
             break
 
@@ -108,9 +112,11 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Monitor traffic advisories along the route."""
     chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
-    # traffic_advisories = get_traffic_advisories()
+    # 
+    traffic_advisories = import_TrafficAdvisories_entity()
 
-    mock_traffic_advisories = [
+
+    traffic_advisories = [
     {
         "id": "urn:ngsi-ld:TrafficAdvisories:EVMS_RS10",
         "type": "TrafficAdvisories",
@@ -148,15 +154,17 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
         }
     }
     ]
-
+    
+    # traffic_advisories = retrieve_ngsi_type(
+    #     input_type="TrafficAdvisories")
+    # print("traffic advisories:", traffic_advisories)
     keywords = ["ACCIDENT", "CLOSURE", "CONSTRUCTION", "JAM"]
-
     sent_advisories = context.user_data.setdefault('sent_advisories', set())
 
     while True:    
         live_location = context.user_data.get('live_location')
 
-        for advisory in mock_traffic_advisories:  
+        for advisory in traffic_advisories:  
             advisory_id = advisory['id']
             if advisory_id not in sent_advisories:
                 advisory_message = advisory['Message']['value']
@@ -179,7 +187,7 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
                             sent_advisories.add(advisory_id)
                         break
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
 
 
 async def monitor_live_location_changes(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -205,6 +213,7 @@ async def monitor_live_location_changes(update: Update, context: ContextTypes.DE
 
 async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, current_carpark, closest_three_carparks, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination):
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
+    import_WeatherForecast_entity()
 
     weather = [
         {
@@ -234,6 +243,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
     # weather = retrieve_ngsi_type(
     #     input_type="WeatherForecast")
     # print("weather:", weather)
+
 
     # Logging setup
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -332,7 +342,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                 break
 
         # Sleep for 5 seconds before checking again    
-        await asyncio.sleep(10)
+        await asyncio.sleep(5)
         if sent_new == True:
             break
 
@@ -340,13 +350,14 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
 async def monitor_all(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination):
     """Run all monitoring tasks concurrently."""
     print(Fore.CYAN + "Starting monitoring tasks...")
-    await asyncio.gather(
-        monitor_carpark_availability(update, context, selected_carpark),
-        monitor_traffic_advisories(update, context),
-        # monitor_weather(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address, geoquery_nearest_carparks, ),
-
-        monitor_weather(update, context, selected_carpark, closest_three_carparks, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination),
-
-
-        monitor_live_location_changes(update, context),
-    )
+    try:
+        await asyncio.gather(
+            monitor_carpark_availability(update, context, selected_carpark),
+            monitor_traffic_advisories(update, context),
+            monitor_weather(update, context, selected_carpark, closest_three_carparks, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination),
+            monitor_live_location_changes(update, context),
+        )
+    except BadRequest as e:
+        logging.error(f"BadRequest error occurred: {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")

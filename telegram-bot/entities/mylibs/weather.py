@@ -1,4 +1,4 @@
-import mylibs.constants as constants
+import entities.mylibs.constants as constants
 import requests
 import json
 from ngsildclient import Client, Entity, SmartDataModels

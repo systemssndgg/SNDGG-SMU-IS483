@@ -1,4 +1,4 @@
-import mylibs.constants as constants
+import entities.mylibs.constants as constants
 import requests
 import json
 from ngsildclient import Client, Entity, SmartDataModels
@@ -38,7 +38,7 @@ def get_traffic_advisories():
             
             entity_list.append(entity)
         print("Total number of Traffic Advisories: ", len(traffic_advisories))
-        print("Total entities created: ", len(entity_list))
+        print("Total entities created: ", len(entity_list), "\n")
 
         return entity_list
     else:
