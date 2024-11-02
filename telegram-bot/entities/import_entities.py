@@ -2,7 +2,7 @@ from entities.mylibs.ura_parking import get_ura_token, get_ura_carparks, get_sea
 from entities.mylibs.traffic_advisories import get_traffic_advisories
 from entities.mylibs.ngsi_ld import create_entities_in_broker
 from entities.mylibs.weather import get_two_hour_weather, get_weather_observed
-
+from entities.mylibs.commercial_carparks import create_commercial_carparks
 from entities.mylibs.ngsi_ld import create_entities_in_broker
 
 
@@ -12,8 +12,7 @@ def import_Carpark_entity():
     carpark_list = get_ura_carparks(token)
     print("\nPushing Carpark to broker...")
     create_entities_in_broker(carpark_list, "\n")
-
-    # main() # add creation of commercial carparks function here
+    create_commercial_carparks()
 
 
 def import_TrafficAdvisories_entity():
