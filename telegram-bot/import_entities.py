@@ -11,20 +11,20 @@ def import_Carpark_entity():
     print("Token ", token)
     carpark_list = get_ura_carparks(token)
     print("\nPushing Carpark to broker...")
-    create_entities_in_broker(carpark_list, "\n")
-    create_commercial_carparks()
+    create_entities_in_broker(carpark_list)
+    create_commercial_carparks() # create_entities_in_broker for Commercial carpark
 
 
 def import_TrafficAdvisories_entity():
     traffic_advisories_list = get_traffic_advisories()
-    print("\nPushing Traffic Advisory to broker...")
-    create_entities_in_broker(traffic_advisories_list, "\n")
+    print("\nPushing TrafficAdvisories to broker...")
+    create_entities_in_broker(traffic_advisories_list)
 
 
 def import_WeatherForecast_entity():
     forecast_list = get_two_hour_weather()
     observed_list = get_weather_observed()
-    print("\nPushing to broker...", "\n")
+    print("\nPushing WeatherForecast to broker...", "\n")
     create_entities_in_broker(forecast_list)
     create_entities_in_broker(observed_list)
 
@@ -32,8 +32,8 @@ def import_WeatherForecast_entity():
 if __name__ == "__main__":
     try:
         import_WeatherForecast_entity()
-        import_Carpark_entity()
         import_TrafficAdvisories_entity()
+        import_Carpark_entity()
         print("\nCompleted importing entities.")
     except Exception as e:
         print(f"Error: {e}")

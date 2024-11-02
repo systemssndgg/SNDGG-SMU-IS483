@@ -1,5 +1,5 @@
-import mylibs.constants  as constants
-import mylibs.ngsi_ld as ngsi_ld
+import entities.mylibs.constants  as constants
+import entities.mylibs.ngsi_ld as ngsi_ld
 
 API_KEY = constants.DATAMALL_API_KEY
 ctx = constants.ctx

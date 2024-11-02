@@ -1,4 +1,4 @@
-import mylibs.constants as constants 
+import entities.mylibs.constants as constants 
 from landtransportsg import Traffic
 import requests
 from openai import OpenAI
@@ -95,7 +95,7 @@ def fetch_carpark_rates():
 # =============================================================================
 # This function helps to generate the formatted excel file using GPT and CommercialCarparkRates.xlsx
 def generate_formatted_excel(file_path):
-    carpark_rates = read_excel("mylibs/CommercialCarparkRates.xlsx")
+    carpark_rates = read_excel("entities/mylibs/CommercialCarparkRates.xlsx")
     response = format_carpark_rates(carpark_rates)
 
     if os.path.exists(file_path):
@@ -349,7 +349,7 @@ def read_excel(file_path):
     return data
 
 # Helper function to load the raw carpark rates from CommercialCarparkRates.xlsx
-def fetch_carpark_rates(carpark_name, file_path='mylibs/CommercialCarparkRates.xlsx'):
+def fetch_carpark_rates(carpark_name, file_path='entities/mylibs/CommercialCarparkRates.xlsx'):
     workbook = openpyxl.load_workbook(filename=file_path)
     sheet = workbook.active
 
@@ -427,14 +427,14 @@ def create_commercial_carparks():
     if use_gpt == True:
         try:
             # Fetch carpark rates
-            carpark_rates = read_excel('mylibs/CommercialCarparkRates.xlsx')
+            carpark_rates = read_excel('entities/mylibs/CommercialCarparkRates.xlsx')
             formatted_carpark_rates = format_carpark_rates(carpark_rates)
         except:
             print("Error formatting carpark rates using GPT-3, check if the API key is correct.")
     else:
         try:
             # Open the Excel file
-            wb = openpyxl.load_workbook('mylibs/FormattedCarparkRates.xlsx')
+            wb = openpyxl.load_workbook('entities/mylibs/FormattedCarparkRates.xlsx')
             ws = wb.active
 
             # Initialize the carpark rates dictionary

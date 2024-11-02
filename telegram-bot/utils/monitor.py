@@ -10,8 +10,8 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 from utils.helper_functions import find_next_best_carpark, find_closest_carpark, is_word_present, end
-from entities.import_entities import import_Carpark_entity, import_TrafficAdvisories_entity, import_WeatherForecast_entity
-from utils.context_broker import retrieve_entity_entry
+from import_entities import import_Carpark_entity, import_TrafficAdvisories_entity, import_WeatherForecast_entity
+from utils.context_broker import retrieve_entity_entry, retrieve_ngsi_type
 
 async def monitor_carpark_availability(update: Update, context: ContextTypes.DEFAULT_TYPE, selected_carpark):
     """Monitor the user's proximity to the selected carpark and alert if availability is low."""
@@ -104,7 +104,7 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
             approaching_message_sent = True
         
         # Sleep for 5 seconds before checking again    
-        await asyncio.sleep(5)
+        await asyncio.sleep(10)
         if sent_new == True:
             break
 
@@ -116,47 +116,47 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
     traffic_advisories = import_TrafficAdvisories_entity()
 
 
-    traffic_advisories = [
-    {
-        "id": "urn:ngsi-ld:TrafficAdvisories:EVMS_RS10",
-        "type": "TrafficAdvisories",
-        "Message": {
-            "type": "Property",
-            "value": "DRIVE SAFELY,SPEED CAMERAS,IN TUNNEL"
-        },
-        "Location": {
-            "type": "GeoProperty",
-            "value": {
-                "type": "Point",
-                "coordinates": [
-                    103.892766,
-                    1.334989
-                ]
-            }
-        }
-    },
-    {
-        "id": "urn:ngsi-ld:TrafficAdvisories:VMS_0008",
-        "type": "TrafficAdvisories",
-        "Message": {
-            "type": "Property",
-            "value": "ACCIDENT IN LANE,"
-        },
-        "Location": {
-            "type": "GeoProperty",
-            "value": {
-                "type": "Point",
-                "coordinates": [
-                    103.874857,
-                    1.314717
-                ]
-            }
-        }
-    }
-    ]
+    # traffic_advisories = [
+    # {
+    #     "id": "urn:ngsi-ld:TrafficAdvisories:EVMS_RS10",
+    #     "type": "TrafficAdvisories",
+    #     "Message": {
+    #         "type": "Property",
+    #         "value": "DRIVE SAFELY,SPEED CAMERAS,IN TUNNEL"
+    #     },
+    #     "Location": {
+    #         "type": "GeoProperty",
+    #         "value": {
+    #             "type": "Point",
+    #             "coordinates": [
+    #                 103.892766,
+    #                 1.334989
+    #             ]
+    #         }
+    #     }
+    # },
+    # {
+    #     "id": "urn:ngsi-ld:TrafficAdvisories:VMS_0008",
+    #     "type": "TrafficAdvisories",
+    #     "Message": {
+    #         "type": "Property",
+    #         "value": "ACCIDENT IN LANE,"
+    #     },
+    #     "Location": {
+    #         "type": "GeoProperty",
+    #         "value": {
+    #             "type": "Point",
+    #             "coordinates": [
+    #                 103.874857,
+    #                 1.314717
+    #             ]
+    #         }
+    #     }
+    # }
+    # ]
     
-    # traffic_advisories = retrieve_ngsi_type(
-    #     input_type="TrafficAdvisories")
+    traffic_advisories = retrieve_ngsi_type(
+        input_type="TrafficAdvisories")
     # print("traffic advisories:", traffic_advisories)
     keywords = ["ACCIDENT", "CLOSURE", "CONSTRUCTION", "JAM"]
     sent_advisories = context.user_data.setdefault('sent_advisories', set())
@@ -215,33 +215,33 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
     import_WeatherForecast_entity()
 
-    weather = [
-        {
-            "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-10-08T12:23:56_2024-10-08T14:23:56",
-            "type": "WeatherForecast",
-            "Area": {
-                "type": "Property",
-                "value": "Bedok"
-            },
-            "forecast": {
-                "type": "Property",
-                "value": "Heavy Rain"
-            },
-            "location": {
-                "type": "GeoProperty",
-                "value": {
-                    "type": "Point",
-                    "coordinates": [
-                        103.924,
-                        1.321
-                    ]
-                }
-            }
-        }
-        ]
+    # weather = [
+    #     {
+    #         "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-10-08T12:23:56_2024-10-08T14:23:56",
+    #         "type": "WeatherForecast",
+    #         "Area": {
+    #             "type": "Property",
+    #             "value": "Bedok"
+    #         },
+    #         "forecast": {
+    #             "type": "Property",
+    #             "value": "Heavy Rain"
+    #         },
+    #         "location": {
+    #             "type": "GeoProperty",
+    #             "value": {
+    #                 "type": "Point",
+    #                 "coordinates": [
+    #                     103.924,
+    #                     1.321
+    #                 ]
+    #             }
+    #         }
+    #     }
+    #     ]
     
-    # weather = retrieve_ngsi_type(
-    #     input_type="WeatherForecast")
+    weather = retrieve_ngsi_type(
+        input_type="WeatherForecast")
     # print("weather:", weather)
 
 
