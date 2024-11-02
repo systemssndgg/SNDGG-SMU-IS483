@@ -12,9 +12,9 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 import pandas as pd
 
-client = OpenAI(
-    api_key = constants.OPENAI_KEY
-)
+# client = OpenAI(
+#     api_key = constants.OPENAI_KEY
+# )
 
 API_KEY = constants.LTA_API_KEY
 ctx = constants.ctx
@@ -22,123 +22,6 @@ broker_url = constants.broker_url
 broker_port = constants.broker_port  # default, 80
 temporal_port = constants.temporal_port  # default 1026
 broker_tenant = constants.broker_tenant
-
-price_dictionary = {
-                    "WeekdayStr": "-",
-                    "SaturdayStr": "-",
-                    "SundayPHStr": "-",
-                    "Car" :{
-                            "EntryFees" : {
-                                "Weekdays" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                },
-                                "Saturday" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                },
-                                "SundayPH" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                }
-                            },
-                            "WeekdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "weekdayMin" : None,
-                                "weekdayRate" : None
-                            },
-                            "SaturdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "satdayMin" : None,
-                                "satdayRate" : None
-                            },
-                            "SundayPHRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "sunPHMin" : None,
-                                "sunPHRate" : None
-                            },
-                    },
-                    "Motorcycle" :{
-                            "EntryFees" : {
-                                "Weekdays" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                },
-                                "Saturday" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                },
-                                "SundayPH" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                }
-                            },
-                            "WeekdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "weekdayMin" : None,
-                                "weekdayRate" : None
-                            },
-                            "SaturdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "satdayMin" : None,
-                                "satdayRate" : None
-                            },
-                            "SundayPHRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "sunPHMin" : None,
-                                "sunPHRate" : None
-                            },
-                    },
-                    "Heavy Vehicle" :{
-                            "EntryFees" : {
-                                "Weekdays" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                },
-                                "Saturday" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                },
-                                "SundayPH" : {
-                                    "startTime" : None,
-                                    "endTime" : None,
-                                    "entryFee" : None
-                                }
-                            },
-                            "WeekdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "weekdayMin" : None,
-                                "weekdayRate" : None
-                            },
-                            "SaturdayRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "satdayMin" : None,
-                                "satdayRate" : None
-                            },
-                            "SundayPHRate" : {
-                                "startTime" : None,
-                                "endTime" : None,
-                                "sunPHMin" : None,
-                                "sunPHRate" : None
-                            },
-                    }
-                }
 
 # (1) Fetch carpark availability from the data.gov.sg API
 def fetch_carpark_availabilities():
@@ -212,7 +95,7 @@ def fetch_carpark_rates():
 # =============================================================================
 # This function helps to generate the formatted excel file using GPT and CommercialCarparkRates.xlsx
 def generate_formatted_excel(file_path):
-    carpark_rates = read_excel("CommercialCarparkRates.xlsx")
+    carpark_rates = read_excel("mylibs/CommercialCarparkRates.xlsx")
     response = format_carpark_rates(carpark_rates)
 
     if os.path.exists(file_path):
@@ -466,7 +349,7 @@ def read_excel(file_path):
     return data
 
 # Helper function to load the raw carpark rates from CommercialCarparkRates.xlsx
-def fetch_carpark_rates(carpark_name, file_path='CommercialCarparkRates.xlsx'):
+def fetch_carpark_rates(carpark_name, file_path='mylibs/CommercialCarparkRates.xlsx'):
     workbook = openpyxl.load_workbook(filename=file_path)
     sheet = workbook.active
 
@@ -521,7 +404,7 @@ def clean_text(text):
     return re.sub(r'[^\x00-\x7F]+', ' ', text)  # Removes non-ASCII characters
 
 # This function ties in everything to create the entities and push it to the context broker.
-def main():
+def create_commercial_carparks():
     # Change this variable depending on if you're using gpt to format the data or calling it straight from the excel file.
     use_gpt = False
 
@@ -544,14 +427,14 @@ def main():
     if use_gpt == True:
         try:
             # Fetch carpark rates
-            carpark_rates = read_excel('CommercialCarparkRates.xlsx')
+            carpark_rates = read_excel('mylibs/CommercialCarparkRates.xlsx')
             formatted_carpark_rates = format_carpark_rates(carpark_rates)
         except:
             print("Error formatting carpark rates using GPT-3, check if the API key is correct.")
     else:
         try:
             # Open the Excel file
-            wb = openpyxl.load_workbook('FormattedCarparkRates.xlsx')
+            wb = openpyxl.load_workbook('mylibs/FormattedCarparkRates.xlsx')
             ws = wb.active
 
             # Initialize the carpark rates dictionary
@@ -661,9 +544,3 @@ def main():
         print("Failed to create entities, check if your context broker is running in Docker.")
 
     return entity_dict
-
-
-# TEST MAIN()
-# =============================================================================
-# print(main())
-# =============================================================================

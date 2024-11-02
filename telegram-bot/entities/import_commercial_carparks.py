@@ -1,4 +1,4 @@
-from mylibs.commercial_carparks import main
+from mylibs.commercial_carparks import create_commercial_carparks
 
 print("\nPushing to broker...")
-main()
+create_commercial_carparks()
