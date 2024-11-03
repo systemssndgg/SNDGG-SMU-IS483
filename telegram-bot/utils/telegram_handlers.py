@@ -350,7 +350,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 preference_message = await context.bot.edit_message_text(
                     chat_id=query.message.chat_id,
                     message_id=query.message.message_id,
-                    text="*Which of the following is most important to you?*\n\n",
+                    text="*Now, keeping selecting your next most important preference(s).*\n\n",
                     parse_mode='Markdown',
                     reply_markup=InlineKeyboardMarkup(new_keyboard)
                 )
@@ -507,7 +507,7 @@ async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 preference_message = await context.bot.edit_message_text(
                     chat_id=query.message.chat_id,
                     message_id=query.message.message_id,
-                    text="*Which of the following is most important to you?*\n\n",
+                    text="*Now, keeping selecting your next most important preference(s).*\n\n",
                     parse_mode='Markdown',
                     reply_markup=InlineKeyboardMarkup(new_keyboard)
                 )
