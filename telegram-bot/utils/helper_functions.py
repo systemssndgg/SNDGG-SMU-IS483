@@ -375,7 +375,7 @@ def find_next_best_carpark(carparks, current_carpark):
     return best_carpark
 
 
-def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_preferences: dict, num_cp_to_return: int, min_avail_lots: int=10, num_hrs: int=2, remove_unsheltered: bool=False, strict_pref: bool=False, destination: Union[list, tuple]=None):
+def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_preferences: dict, num_cp_to_return: int, min_avail_lots: int=10, num_hrs: int=2, remove_unsheltered: bool=False, strict_pref: bool=False, destination: Union[list, tuple]=None, remove_missing_price: bool=False, remove_missing_lots: bool=False):
     '''
         Function to get the top N carparks based on user preferences using Z-Score Normalization and Weighted Scoring.
         
@@ -430,6 +430,10 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
             - If destination is provided, the function will calculate the walking time from the carpark to the destination
             - If destination is not provided, the function will default walking time to 0.0
 
+        [10] remove_missing_price: Boolean to remove carparks with missing price information (default is False)
+
+        [11] remove_missing_lots: Boolean to remove carparks with missing available lots information (default is False)
+
         OUTPUT PARAMETERS SPECIFICATIONS ===============================================================
         Returns: List of top N carpark dictionaries in the same format as the input carparks. (First item in the list is the best carpark)
 
@@ -456,12 +460,17 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
             rotten_carparks.append(cp)
             continue
 
+        # SKIP IF PRICE INFORMATION IS MISSING [DONT INCLUDE IN ROTTEN CARPARKS]
+        if remove_missing_price and find_price_per_hr(cp, num_hrs, 'Car') == -1:
+            continue
+
+        # SKIP IF AVAILABLE LOTS INFORMATION IS MISSING [DONT INCLUDE IN ROTTEN CARPARKS]
+        if remove_missing_lots and cp['ParkingAvailability'] == None:
+            continue
+
         new_carparks.append(cp)
     
     carparks = new_carparks
-
-    # print("\n\nCARPARKS: ", carparks)
-    # print("\n\nROTTEN CARPARKS: ", rotten_carparks)
 
     # If insufficient carparks meet the requirements, recurse with the rotten carparks to combine at the end of function
     if len(carparks) < num_cp_to_return:
@@ -481,17 +490,28 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     carparks_list = []
 
     for cp in carparks:
+        # [A] PRICE PER HOUR =================================================
         # Extract the values from the carpark dictionary
-        price = find_price_per_hr(cp, num_hrs, 'Car') # Note: A -1 value indicates price information is not available
+        price = find_price_per_hr(cp, num_hrs, 'Car') # Note: -1 value indicates price information is not available
+        
+        # [B] AVAILABLE LOTS =================================================
+        available_lots = int(cp['ParkingAvailability']['value'])
 
+        # [C] WALKING TIME & TRAVEL TIME =====================================
         if (destination):
             walk_time = get_route_duration(cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], destination[0], destination[1], travel_mode="walking")
         else:
             walk_time = 0.0
         
         drive_time = get_route_duration(live_location[0], live_location[1], cp['location']['value']['coordinates'][1], cp['location']['value']['coordinates'][0], travel_mode="driving")
+
+        # If no available lots, assume 15min wait
+        if available_lots == 0:
+            drive_time += 15
+
         travel_time = walk_time + drive_time
-        available_lots = int(cp['ParkingAvailability']['value'])
+
+        # [D] SHELTERED STATUS ==============================================
         is_sheltered = bool(cp['Sheltered']['value'])
          
         # Append the data as a list to the carparks_list
