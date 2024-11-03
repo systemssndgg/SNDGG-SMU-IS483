@@ -14,7 +14,7 @@ from utils.monitor import monitor_all
 from utils.helper_functions import aggregate_message_new, get_top_carparks, remove_selected_button
 from utils.context_broker import geoquery_ngsi_point
 from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
-from utils.firestore import check_user_exists, get_user_preference, store_user_preference, edit_user_preference
+from utils.firestore import check_user_exists, get_user_preference, store_user_preference, edit_user_preference, store_user_filter, get_user_filter, edit_user_filter
 
 import asyncio
 
@@ -23,7 +23,7 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 # State definitions
-DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, = range(8)
+DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER = range(11)
 
 # Store user data
 user_data = {}
@@ -442,140 +442,6 @@ async def store_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await query.edit_message_text("❌ Your preference has not been saved.")
     return await confirm_destination(update, context)
 
-async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Ask the user to set their preference."""
-    if context.user_data.get('in_session'):
-        await update.message.reply_text("⛔ Please end the current session before editing preferences with /preference.")
-    else:
-        query = update.callback_query
-
-        if query:
-            await query.answer()
-
-        keyboard = [
-            [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
-            [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
-            [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
-            [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
-            [InlineKeyboardButton("🛑 End Session", callback_data="end"), InlineKeyboardButton("🔃 Reset", callback_data="reset")]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        if 'menu_preference_list' not in context.user_data:
-            context.user_data['menu_preference_list'] = []
-            context.user_data
-        menu_preference_list = context.user_data['menu_preference_list']
-
-        if not query or not query.data or query.data == "confirm_yes" or query.data == "reset":
-            if query and query.data == "reset":
-                context.user_data['menu_preference_list'] = []
-                print("Preferences reset")
-                preference_message_id = context.user_data.get('menu_preference_message_id')
-                first_preference_message_id = context.user_data.get('menu_first_preference_message_id')
-                if preference_message_id or first_preference_message_id:
-                    if preference_message_id:
-                        await context.bot.delete_message(
-                            chat_id=query.message.chat_id,
-                            message_id=preference_message_id
-                        )
-                    elif first_preference_message_id:
-                        await context.bot.delete_message(
-                            chat_id=query.message.chat_id,
-                            message_id=first_preference_message_id
-                        )
-
-            first_preference_message = await context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                text="*Which of the following is most important to you?*\n\n",
-                parse_mode='Markdown',
-                reply_markup=reply_markup
-            )
-            context.user_data['menu_first_preference_message_id'] = first_preference_message.message_id
-
-            return PREFERENCE
-            
-        elif query.data in ["cheapest", "fastest", "sheltered", "shortest_walking_distance"]:
-            # Keep track of user's preference
-            if query.data not in menu_preference_list:
-                menu_preference_list.append(query.data)
-                print("preference list:" , menu_preference_list)
-
-            new_keyboard = remove_selected_button(query)
-
-            if len(new_keyboard) > 2:
-                # Update the message with the modified checklist
-                preference_message = await context.bot.edit_message_text(
-                    chat_id=query.message.chat_id,
-                    message_id=query.message.message_id,
-                    text="*Which of the following is most important to you?*\n\n",
-                    parse_mode='Markdown',
-                    reply_markup=InlineKeyboardMarkup(new_keyboard)
-                )
-                context.user_data['menu_preference_message_id'] = preference_message.message_id
-                
-                return PREFERENCE
-                
-            else:
-                # Automatically append the last preference button to the list
-                if len(new_keyboard) == 2:
-                    last_preference = new_keyboard[0][0].callback_data
-                    if last_preference not in menu_preference_list:
-                        menu_preference_list.append(last_preference)
-                        print("preference list:", menu_preference_list)
-
-                # Send the final preferences summary
-                preference_text = "\n".join(
-                    [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else 
-                    f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(menu_preference_list) - 1 else 
-                    f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)}"
-                    for i, pref in enumerate(menu_preference_list)]
-                )
-                await context.bot.send_message(
-                    chat_id=query.message.chat_id,
-                    text=f"You've selected your preferences in the following order:\n\n{preference_text}"
-                )
-                print("User has chosen their preferences")
-
-                menu_preference_message_id = context.user_data.get('menu_preference_message_id')
-                if menu_preference_message_id:
-                    try:
-                        await context.bot.delete_message(
-                            chat_id=query.message.chat_id,
-                            message_id=menu_preference_message_id
-                        )
-                    except BadRequest as e:
-                        logger.error(f"Failed to delete preference message: {e}")
-                return await edit_preference(update, context)
-
-        elif query.data == "end":
-            # ...
-            return await end(update, context)
-
-async def edit_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Edit the user's preference."""
-    loading_message = await context.bot.send_message(
-        text="*🔄 Updating preference...*",
-        chat_id=update.effective_chat.id,
-        parse_mode="Markdown"
-    )
-
-    user_id = update.effective_user.id
-    print(context.user_data.get('menu_preference_list'))
-    preference_list = context.user_data.get('menu_preference_list')
-    print(f"Editing user preference for user {user_id}")
-    
-    user_id = update.effective_user.id
-    if check_user_exists(user_id):
-        edit_user_preference(user_id, preference_list)
-        await loading_message.edit_text("✅ Your preference has been updated.")
-    else:
-        store_user_preference(user_id, preference_list)
-        await loading_message.edit_text("✅ Your preference has been stored.")
-
-    context.user_data.get('menu_preference_list').clear()
-
-    return ConversationHandler.END
-
 async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Confirm the destination and ask for live location."""
 
@@ -924,7 +790,295 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             "such as distance, price, or shelter availability.\n\n"
             "🚀 To get started, type /start to begin a new session, where you can enter your destination "
             "and set your carpark preferences.\n\n"
-            "✏️ Use /preference to edit your saved carpark preferences."
+            "⚙️ Use /settings to edit your carpark preferences or filters."
         ),
         parse_mode="Markdown"
     )
+        
+async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Ask the user to set their preference."""
+    query = update.callback_query
+    await query.answer()
+    settings_status = context.user_data.get('edit_settings_message')
+
+    if not settings_status:
+        await context.bot.edit_message_text(
+            chat_id=update.effective_chat.id,
+            message_id=query.message.message_id,
+            text=(
+                "⚙️ *Settings: Edit Preference*"
+            ),
+            parse_mode="Markdown",
+            reply_markup=None
+        )
+
+    context.user_data['edit_settings_message'] = True
+
+    keyboard = [
+        [InlineKeyboardButton("🏎️ Fastest", callback_data="fastest")],
+        [InlineKeyboardButton("💸 Cheapest", callback_data="cheapest")],
+        [InlineKeyboardButton("☂️ Sheltered", callback_data="sheltered")],
+        [InlineKeyboardButton("🚶‍♂️ Shortest Walking Distance", callback_data="shortest_walking_distance")],
+        [InlineKeyboardButton("🛑 End Session", callback_data="end"), InlineKeyboardButton("🔃 Reset", callback_data="reset")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    if 'menu_preference_list' not in context.user_data:
+        context.user_data['menu_preference_list'] = []
+        context.user_data
+    menu_preference_list = context.user_data['menu_preference_list']
+
+    if not query or not query.data or query.data == "preference" or query.data == "reset":
+        if query and query.data == "reset":
+            context.user_data['menu_preference_list'] = []
+            print("Preferences reset")
+            preference_message_id = context.user_data.get('menu_preference_message_id')
+            first_preference_message_id = context.user_data.get('menu_first_preference_message_id')
+            if preference_message_id or first_preference_message_id:
+                if preference_message_id:
+                    await context.bot.delete_message(
+                        chat_id=query.message.chat_id,
+                        message_id=preference_message_id
+                    )
+                elif first_preference_message_id:
+                    await context.bot.delete_message(
+                        chat_id=query.message.chat_id,
+                        message_id=first_preference_message_id
+                    )
+
+        first_preference_message = await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="*Which of the following is most important to you?*\n\n",
+            parse_mode='Markdown',
+            reply_markup=reply_markup
+        )
+        context.user_data['menu_first_preference_message_id'] = first_preference_message.message_id
+
+        return PREFERENCE
+        
+    elif query.data in ["cheapest", "fastest", "sheltered", "shortest_walking_distance"]:
+        # Keep track of user's preference
+        if query.data not in menu_preference_list:
+            menu_preference_list.append(query.data)
+            print("preference list:" , menu_preference_list)
+
+        new_keyboard = remove_selected_button(query)
+
+        if len(new_keyboard) > 2:
+            # Update the message with the modified checklist
+            preference_message = await context.bot.edit_message_text(
+                chat_id=query.message.chat_id,
+                message_id=query.message.message_id,
+                text="*Which of the following is most important to you?*\n\n",
+                parse_mode='Markdown',
+                reply_markup=InlineKeyboardMarkup(new_keyboard)
+            )
+            context.user_data['menu_preference_message_id'] = preference_message.message_id
+            
+            return PREFERENCE
+            
+        else:
+            # Automatically append the last preference button to the list
+            if len(new_keyboard) == 2:
+                last_preference = new_keyboard[0][0].callback_data
+                if last_preference not in menu_preference_list:
+                    menu_preference_list.append(last_preference)
+                    print("preference list:", menu_preference_list)
+
+            # Send the final preferences summary
+            preference_text = "\n".join(
+                [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else 
+                f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(menu_preference_list) - 1 else 
+                f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)}"
+                for i, pref in enumerate(menu_preference_list)]
+            )
+            await context.bot.send_message(
+                chat_id=query.message.chat_id,
+                text=f"You've selected your preferences in the following order:\n\n{preference_text}"
+            )
+            print("User has chosen their preferences")
+
+            menu_preference_message_id = context.user_data.get('menu_preference_message_id')
+            if menu_preference_message_id:
+                try:
+                    await context.bot.delete_message(
+                        chat_id=query.message.chat_id,
+                        message_id=menu_preference_message_id
+                    )
+                except BadRequest as e:
+                    logger.error(f"Failed to delete preference message: {e}")
+            return await edit_preference(update, context)
+
+    elif query.data == "end":
+        return await end(update, context)
+
+async def edit_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Edit the user's preference."""
+    loading_message = await context.bot.send_message(
+        text="*🔄 Updating preference...*",
+        chat_id=update.effective_chat.id,
+        parse_mode="Markdown"
+    )
+
+    user_id = update.effective_user.id
+    print(context.user_data.get('menu_preference_list'))
+    preference_list = context.user_data.get('menu_preference_list')
+    print(f"Editing user preference for user {user_id}")
+    
+    user_id = update.effective_user.id
+    if check_user_exists(user_id):
+        edit_user_preference(user_id, preference_list)
+        await loading_message.edit_text("✅ Your preference has been updated.")
+    else:
+        store_user_preference(user_id, preference_list)
+        await loading_message.edit_text("✅ Your preference has been stored.")
+
+    context.user_data.get('menu_preference_list').clear()
+
+    return ConversationHandler.END
+
+async def filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Ask the user to set their filter."""
+    query = update.callback_query
+    await query.answer()
+
+    context.user_data['selected_filter'] = None
+
+    await context.bot.edit_message_text(
+        chat_id=update.effective_chat.id,
+        message_id=query.message.message_id,
+        text=(
+            "⚙️ *Settings: Edit Filter*"
+        ),
+        parse_mode="Markdown",
+        reply_markup=None
+    )
+
+    keyboard = [
+        [InlineKeyboardButton("💸 Missing Carpark Prices", callback_data="missing_carpark_prices")],
+        [InlineKeyboardButton("🅿️ Missing Carpark Availability", callback_data="missing_carpark_avail")],
+        [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="🗂️ *Select Carpark Filters*",
+        parse_mode="Markdown",
+        reply_markup=reply_markup
+    )
+
+    return FILTER
+
+async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    query = update.callback_query
+    await query.answer()
+
+    selected_filter = query.data
+    context.user_data['selected_filter'] = selected_filter
+
+    await context.bot.edit_message_reply_markup(
+        chat_id=update.effective_chat.id,
+        message_id=query.message.message_id,
+        reply_markup=None
+    )
+
+    keyboard = [
+        [InlineKeyboardButton("✅ Yes", callback_data="include"), InlineKeyboardButton("❌ No", callback_data="exclude")],
+        [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    if selected_filter == "missing_carpark_prices":
+        await query.message.reply_text(
+            f"💸 *Do you want to include carparks that do not have prices?*\n\n⚠️ Do note that selecting 'No' may limit parking options",
+            parse_mode="Markdown",
+            reply_markup=reply_markup
+        )
+    elif selected_filter == "missing_carpark_avail":
+        await query.message.reply_text(
+            f"🅿️ *Do you want to include carparks that do not have available lots?*\n\n⚠️ Do note that selecting 'No' may limit parking options",
+            parse_mode="Markdown",
+            reply_markup=reply_markup
+        )
+    elif selected_filter == "end":
+        return await end(update, context)
+    
+    return CONFIRM_FILTER
+
+async def confirm_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    query = update.callback_query
+    await query.answer()
+
+    user_id = update.effective_user.id
+    selected_filter = context.user_data.get('selected_filter')
+    filter_value = query.data
+
+    if filter_value == "end":
+        try:
+            return await end(update, context)
+        except Exception as e:
+            print(f"An error occurred in end: {e}")
+            return ConversationHandler.END
+
+    try:
+        if check_user_exists(user_id):
+            edit_user_filter(user_id, selected_filter, filter_value)
+        else:
+            store_user_filter(user_id, selected_filter, filter_value)
+
+        await query.edit_message_text(text="✅ *Your filter has been updated.*", parse_mode="Markdown")
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        await query.edit_message_text(text="❌ An error occurred while updating your filter.", parse_mode="Markdown")
+        return ConversationHandler.END
+    
+    return ConversationHandler.END
+
+async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    if context.user_data.get('in_session'):
+        await update.message.reply_text("⛔ Please end the current session before using /settings.")
+    else:
+        keyboard = [
+            [InlineKeyboardButton("✏️ Edit Preferences", callback_data="preference"), InlineKeyboardButton("🗂️ Edit Filters", callback_data="filter")],
+            [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+        ]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=("⚙️ *Settings*"),
+            parse_mode="Markdown",
+            reply_markup=reply_markup
+        )
+
+        context.user_data['edit_settings_message'] = False
+
+        return SETTINGS
+    
+async def handle_settings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data == "preference":
+        try:
+            return await preference(update, context)
+        except Exception as e:
+            print(f"An error occurred in preference: {e}")
+            return ConversationHandler.END
+    elif query.data == "filter":
+        try:
+            return await filter(update, context)
+        except Exception as e:
+            print(f"An error occurred in filter: {e}")
+            return ConversationHandler.END
+    elif query.data == "end":
+        try:
+            return await end(update, context)
+        except Exception as e:
+            print(f"An error occurred in end: {e}")
+            return ConversationHandler.END
