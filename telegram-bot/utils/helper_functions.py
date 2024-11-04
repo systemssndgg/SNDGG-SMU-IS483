@@ -452,20 +452,20 @@ def get_top_carparks(live_location: Union[list, tuple], carparks: list, user_pre
     rotten_carparks = []
 
     for cp in carparks:
+        # SKIP IF AVAILABLE LOTS INFORMATION IS MISSING [DONT INCLUDE IN ROTTEN CARPARKS]
+        if remove_missing_lots and cp['ParkingAvailability']['value'] == None:
+            continue
+
+        # SKIP IF PRICE INFORMATION IS MISSING [DONT INCLUDE IN ROTTEN CARPARKS]
+        if remove_missing_price and find_price_per_hr(cp, num_hrs, 'Car') == -1:
+            continue
+        
         if int(cp['ParkingAvailability']['value']) < min_avail_lots:
             rotten_carparks.append(cp)
             continue
 
         if remove_unsheltered and not cp['Sheltered']['value']:
             rotten_carparks.append(cp)
-            continue
-
-        # SKIP IF PRICE INFORMATION IS MISSING [DONT INCLUDE IN ROTTEN CARPARKS]
-        if remove_missing_price and find_price_per_hr(cp, num_hrs, 'Car') == -1:
-            continue
-
-        # SKIP IF AVAILABLE LOTS INFORMATION IS MISSING [DONT INCLUDE IN ROTTEN CARPARKS]
-        if remove_missing_lots and cp['ParkingAvailability'] == None:
             continue
 
         new_carparks.append(cp)
