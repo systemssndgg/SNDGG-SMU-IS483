@@ -1,4 +1,4 @@
-import entities.mylibs.constants as constants 
+import constants as constants 
 from landtransportsg import Traffic
 import requests
 from openai import OpenAI
@@ -386,8 +386,7 @@ def fetch_carpark_rates(carpark_name, file_path='entities/mylibs/CommercialCarpa
     }
 
 # Helper function to create a carpark entity
-def create_entity(carpark_name, coordinates, available_lots, pricing):
-    e_id = carpark_name.replace(" ", "")
+def create_entity(carpark_name, e_id, coordinates, available_lots, pricing):
     entity = Entity("Carpark", e_id, ctx=ctx)
 
     # Set properties
@@ -398,7 +397,7 @@ def create_entity(carpark_name, coordinates, available_lots, pricing):
     entity.prop("ParkingAvailability", available_lots)
     entity.prop('Pricing', pricing)
 
-    return e_id, entity
+    return entity
 
 def clean_text(text):
     return re.sub(r'[^\x00-\x7F]+', ' ', text)  # Removes non-ASCII characters
@@ -501,6 +500,7 @@ def create_commercial_carparks():
         development = value['Development'].strip()
         coordinates = value['Location'].split(" ")
         available_lots = value['AvailableLots']
+        e_id = value['CarParkID']
     
         # Initialize the pricing dictionary
         pricing = {}
@@ -508,8 +508,11 @@ def create_commercial_carparks():
         # Check for the special case of Sentosa
         if development.lower() == "sentosa":
             sentosa_carparks = ["Sentosa (Beach and Imbiah car park)", "Sentosa (Tanjong & Palawan car park)"]
+            count = 1
             for sentosa_carpark_name in sentosa_carparks:
                 # Fetch pricing data for Sentosa-specific carparks
+                e_id = e_id + "." + str(count)
+                count += 1
                 for carpark_name, carpark_data in formatted_carpark_rates.items():
                     if carpark_name.strip().lower() == sentosa_carpark_name.strip().lower():
                         # Add the formatted rates to the pricing dictionary
@@ -520,7 +523,7 @@ def create_commercial_carparks():
                         pricing['SaturdayStr'] = clean_text(raw_rates['SaturdayStr'])
                         pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
                         # Create and store the entity
-                        e_id, entity = create_entity(sentosa_carpark_name, coordinates, available_lots, pricing)
+                        entity = create_entity(sentosa_carpark_name, e_id, coordinates, available_lots, pricing)
                         entity_dict[e_id] = entity
         else:
             # General case for other carparks
@@ -535,7 +538,7 @@ def create_commercial_carparks():
                     pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
 
                     # Create and store the entity
-                    e_id, entity = create_entity(carpark_name, coordinates, available_lots, pricing)
+                    entity = create_entity(carpark_name, e_id, coordinates, available_lots, pricing)
                     entity_dict[e_id] = entity
             
     try:
@@ -544,3 +547,6 @@ def create_commercial_carparks():
         print("Failed to create entities, check if your context broker is running in Docker.")
 
     return entity_dict
+
+
+print(create_commercial_carparks())
