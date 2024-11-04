@@ -14,7 +14,7 @@ from utils.monitor import monitor_all
 from utils.helper_functions import aggregate_message_new, get_top_carparks, remove_selected_button
 from utils.context_broker import geoquery_ngsi_point
 from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
-from utils.firestore import check_user_exists, get_user_preference, store_user_preference, edit_user_preference, store_user_filter, get_user_filter, edit_user_filter
+from utils.firestore import check_user_exists, get_user_preference, store_user_preference, edit_user_preference, store_user_filter, get_user_filter, edit_user_filter, does_key_exist
 
 import asyncio
 
@@ -23,7 +23,7 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 # State definitions
-DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER = range(11)
+DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER, NUMERIC_INPUT = range(12)
 
 # Store user data
 user_data = {}
@@ -957,6 +957,8 @@ async def filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     keyboard = [
         [InlineKeyboardButton("💸 Missing Carpark Prices", callback_data="missing_carpark_prices")],
         [InlineKeyboardButton("🅿️ Missing Carpark Availability", callback_data="missing_carpark_avail")],
+        [InlineKeyboardButton("🅿️ Minimum Carpark Availability", callback_data="minimum_carpark_avail")],
+        [InlineKeyboardButton("🅿️ Number of Carpark Options", callback_data="number_carpark_options")],
         [InlineKeyboardButton("🛑 End Session", callback_data="end")]
     ]
 
@@ -985,6 +987,30 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     )
 
     keyboard = [
+        [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    if selected_filter == "minimum_carpark_avail":
+        minimum_carpark_avail_message = await query.message.reply_text(
+            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than or equal to 1.",
+            parse_mode="Markdown",
+            reply_markup=reply_markup
+        )
+        context.user_data['minimum_carpark_avail_message_id'] = minimum_carpark_avail_message.message_id
+        return NUMERIC_INPUT
+
+    elif selected_filter == "number_carpark_options":
+        number_carpark_options_message = await query.message.reply_text(
+            "🅿️ *Please enter the number of carpark options.*\n\n⚠️ Enter a number between 1 and 10.",
+            parse_mode="Markdown",
+            reply_markup=reply_markup
+        )
+        context.user_data['number_carpark_options_message_id'] = number_carpark_options_message.message_id
+        return NUMERIC_INPUT
+
+    keyboard = [
         [InlineKeyboardButton("✅ Yes", callback_data="include"), InlineKeyboardButton("❌ No", callback_data="exclude")],
         [InlineKeyboardButton("🛑 End Session", callback_data="end")]
     ]
@@ -1007,6 +1033,58 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         return await end(update, context)
     
     return CONFIRM_FILTER
+
+async def handle_numeric_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Handle numeric input from the user with specific validations."""
+    user_input = update.message.text
+    selected_filter = context.user_data.get('selected_filter')
+    user_id = update.effective_user.id
+
+    try:
+        user_input = int(user_input)
+
+        if selected_filter == "minimum_carpark_avail" and user_input < 1:
+            await update.message.reply_text(
+                "❌ *Invalid input. Please enter a number greater than or equal to 1.*", parse_mode="Markdown"
+            )
+            return NUMERIC_INPUT
+
+        elif selected_filter == "number_carpark_options" and (user_input < 1 or user_input > 10):
+            await update.message.reply_text(
+                "❌ *Invalid input. Please enter a number between 1 and 10.*", parse_mode="Markdown"
+            )
+            return NUMERIC_INPUT
+
+        try:
+            if check_user_exists(user_id):
+                edit_user_filter(user_id, selected_filter, user_input)
+            else:
+                store_user_filter(user_id, selected_filter, user_input)
+            
+            if context.user_data.get("minimum_carpark_avail_message_id"):
+                await context.bot.edit_message_reply_markup(
+                    chat_id=update.effective_chat.id,
+                    message_id=context.user_data['minimum_carpark_avail_message_id'],
+                    reply_markup=None
+                )
+            elif context.user_data.get("number_carpark_options_message_id"):
+                await context.bot.edit_message_reply_markup(
+                    chat_id=update.effective_chat.id,
+                    message_id=context.user_data['number_carpark_options_message_id'],
+                    reply_markup=None
+                )
+                
+            await update.message.reply_text("✅ *Your input has been recorded.*", parse_mode="Markdown")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    except ValueError:
+        await update.message.reply_text(
+            "❌ Invalid input. Please enter a valid number."
+        )
+        return NUMERIC_INPUT
+
+    return ConversationHandler.END
 
 async def confirm_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
