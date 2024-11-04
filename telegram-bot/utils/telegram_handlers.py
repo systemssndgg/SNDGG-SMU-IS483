@@ -269,8 +269,8 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             return DESTINATION
         
         user_id = update.effective_user.id
-        if check_user_exists(user_id):
-            # Runs if user exists in Firestore
+        if does_key_exist(user_id, 'preference'):
+            # Runs if user exists in Firestore AND if preference is stored
             confirm_destination_message_id = context.user_data.get('confirm_destination_message')
             if confirm_destination_message_id:
                 try:
@@ -579,6 +579,16 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             # eg.  ['fastest', 'shortest_walking_distance', 'cheapest', 'sheltered']
             user_selected_preference = context.user_data.get("preference_list")[:]
 
+            # Get user's filters
+            user_id = update.effective_user.id
+            remove_missing_price = False
+            remove_missing_avail = False
+
+            if (does_key_exist(user_id, 'missing_carpark_prices')):
+                remove_missing_price = get_user_filter(user_id, 'missing_carpark_prices') == 'exclude'
+            if (does_key_exist(user_id, 'missing_carpark_avail')):
+                remove_missing_avail = get_user_filter(user_id, 'missing_carpark_avail') == 'exclude'
+
             # Add available_lots to the user preference list as least preference (last item)
             user_selected_preference.append('available_lots')
 
@@ -604,7 +614,20 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             # [END] ========================================================================================================
 
             global closest_three_carparks
-            closest_three_carparks = get_top_carparks(live_location, geoquery_nearest_carparks, user_pref, num_cp_to_return=3, min_avail_lots=10, destination=(destination_lat, destination_long))
+
+            closest_three_carparks = get_top_carparks(
+                live_location=live_location,
+                carparks=geoquery_nearest_carparks,
+                user_preferences=user_pref,
+                num_cp_to_return=3,
+                min_avail_lots=10,
+                num_hrs=2,
+                strict_pref=False, # MIGHT HAVE TO CHANGE THIS (ADAMBFT)
+                destination=(destination_lat, destination_long),
+                remove_unsheltered=False,
+                remove_missing_price=remove_missing_price,
+                remove_missing_lots=remove_missing_avail
+            )
             
             carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference)
 
