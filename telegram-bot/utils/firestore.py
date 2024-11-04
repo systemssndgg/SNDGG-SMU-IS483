@@ -17,7 +17,7 @@ def store_user_preference(user_id, preference):
     user_ref = db.collection('users').document(str(user_id))
     user_ref.set({
         'preference': preference
-    })
+    }, merge=True)
 
 def get_user_preference(user_id):
     user_ref = db.collection('users').document(str(user_id))
@@ -37,7 +37,7 @@ def store_user_filter(user_id, filter_name, filter_value):
     user_ref = db.collection('users').document(str(user_id))
     user_ref.set({
         filter_name: filter_value
-    })
+    }, merge=True)
 
 def get_user_filter(user_id, filter_name):
     user_ref = db.collection('users').document(str(user_id))
@@ -52,3 +52,11 @@ def edit_user_filter(user_id, filter_name, filter_value):
     user_ref.update({
         filter_name: filter_value
     })
+
+def does_key_exist(user_id, key):
+    user_ref = db.collection('users').document(str(user_id))
+    user_doc = user_ref.get()
+
+    if user_doc.exists:
+        return (key in user_doc.to_dict())
+    return False
