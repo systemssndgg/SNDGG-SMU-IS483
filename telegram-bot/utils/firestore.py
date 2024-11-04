@@ -18,7 +18,6 @@ def store_user_preference(user_id, preference):
     user_ref.set({
         'preference': preference
     }, merge=True)
-    }, merge=True)
 
 def get_user_preference(user_id):
     user_ref = db.collection('users').document(str(user_id))
@@ -38,7 +37,6 @@ def store_user_filter(user_id, filter_name, filter_value):
     user_ref = db.collection('users').document(str(user_id))
     user_ref.set({
         filter_name: filter_value
-    }, merge=True)
     }, merge=True)
 
 def get_user_filter(user_id, filter_name):
