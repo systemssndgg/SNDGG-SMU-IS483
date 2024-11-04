@@ -1,4 +1,4 @@
-import constants as constants 
+import mylibs.constants as constants 
 from landtransportsg import Traffic
 import requests
 from openai import OpenAI
@@ -541,12 +541,11 @@ def create_commercial_carparks():
                     entity = create_entity(carpark_name, e_id, coordinates, available_lots, pricing)
                     entity_dict[e_id] = entity
             
-    try:
-        create_entities_in_broker(entity_dict.values())
-    except:
-        print("Failed to create entities, check if your context broker is running in Docker.")
+    # try:
+    #     create_entities_in_broker(entity_dict.values())
+    # except:
+    #     print("Failed to create entities, check if your context broker is running in Docker.")
 
-    return entity_dict
+    return entity_dict.values()
 
 
-print(create_commercial_carparks())
