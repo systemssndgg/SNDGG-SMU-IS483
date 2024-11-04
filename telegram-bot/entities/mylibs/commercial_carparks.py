@@ -59,7 +59,7 @@ def fetch_carpark_availabilities():
         return entity_dict
 
 # (2) Fetch the carpark rates from data.gov if needed
-def fetch_carpark_rates():
+def fetch_carpark_rates_datagovsg():
     '''
     Inputs -> None
     Outputs -> entity_dict : dict : A dictionary of carpark entities with the CarParkID as the key
