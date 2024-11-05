@@ -546,6 +546,6 @@ def create_commercial_carparks():
     # except:
     #     print("Failed to create entities, check if your context broker is running in Docker.")
 
-    return entity_dict.values()
+    return list(entity_dict.values())
 
 
