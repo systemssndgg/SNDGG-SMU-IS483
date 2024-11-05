@@ -3,6 +3,8 @@ from datetime import datetime
 import numpy as np
 import random
 import logging
+import time
+import threading
 from typing import Union
 
 from utils.google_maps import get_route_duration
@@ -11,6 +13,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.error import BadRequest
+
+from import_entities import import_Carpark_entity, import_TrafficAdvisories_entity, import_WeatherForecast_entity
 
 def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, selected_preference):
     closest_three_carparks = []
@@ -886,3 +890,49 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     )
             
     return ConversationHandler.END
+
+def repeated_function_calls(function, timer: int, stop_event: threading.Event):
+    """Repeatedly call the provided function every `timer` seconds."""
+    while not stop_event.is_set():
+        try:
+            print("running", function.__name__)
+            # Call the provided function
+            function()
+        except Exception as e:
+            print(f"Error running the function: {e}")
+        
+        # Wait for the specified interval before running the function again
+        stop_event.wait(timer)
+
+async def update_context_broker():
+    """Update the context broker with the API data at API update frequency.
+    
+    URA Carpark ParkingAvailability Update Frequency: Every 5 mins / 300 seconds
+
+    Weather Data Update Frequency: Every 2 hours / 7200 seconds
+
+    TrafficAdvisories Update Frequency: Every 2 minutes / 120 seconds
+    """
+    stop_event = threading.Event()
+
+    try:
+        print("Updating context broker...")
+        # Create threads for each repeated function call
+        carpark_thread = threading.Thread(target=repeated_function_calls, args=(import_Carpark_entity, 300, stop_event)) 
+        weather_thread = threading.Thread(target=repeated_function_calls, args=(import_WeatherForecast_entity, 7200, stop_event)) 
+        traffic_thread = threading.Thread(target=repeated_function_calls, args=(import_TrafficAdvisories_entity, 120, stop_event)) 
+
+        # Start the threads
+        carpark_thread.start()
+        weather_thread.start()
+        traffic_thread.start()
+
+        # Join the threads to ensure they run concurrently
+        carpark_thread.join()
+        weather_thread.join()
+        traffic_thread.join()
+        print("Context broker updated successfully.")
+    except Exception as e:
+        print(f"Error updating context broker: {e}")
+    finally:
+        stop_event.set()

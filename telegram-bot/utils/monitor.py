@@ -25,8 +25,6 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
     sent_new = False
     # Begin monitoring the user's proximity
     while True:
-        # update Carpark_entity
-        import_Carpark_entity()
         selected_carpark_updated = retrieve_entity_entry(context.user_data['selected_carpark_id'])
 
         # Continuously get updated live location
@@ -112,9 +110,6 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Monitor traffic advisories along the route."""
     chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
-    # 
-    traffic_advisories = import_TrafficAdvisories_entity()
-
 
     # traffic_advisories = [
     # {
@@ -213,7 +208,6 @@ async def monitor_live_location_changes(update: Update, context: ContextTypes.DE
 
 async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, current_carpark, closest_three_carparks, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination):
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
-    import_WeatherForecast_entity()
 
     # weather = [
     #     {
