@@ -477,10 +477,10 @@ async def handle_hour(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
         await query.answer()
 
         if query.data == "default":
-            context.user_data['hours'] = DEFAULT_PARKING_HOURS
+            context.user_data['hours'] = hours = DEFAULT_PARKING_HOURS
             await context.bot.send_message(
                 text=f"✅ *You have selected {hours} hours.*",
-                chat_id=update.message.chat_id,
+                chat_id=query.message.chat_id,
                 parse_mode="Markdown"
             )
             return await confirm_destination(update, context)
@@ -628,6 +628,8 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 num_cp_return = get_user_filter(user_id, 'number_carpark_options')
             if (does_key_exist(user_id, 'min_avail_lots')):
                 min_avail_lots = get_user_filter(user_id, 'min_avail_lots')
+            
+            num_hours_parked = context.user_data.get('hours')
 
             # Add available_lots to the user preference list as least preference (last item)
             user_selected_preference.append('available_lots')
@@ -661,8 +663,8 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 user_preferences=user_pref,
                 num_cp_to_return=num_cp_return,
                 min_avail_lots=min_avail_lots,
-                num_hrs=2,
-                strict_pref=True, # MIGHT HAVE TO CHANGE THIS (ADAMBFT)
+                num_hrs=num_hours_parked,
+                strict_pref=True,
                 destination=(destination_lat, destination_long),
                 remove_unsheltered=False,
                 remove_missing_price=remove_missing_price,
