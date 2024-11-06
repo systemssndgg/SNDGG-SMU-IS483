@@ -250,7 +250,7 @@ def aggregate_message(closest_three_carparks, selected_preference, live_location
     return carparks_message
 
 
-def aggregate_message_new(carparks_list: list, selected_preference: list):
+def aggregate_message_new(carparks_list: list, selected_preference: list, ideal_num_carparks: int = 3):
     '''
     INPUT PARAMETERS:
 
@@ -296,12 +296,16 @@ def aggregate_message_new(carparks_list: list, selected_preference: list):
     }
 
     [2] selected_preference: User's selected preference in ordered list (1st item most important) (e.g., ['cheapest', 'fastest', 'shortest_walking_distance', 'sheltered', 'available_lots'])
+
+    [3] ideal_num_carparks: Number of carparks expected to be returned (default is 3)
     '''
+
+    # Suggestions for user if there are not enough carparks
+    suggestion_msg = "You may try editing your filters in settings to expand your search range."
 
     # Check if there are no carparks
     if (len(carparks_list) == 0):
-        return "😭 Oh no, it seems there are no carparks currently available near your destination..."
-
+        return f"😭 Oh no, it seems there are no carparks currently available near your destination. {suggestion_msg}"
 
     # INITIALIZE VARIABLES ========================================
 
@@ -355,6 +359,10 @@ def aggregate_message_new(carparks_list: list, selected_preference: list):
             res_msg += pref_msg_map[cp_id][pref]
 
         res_msg += "\n"
+    
+    # If there are not enough carparks, add a message to inform the user
+    if len(carparks_list) < ideal_num_carparks:
+        res_msg += f"\n\nℹ️ Only {len(carparks_list)} carparks were found near your destination. {suggestion_msg}"
     
     return res_msg
 

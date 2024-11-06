@@ -86,7 +86,7 @@ def get_ura_carparks(ura_token):
                     svy21_geocoordinates = carpark["geometries"][0]["coordinates"].split(",")
                     latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
                     if len(latlon_geocoordinates) > 1:
-                        entity.gprop("Location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
+                        entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
                 
                 # Parking capcacity
                 entity.prop("ParkingCapacity", carpark.get("parkCapacity", 0))

@@ -613,13 +613,21 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
             # Get user's filters
             user_id = update.effective_user.id
+
+            # Default values
             remove_missing_price = False
             remove_missing_avail = False
+            num_cp_return = 3
+            min_avail_lots = 10
 
             if (does_key_exist(user_id, 'missing_carpark_prices')):
                 remove_missing_price = get_user_filter(user_id, 'missing_carpark_prices') == 'exclude'
             if (does_key_exist(user_id, 'missing_carpark_avail')):
                 remove_missing_avail = get_user_filter(user_id, 'missing_carpark_avail') == 'exclude'
+            if (does_key_exist(user_id, 'number_carpark_options')):
+                num_cp_return = get_user_filter(user_id, 'number_carpark_options')
+            if (does_key_exist(user_id, 'min_avail_lots')):
+                min_avail_lots = get_user_filter(user_id, 'min_avail_lots')
 
             # Add available_lots to the user preference list as least preference (last item)
             user_selected_preference.append('available_lots')
@@ -651,17 +659,17 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 live_location=live_location,
                 carparks=geoquery_nearest_carparks,
                 user_preferences=user_pref,
-                num_cp_to_return=3,
-                min_avail_lots=10,
+                num_cp_to_return=num_cp_return,
+                min_avail_lots=min_avail_lots,
                 num_hrs=2,
-                strict_pref=False, # MIGHT HAVE TO CHANGE THIS (ADAMBFT)
+                strict_pref=True, # MIGHT HAVE TO CHANGE THIS (ADAMBFT)
                 destination=(destination_lat, destination_long),
                 remove_unsheltered=False,
                 remove_missing_price=remove_missing_price,
                 remove_missing_lots=remove_missing_avail
             )
-            
-            carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference)
+
+            carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference, ideal_num_carparks=num_cp_return)
 
             carpark_options_message_id = await context.bot.send_message(
                 chat_id=update.effective_chat.id,
@@ -1054,7 +1062,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             reply_markup=reply_markup
         )
         context.user_data['minimum_carpark_avail_message_id'] = minimum_carpark_avail_message.message_id
-        return NUMERIC_INPUT
+        return FILTER_NUMERIC_INPUT
 
     elif selected_filter == "number_carpark_options":
         number_carpark_options_message = await query.message.reply_text(
@@ -1063,7 +1071,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             reply_markup=reply_markup
         )
         context.user_data['number_carpark_options_message_id'] = number_carpark_options_message.message_id
-        return NUMERIC_INPUT
+        return FILTER_NUMERIC_INPUT
 
     keyboard = [
         [InlineKeyboardButton("✅ Yes", callback_data="include"), InlineKeyboardButton("❌ No", callback_data="exclude")],
