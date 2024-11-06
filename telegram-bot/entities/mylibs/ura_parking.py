@@ -79,20 +79,22 @@ def get_ura_carparks(ura_token):
                 entity = Entity("Carpark", id, ctx=ctx)
 
                 # Set carpark name
-                entity.prop("CarparkName", carpark["ppName"])
+                entity.prop("carparkName", carpark["ppName"])
                 
                 # Set location using coordinates
                 if carpark["geometries"]:
                     svy21_geocoordinates = carpark["geometries"][0]["coordinates"].split(",")
                     latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
                     if len(latlon_geocoordinates) > 1:
-                        entity.gprop("Location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
+                        entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
                 
                 # Parking capcacity
-                entity.prop("ParkingCapacity", carpark.get("parkCapacity", 0))
+                if carpark["parkCapacity"]:
+                    if carpark["parkCapacity"] != "0":
+                        entity.prop("parkingCapacity", int(carpark["parkCapacity"]))
 
                 # Mock sheltered status
-                entity.prop("Sheltered", False)
+                entity.prop("sheltered", False)
                 # entity.prop("Sheltered", False if count % 2 == 0 else True)
                 # count += 1
 
@@ -100,10 +102,8 @@ def get_ura_carparks(ura_token):
                 # Parking availability
                 for carpark_availability in carpark_availability_list["Result"]:
                     if carpark["ppCode"] == carpark_availability["carparkNo"] and carpark_availability["lotType"] == "C":
-                        entity.prop("ParkingAvailability", int(carpark_availability["lotsAvailable"]))
+                        entity.prop("parkingAvailability", int(carpark_availability["lotsAvailable"]))
                         break
-                    else:
-                        entity.prop("ParkingAvailability", 0)
                 
                 # Append to entity_list
                 entity_list.append(entity)
@@ -116,7 +116,7 @@ def get_ura_carparks(ura_token):
             pricing = {}
             pricing["rates"] = {}
             for carpark in carpark_list["Result"]:
-                if entity["CarparkName"]["value"].strip() == carpark["ppName"].strip():
+                if entity["carparkName"]["value"].strip() == carpark["ppName"].strip():
                     try:
                         weekdayRateFloat = float(carpark["weekdayRate"].replace("$", ""))
                         weekdayMinFloat = float(carpark["weekdayMin"].replace(" mins", " "))
@@ -150,56 +150,47 @@ def get_ura_carparks(ura_token):
                         # Check if then entity already has a populated pricing dictionary
                         if not pricing["rates"]:
                             pricing["rates"]["weekday"] = {
-                                'time_based': [
+                                'timeBased': [
                                     {
-                                    'start_time': carpark["startTime"],
-                                    'end_time': carpark["endTime"],
-                                    'rate_per_hour': weekdayRatePerHour
+                                    'startTime': carpark["startTime"],
+                                    'endTime': carpark["endTime"],
+                                    'ratePerHour': weekdayRatePerHour
                                     }
-                                ],
-                                'flat_entry_fee': '-',
-                                'first_hour_rate': '-',
-                                'max_daily_fee': '-'
+                                ]
                             }
                             pricing["rates"]["saturday"] = {
-                                'time_based': [
+                                'timeBased': [
                                     {
-                                    'start_time': carpark["startTime"],
-                                    'end_time': carpark["endTime"],
-                                    'rate_per_hour': satdayRatePerHour
+                                    'startTime': carpark["startTime"],
+                                    'endTime': carpark["endTime"],
+                                    'ratePerHour': satdayRatePerHour
                                     }
-                                ],
-                                'flat_entry_fee': '-',
-                                'first_hour_rate': '-',
-                                'max_daily_fee': '-'
+                                ]
                             }
-                            pricing["rates"]["sunday_public_holiday"] = {
-                                'time_based': [
+                            pricing["rates"]["sundayPublicHoliday"] = {
+                                'timeBased': [
                                     {
-                                    'start_time': carpark["startTime"],
-                                    'end_time': carpark["endTime"],
-                                    'rate_per_hour': sunPHRatePerHour
+                                    'startTime': carpark["startTime"],
+                                    'endTime': carpark["endTime"],
+                                    'ratePerHour': sunPHRatePerHour
                                     }
-                                ],
-                                'flat_entry_fee': '-',
-                                'first_hour_rate': '-',
-                                'max_daily_fee': '-'
+                                ]
                             }
                         else:
-                            pricing["rates"]["weekday"]["time_based"].append({
-                                'start_time': carpark["startTime"],
-                                'end_time': carpark["endTime"],
-                                'rate_per_hour': weekdayRatePerHour
+                            pricing["rates"]["weekday"]["timeBased"].append({
+                                'startTime': carpark["startTime"],
+                                'endTime': carpark["endTime"],
+                                'ratePerHour': weekdayRatePerHour
                             })
-                            pricing["rates"]["saturday"]["time_based"].append({
-                                'start_time': carpark["startTime"],
-                                'end_time': carpark["endTime"],
-                                'rate_per_hour': satdayRatePerHour
+                            pricing["rates"]["saturday"]["timeBased"].append({
+                                'startTime': carpark["startTime"],
+                                'endTime': carpark["endTime"],
+                                'ratePerHour': satdayRatePerHour
                             })
-                            pricing["rates"]["sunday_public_holiday"]["time_based"].append({
-                                'start_time': carpark["startTime"],
-                                'end_time': carpark["endTime"],
-                                'rate_per_hour': sunPHRatePerHour
+                            pricing["rates"]["sundayPublicHoliday"]["timeBased"].append({
+                                'startTime': carpark["startTime"],
+                                'endTime': carpark["endTime"],
+                                'ratePerHour': sunPHRatePerHour
                             })
                     except:
                         print("Error: ", carpark["ppName"])

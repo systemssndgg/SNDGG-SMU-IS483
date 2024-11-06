@@ -74,17 +74,15 @@ def create_hdb_carparks():
         entity = Entity("Carpark", value['CarParkID'], ctx=ctx)
         for key, value in value.items():
             if key == "Development":
-                entity.prop("CarparkName", value)
+                entity.prop("carparkName", value)
             elif key == "Location":
                 coordinates = value.split(" ")
-                entity.gprop("Location", (float(coordinates[0]), float(coordinates[1])))
+                entity.gprop("location", (float(coordinates[0]), float(coordinates[1])))
             elif key == "AvailableLots":
-                entity.prop("ParkingAvailability", value)
+                entity.prop("parkingAvailability", value)
             
         # Fill in the empty properties
-        entity.prop("Sheltered", True)
-        entity.prop('Pricing', "-")
-        entity.prop("ParkingCapacity", "-")
+        entity.prop("sheltered", True)
         entity_list.append(entity)  # Add entity to list
     return entity_list
 
