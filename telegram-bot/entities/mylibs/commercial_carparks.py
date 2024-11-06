@@ -390,12 +390,11 @@ def create_entity(carpark_name, e_id, coordinates, available_lots, pricing):
     entity = Entity("Carpark", e_id, ctx=ctx)
 
     # Set properties
-    entity.prop("CarparkName", carpark_name)
+    entity.prop("carparkName", carpark_name)
     entity.gprop("location", (float(coordinates[0]), float(coordinates[1])))
-    entity.prop("ParkingCapacity", "-")
-    entity.prop("Sheltered", True)
-    entity.prop("ParkingAvailability", available_lots)
-    entity.prop('Pricing', pricing)
+    entity.prop("sheltered", True)
+    entity.prop("parkingAvailability", available_lots)
+    entity.prop('pricing', pricing)
 
     return entity
 
@@ -450,41 +449,32 @@ def create_commercial_carparks():
                 # Initialize day_type if not already in dict
                 if day_type not in carpark_rates[location]['rates']:
                     carpark_rates[location]['rates'][day_type] = {
-                        'time_based': [],
-                        'flat_entry_fee': None,
-                        'first_hour_rate': None,
-                        'max_daily_fee': None
+                        'timeBased': []
                     }
                 
                 # Add time-based rates
                 if start_time != '-' and end_time != '-' and rate_per_hour != '-':
-                    carpark_rates[location]['rates'][day_type]['time_based'].append({
-                        'start_time': start_time,
-                        'end_time': end_time,
-                        'rate_per_hour': float(rate_per_hour)
+                    carpark_rates[location]['rates'][day_type]['timeBased'].append({
+                        'startTime': start_time,
+                        'endTime': end_time,
+                        'ratePerHour': float(rate_per_hour)
                     })
                 
                 # Add flat entry fee (if exists)
                 if flat_entry_start != '-' and flat_entry_end != '-' and flat_entry_fee != '-':
-                    carpark_rates[location]['rates'][day_type]['flat_entry_fee'] = {
-                        'start_time': flat_entry_start,
-                        'end_time': flat_entry_end,
+                    carpark_rates[location]['rates'][day_type]['flatEntryFee'] = {
+                        'startTime': flat_entry_start,
+                        'endTime': flat_entry_end,
                         'fee': float(flat_entry_fee)
                     }
-                else:
-                    carpark_rates[location]['rates'][day_type]['flat_entry_fee'] = None
                 
                 # Add first hour rate
                 if first_hour_rate != '-':
-                    carpark_rates[location]['rates'][day_type]['first_hour_rate'] = float(first_hour_rate)
-                else:
-                    carpark_rates[location]['rates'][day_type]['first_hour_rate'] = None
+                    carpark_rates[location]['rates'][day_type]['firstHourRate'] = float(first_hour_rate)
                 
                 # Add max daily fee
                 if max_daily_fee != '-':
-                    carpark_rates[location]['rates'][day_type]['max_daily_fee'] = max_daily_fee
-                else:
-                    carpark_rates[location]['rates'][day_type]['max_daily_fee'] = None
+                    carpark_rates[location]['rates'][day_type]['maxDailyFee'] = max_daily_fee
                 
             formatted_carpark_rates = carpark_rates
     
@@ -519,9 +509,9 @@ def create_commercial_carparks():
                         pricing['rates'] = carpark_data['rates']
 
                         raw_rates = fetch_carpark_rates(sentosa_carpark_name)
-                        pricing['WeekdayStr'] = clean_text(raw_rates['WeekdayStr'])
-                        pricing['SaturdayStr'] = clean_text(raw_rates['SaturdayStr'])
-                        pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
+                        pricing['weekdayStr'] = clean_text(raw_rates['WeekdayStr'])
+                        pricing['saturdayStr'] = clean_text(raw_rates['SaturdayStr'])
+                        pricing['sundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
                         # Create and store the entity
                         entity = create_entity(sentosa_carpark_name, e_id, coordinates, available_lots, pricing)
                         entity_dict[e_id] = entity
@@ -533,9 +523,9 @@ def create_commercial_carparks():
                     pricing['rates'] = carpark_data['rates']
 
                     raw_rates = fetch_carpark_rates(carpark_name)
-                    pricing['WeekdayStr'] = clean_text(raw_rates['WeekdayStr'])
-                    pricing['SaturdayStr'] = clean_text(raw_rates['SaturdayStr'])
-                    pricing['SundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
+                    pricing['weekdayStr'] = clean_text(raw_rates['WeekdayStr'])
+                    pricing['saturdayStr'] = clean_text(raw_rates['SaturdayStr'])
+                    pricing['sundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
 
                     # Create and store the entity
                     entity = create_entity(carpark_name, e_id, coordinates, available_lots, pricing)
