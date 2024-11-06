@@ -110,23 +110,23 @@ def generate_formatted_excel(file_path):
 
     for location, carpark_data in response.items():
         for day, rates in carpark_data['rates'].items():
-            time_based = rates.get('time_based', '-')
-            flat_entry_fee = rates.get('flat_entry_fee')
+            time_based = rates.get('timeBased', '-')
+            flat_entry_fee = rates.get('flatEntryFee')
             if isinstance(flat_entry_fee, dict):
-                flat_start = flat_entry_fee['start_time']
-                flat_end = flat_entry_fee['end_time']
+                flat_start = flat_entry_fee['startTime']
+                flat_end = flat_entry_fee['endTime']
                 flat_fee = flat_entry_fee['fee']
             else:
                 flat_start = flat_end = flat_fee = '-'
-            first_hour_rate = rates.get('first_hour_rate', '-')
-            max_daily_fee = rates.get('max_daily_fee', '-')
+            first_hour_rate = rates.get('firstHourRate', '-')
+            max_daily_fee = rates.get('maxDailyFee', '-')
             
             # If there is a time-based rate, write each period
             if time_based and isinstance(time_based, list):
                 for tb in time_based:
                     sheet.append([
                         location, day, 
-                        tb.get('start_time', '-'), tb.get('end_time', '-'), tb.get('rate_per_hour', '-'),
+                        tb.get('startTime', '-'), tb.get('endTime', '-'), tb.get('ratePerHour', '-'),
                         flat_start, flat_end, flat_fee,
                         first_hour_rate if first_hour_rate is not None else '-',
                         max_daily_fee if max_daily_fee is not None else '-'
@@ -194,63 +194,63 @@ def format_carpark_rates(carpark_rates):
   "Carpark A": {
     "rates": {
       "weekday": {
-        "time_based": [
+        "timeBased": [
           {
-            "start_time": "07:30",
-            "end_time": "17:00",
-            "rate_per_hour": 2.0
+            "startTime": "07:30",
+            "endTime": "17:00",
+            "ratePerHour": 2.0
           },
           {
-            "start_time": "17:00",
-            "end_time": "22:00",
-            "rate_per_hour": 1.5
+            "startTime": "17:00",
+            "endTime": "22:00",
+            "ratePerHour": 1.5
           }
         ],
         "flat_entry_fee": {
-          "start_time": "22:00",
-          "end_time": "07:30",
+          "startTime": "22:00",
+          "endTime": "07:30",
           "fee": 5.0
         },
-        "first_hour_rate": 3.0,
-        "max_daily_fee": 20.0
+        "firstHourRate": 3.0,
+        "maxDailyFee": 20.0
       },
       "saturday": {
-        "time_based": [
+        "timeBased": [
           {
-            "start_time": "07:30",
-            "end_time": "17:00",
-            "rate_per_hour": 2.5
+            "startTime": "07:30",
+            "endTime": "17:00",
+            "ratePerHour": 2.5
           },
           {
-            "start_time": "17:00",
-            "end_time": "22:00",
-            "rate_per_hour": 2.0
+            "startTime": "17:00",
+            "endTime": "22:00",
+            "ratePerHour": 2.0
           }
         ],
         "flat_entry_fee": null,
-        "first_hour_rate": 4.0,
-        "max_daily_fee": 20.0
+        "firstHourRate": 4.0,
+        "maxDailyFee": 20.0
       },
       "sunday_public_holiday": {
-        "time_based": [
+        "timeBased": [
           {
-            "start_time": "07:30",
-            "end_time": "17:00",
-            "rate_per_hour": 3.0
+            "startTime": "07:30",
+            "endTime": "17:00",
+            "ratePerHour": 3.0
           },
           {
-            "start_time": "17:00",
-            "end_time": "22:00",
-            "rate_per_hour": 2.5
+            "startTime": "17:00",
+            "endTime": "22:00",
+            "ratePerHour": 2.5
           }
         ],
         "flat_entry_fee": {
-          "start_time": "22:00",
-          "end_time": "07:30",
+          "startTime": "22:00",
+          "endTime": "07:30",
           "fee": 6.0
         },
-        "first_hour_rate": null,
-        "max_daily_fee": 20.0
+        "firstHourRate": null,
+        "maxDailyFee": 20.0
       }
     }
   }
@@ -267,13 +267,13 @@ def format_carpark_rates(carpark_rates):
     - rates is an object that contains the pricing information for the carpark
     - weekday is an object that contains the pricing information for weekdays
     - saturday is an object that contains the pricing information for Saturdays
-    - sunday_public_holiday is an object that contains the pricing information for Sundays and Public Holidays
-    - time_based is an array of objects that contain the pricing information for different time slots
+    - sundayPublicHoliday is an object that contains the pricing information for Sundays and Public Holidays
+    - timeBased is an array of objects that contain the pricing information for different time slots
     - flat_entry_fee is an object that contains the pricing information for a flat entry fee
-    - first_hour_rate is an object that contains the pricing information for the first hour rate
-    - max_daily_fee is the maximum daily fee that can be charged for parking in the carpark
-    - start_time and end_time are the start and end times for the time slot
-    - rate_per_hour is the rate per hour for parking in the carpark
+    - firstHourRate is an object that contains the pricing information for the first hour rate
+    - maxDailyFee is the maximum daily fee that can be charged for parking in the carpark
+    - startTime and endTime are the start and end times for the time slot
+    - ratePerHour is the rate per hour for parking in the carpark
     - fee is the entry fee for parking in the carpark
     - rate is the rate for the first hour of parking in the carpark
     - subsequent_rate is the rate for subsequent hours of parking in the carpark
@@ -380,9 +380,9 @@ def fetch_carpark_rates(carpark_name, file_path='entities/mylibs/CommercialCarpa
 
     # Return the pricing as a dictionary
     return {
-        'WeekdayStr': weekday_rate_combined or "-",
-        'SaturdayStr': saturday_rate or "-",
-        'SundayPHStr': sunday_rate or "-"
+        'weekdayStr': weekday_rate_combined or "-",
+        'saturdayStr': saturday_rate or "-",
+        'sundayPHStr': sunday_rate or "-"
     }
 
 # Helper function to create a carpark entity
@@ -509,9 +509,9 @@ def create_commercial_carparks():
                         pricing['rates'] = carpark_data['rates']
 
                         raw_rates = fetch_carpark_rates(sentosa_carpark_name)
-                        pricing['weekdayStr'] = clean_text(raw_rates['WeekdayStr'])
-                        pricing['saturdayStr'] = clean_text(raw_rates['SaturdayStr'])
-                        pricing['sundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
+                        pricing['weekdayStr'] = clean_text(raw_rates['weekdayStr'])
+                        pricing['saturdayStr'] = clean_text(raw_rates['saturdayStr'])
+                        pricing['sundayPHStr'] = clean_text(raw_rates['sundayPHStr'])
                         # Create and store the entity
                         entity = create_entity(sentosa_carpark_name, e_id, coordinates, available_lots, pricing)
                         entity_dict[e_id] = entity
@@ -523,9 +523,9 @@ def create_commercial_carparks():
                     pricing['rates'] = carpark_data['rates']
 
                     raw_rates = fetch_carpark_rates(carpark_name)
-                    pricing['weekdayStr'] = clean_text(raw_rates['WeekdayStr'])
-                    pricing['saturdayStr'] = clean_text(raw_rates['SaturdayStr'])
-                    pricing['sundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
+                    pricing['weekdayStr'] = clean_text(raw_rates['weekdayStr'])
+                    pricing['saturdayStr'] = clean_text(raw_rates['saturdayStr'])
+                    pricing['sundayPHStr'] = clean_text(raw_rates['sundayPHStr'])
 
                     # Create and store the entity
                     entity = create_entity(carpark_name, e_id, coordinates, available_lots, pricing)
