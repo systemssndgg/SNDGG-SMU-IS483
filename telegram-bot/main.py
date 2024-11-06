@@ -9,11 +9,11 @@ import constants
 from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, ConversationHandler, MessageHandler, filters
 
 # import functions
-from utils.telegram_handlers import start, get_destination, destination_selected, user_preference, store_preference, confirm_destination, preference, live_location, carpark_selected, info, settings, handle_settings, handle_filter, confirm_filter, handle_numeric_input, end
+from utils.telegram_handlers import start, get_destination, destination_selected, user_preference, store_preference, confirm_destination, preference, live_location, carpark_selected, info, settings, handle_settings, handle_filter, confirm_filter, handle_filter_numeric_input, hour, handle_hour, end
 from utils.helper_functions import update_context_broker
 
 # State definitions
-DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER, NUMERIC_INPUT = range(12)
+DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER, FILTER_NUMERIC_INPUT, HOUR_NUMERIC_INPUT = range(13)
 
 app = Flask(__name__)
 
@@ -76,9 +76,13 @@ def main() -> None:
             CONFIRM_FILTER: [
                 CallbackQueryHandler(confirm_filter, pattern="^(include|exclude|end)$"),
             ],
-            NUMERIC_INPUT: [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_numeric_input),
+            FILTER_NUMERIC_INPUT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_filter_numeric_input),
             ],
+            HOUR_NUMERIC_INPUT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_hour),
+                CallbackQueryHandler(handle_hour, pattern="^default$"),
+            ]
         },
         fallbacks=[CommandHandler('end', end),
         CallbackQueryHandler(end, pattern='^end$'),

@@ -23,7 +23,7 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 # State definitions
-DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER, NUMERIC_INPUT = range(12)
+DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER, FILTER_NUMERIC_INPUT, HOUR_NUMERIC_INPUT = range(13)
 
 # Store user data
 user_data = {}
@@ -294,9 +294,10 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     )
             await context.bot.send_message(
                         chat_id=query.message.chat_id,
-                        text=f"Your stored preferences are:\n\n{preference_text}"
+                        text=f"*Your stored preferences are:*\n\n{preference_text}",
+                        parse_mode='Markdown'
                     )
-            return await confirm_destination(update, context)
+            return await hour(update, context)
         
         if query.data == "confirm_yes" or query.data == "reset":
             if query.data == "reset":
@@ -375,7 +376,8 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 )
                 await context.bot.send_message(
                     chat_id=query.message.chat_id,
-                    text=f"You've selected your preferences in the following order:\n\n{preference_text}"
+                    text=f"*You've selected your preferences in the following order:*\n\n{preference_text}",
+                    parse_mode='Markdown'
                 )
                 print("User has chosen their preferences")
 
@@ -437,10 +439,72 @@ async def store_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         preference_list = context.user_data.get('preference_list')
         print(f"Storing user preference {preference_list} for user {user_id}")
         store_user_preference(user_id, preference_list)
-        await query.edit_message_text("✅ Your preference has been saved.")
+        await query.edit_message_text("✅ *Your preference has been saved.*", parse_mode="Markdown")
     elif query.data == "confirm_preference_no":
-        await query.edit_message_text("❌ Your preference has not been saved.")
-    return await confirm_destination(update, context)
+        await query.edit_message_text("❌ *Your preference has not been saved.*", parse_mode="Markdown")
+    return await hour(update, context)
+
+DEFAULT_PARKING_HOURS = 1 
+async def hour(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Ask user for the number of hours they plan to park for."""
+    query = update.callback_query
+    await query.answer()
+
+    keyboard = [
+        [InlineKeyboardButton("1️⃣ Default", callback_data="default")],
+        [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    hour_message = await context.bot.send_message(
+        text=(
+        "⏳ *How many hours do you plan to park for?*"
+        "\n\nPlease type the number of hours or select 'Default' for 1 hour."),
+        chat_id=query.message.chat_id,
+        parse_mode="Markdown",
+        reply_markup=reply_markup
+    )
+
+    context.user_data['hour_message_id'] = hour_message.message_id
+
+    return HOUR_NUMERIC_INPUT
+
+async def handle_hour(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Process user's input for parking hours and validate it."""
+    if update.callback_query:
+        # Handling button selections
+        query = update.callback_query
+        await query.answer()
+
+        if query.data == "default":
+            context.user_data['hours'] = DEFAULT_PARKING_HOURS
+            await context.bot.send_message(
+                text=f"✅ *You have selected {hours} hours.*",
+                chat_id=update.message.chat_id,
+                parse_mode="Markdown"
+            )
+            return await confirm_destination(update, context)
+        elif query.data == "end":
+            return await end(update, context)
+
+    elif update.message and update.message.text:
+        # Handling text input for hours
+        hours = update.message.text
+        if handle_hour_numeric_input(hours):
+            context.user_data['hours'] = int(hours)
+            await context.bot.send_message(
+                text=f"✅ *You have selected {hours} hours.*",
+                chat_id=update.message.chat_id,
+                parse_mode="Markdown"
+            )
+            return await confirm_destination(update, context)
+        else:
+            await update.message.reply_text("⚠️ *Please enter a valid number of hours.*", parse_mode="Markdown")
+            return HOUR_NUMERIC_INPUT
+
+def handle_hour_numeric_input(input_text: str) -> bool:
+    """Validate that the input text is a positive integer."""
+    return input_text.isdigit() and int(input_text) > 0
 
 async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Confirm the destination and ask for live location."""
@@ -448,73 +512,41 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
     # Logging setup
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
+    hour_message_id = context.user_data.get('hour_message_id')
     await context.job_queue.stop()
-    query = update.callback_query
-    await query.answer()
+
+    if hour_message_id:
+        try:
+            await context.bot.edit_message_reply_markup(
+                chat_id=update.effective_chat.id,
+                message_id=hour_message_id,
+                reply_markup=None
+            )
+        except BadRequest as e:
+            logger.error(f"Failed to delete hour message: {e}")
 
     preference_list = context.user_data.get('preference_list')
 
     print("Confirm destination", context.user_data.get("confirm_destination"))
-    if context.user_data.get("confirm_destination") == "confirm_yes" or query.data == "confirm_preference_yes" or query.data == "confirm_preference_no":
-        print(f"User has chosen his preferences {preference_list}")
-        print("Asking for live location.")
-        
-        keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        confirm_destination = await context.bot.send_message(
-            chat_id=query.message.chat_id,
-            text="✅ Destination confirmed! Please share your live location to help me find the best route.\n\n"
-                "*Follow these steps:*\n"
-                "📎 Paper Clip > Location > Share Live Location > Select ‘for 1 hour’",
-            parse_mode="Markdown",
-            reply_markup=reply_markup
-        )
-
-        context.user_data['confirm_destination_message_id'] = confirm_destination.message_id
-        context.user_data['confirm_destination_edited_status'] = False
-
-        return LIVE_LOCATION 
+    print(f"User has chosen his preferences {preference_list}")
+    print("Asking for live location.")
     
-    elif query.data == "confirm_no":
-        print("User rejected the location. Asking for a new destination.")
+    keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
-        keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+    confirm_destination = await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="✅ Destination confirmed! Please share your live location to help me find the best route.\n\n"
+            "*Follow these steps:*\n"
+            "📎 Paper Clip > Location > Share Live Location > Select ‘for 1 hour’",
+        parse_mode="Markdown",
+        reply_markup=reply_markup
+    )
 
-        static_map_message_id = context.user_data.get('static_map_message_id')
-        if static_map_message_id:
-            await context.bot.delete_message(
-                chat_id=query.message.chat_id,
-                message_id=static_map_message_id
-            )
+    context.user_data['confirm_destination_message_id'] = confirm_destination.message_id
+    context.user_data['confirm_destination_edited_status'] = False
 
-        await query.edit_message_text(
-            "❌ *Destination rejected.* Let's search again. Where would you like to go?\n\n"
-            "Please type your destination.",
-            parse_mode="Markdown",
-            reply_markup=reply_markup
-        )
-
-        return DESTINATION
-    
-    elif query.data == "end":
-        static_map_message_id = context.user_data.get('static_map_message_id')
-        destination_address_id = context.user_data.get('destination_address_id')
-        if static_map_message_id:
-            await context.bot.delete_message(
-                chat_id=query.message.chat_id,
-                message_id=static_map_message_id
-            )
-        # if destination_address_id:
-        #     await context.bot.delete_message(
-        #         chat_id=query.message.chat_id,
-        #         message_id=destination_address_id
-        #     )
-
-        return await end(update, context)
-
-    return ConversationHandler.END
+    return LIVE_LOCATION 
 
 async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the live location input and find nearest carpark based on destination"""
@@ -1057,7 +1089,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     
     return CONFIRM_FILTER
 
-async def handle_numeric_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def handle_filter_numeric_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle numeric input from the user with specific validations."""
     user_input = update.message.text
     selected_filter = context.user_data.get('selected_filter')
@@ -1070,13 +1102,13 @@ async def handle_numeric_input(update: Update, context: ContextTypes.DEFAULT_TYP
             await update.message.reply_text(
                 "❌ *Invalid input. Please enter a number greater than or equal to 1.*", parse_mode="Markdown"
             )
-            return NUMERIC_INPUT
+            return FILTER_NUMERIC_INPUT
 
         elif selected_filter == "number_carpark_options" and (user_input < 1 or user_input > 10):
             await update.message.reply_text(
                 "❌ *Invalid input. Please enter a number between 1 and 10.*", parse_mode="Markdown"
             )
-            return NUMERIC_INPUT
+            return FILTER_NUMERIC_INPUT
 
         try:
             if check_user_exists(user_id):
@@ -1105,7 +1137,7 @@ async def handle_numeric_input(update: Update, context: ContextTypes.DEFAULT_TYP
         await update.message.reply_text(
             "❌ Invalid input. Please enter a valid number."
         )
-        return NUMERIC_INPUT
+        return FILTER_NUMERIC_INPUT
 
     return ConversationHandler.END
 
