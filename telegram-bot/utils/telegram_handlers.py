@@ -683,7 +683,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             context.user_data['closest_carparks'] = closest_three_carparks
 
             keyboard = [
-                [InlineKeyboardButton(carpark['CarparkName']['value'].title(), callback_data=f"carpark_{count}")]
+                [InlineKeyboardButton(carpark['carparkName']['value'].title(), callback_data=f"carpark_{count}")]
                 for count, carpark in enumerate(closest_three_carparks)
             ]
 
@@ -763,10 +763,10 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     context.user_data['selected_carpark_lat'] = selected_carpark['location']['value']['coordinates'][1]
     context.user_data['selected_carpark_long'] = selected_carpark['location']['value']['coordinates'][0]
     context.user_data['selected_carpark'] = selected_carpark
-    context.user_data['selected_carpark_name'] = selected_carpark['CarparkName']['value'].title()
-    # context.user_data['selected_carpark_availability'] = selected_carpark['ParkingAvailability']['value']
+    context.user_data['selected_carpark_name'] = selected_carpark['carparkName']['value'].title()
+    # context.user_data['selected_carpark_availability'] = selected_carpark['parkingAvailability']['value']
 
-    selected_carpark_name = selected_carpark['CarparkName']['value'].title()
+    selected_carpark_name = selected_carpark['carparkName']['value'].title()
     await query.message.reply_text(
         f"🅿️ You have selected *{selected_carpark_name}* as your carpark.",
         parse_mode="Markdown"
@@ -800,7 +800,7 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     google_route_id = await query.message.reply_text(
         f"🛣️ *Here is your route:*\n\n"
         f"📍 Start: {user_address}\n"
-        f"🅿️ Stop: {selected_carpark['CarparkName']['value'].title()} (Carpark)\n"
+        f"🅿️ Stop: {selected_carpark['carparkName']['value'].title()} (Carpark)\n"
         f"🏁 End: {destination_address}\n\n"
         f"[Click here to view the route]({google_maps_link})", 
         parse_mode='Markdown',
@@ -1059,7 +1059,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     if selected_filter == "minimum_carpark_avail":
         minimum_carpark_avail_message = await query.message.reply_text(
-            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than or equal to 1.",
+            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than or equal to 0.",
             parse_mode="Markdown",
             reply_markup=reply_markup
         )
@@ -1108,9 +1108,9 @@ async def handle_filter_numeric_input(update: Update, context: ContextTypes.DEFA
     try:
         user_input = int(user_input)
 
-        if selected_filter == "minimum_carpark_avail" and user_input < 1:
+        if selected_filter == "minimum_carpark_avail" and user_input < 0:
             await update.message.reply_text(
-                "❌ *Invalid input. Please enter a number greater than or equal to 1.*", parse_mode="Markdown"
+                "❌ *Invalid input. Please enter a number greater than or equal to 0.*", parse_mode="Markdown"
             )
             return FILTER_NUMERIC_INPUT
 

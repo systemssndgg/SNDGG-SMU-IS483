@@ -45,7 +45,7 @@ def get_parking_data():  # Get parking data in NGSI-LD format
                     )  # Pass in point
                     print("Lat ", geocoordinates[0], " Long ", geocoordinates[1])
             elif key == "AvailableLots":
-                entity.prop("ParkingAvailability", value)
+                entity.prop("parkingAvailability", value)
             elif key == "LotType":
                 entity.prop("LotType", value)
             elif key == "Agency":

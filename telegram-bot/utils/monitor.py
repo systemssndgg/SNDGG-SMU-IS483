@@ -59,14 +59,14 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 
         # Trigger warning if within 2km and less than 10 parking spots
         carpark_name = context.user_data.get('selected_carpark_name')
-        available_lots = selected_carpark_updated['ParkingAvailability']['value']
+        available_lots = selected_carpark_updated['parkingAvailability']['value']
         
         if distance_to_carpark <= 2.0 and not approaching_message_sent:
             if available_lots < 10:
                 next_best_carpark = find_next_best_carpark(context.user_data['closest_carparks'], selected_carpark)
 
                 if next_best_carpark:
-                    next_carpark_name = next_best_carpark['CarparkName']['value'].title()
+                    next_carpark_name = next_best_carpark['carparkName']['value'].title()
                     next_carpark_lat = next_best_carpark['location']['value']['coordinates'][1]
                     next_carpark_long = next_best_carpark['location']['value']['coordinates'][0]
 
@@ -262,7 +262,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                 if distance < check_distance and area["forecast"]["value"] in rain_values:
                     rain_value = area["forecast"]["value"]
                     print("rain_value:", rain_value)
-            if current_carpark["Sheltered"]["value"] == False:    
+            if current_carpark["sheltered"]["value"] == False:    
                 live_location = (context.user_data.get('live_location')[0], context.user_data.get('live_location')[1]) 
                 destination = (context.user_data.get('destination_lat'), context.user_data.get('destination_long'))
                 user_preference = context.user_data.get('user_preference')
@@ -293,8 +293,8 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                 context.user_data['selected_carpark_lat'] = new_carpark['location']['value']['coordinates'][1]
                 context.user_data['selected_carpark_long'] = new_carpark['location']['value']['coordinates'][0]
                 context.user_data['selected_carpark'] = new_carpark
-                context.user_data['selected_carpark_name'] = new_carpark['CarparkName']['value'].title()
-                context.user_data['selected_carpark_available_lots'] = new_carpark['ParkingAvailability']['value']
+                context.user_data['selected_carpark_name'] = new_carpark['carparkName']['value'].title()
+                context.user_data['selected_carpark_available_lots'] = new_carpark['parkingAvailability']['value']
 
                 google_route_id = context.user_data.get('google_route_id')
 
@@ -315,7 +315,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                     f"🌧️ *RAIN ALERT: TAP TO REROUTE TO SHELTERED CARPARK*\n\n"
                     f"🛣️ *Here is a new route to a sheltered carpark:*\n\n"
                     f"📍 Start: {user_address}\n"
-                    f"🅿️ Stop: {new_carpark['CarparkName']['value'].title()} (Carpark)\n"
+                    f"🅿️ Stop: {new_carpark['carparkName']['value'].title()} (Carpark)\n"
                     f"🏁 End: {destination_address}\n\n"
                     f"[Click here to view the route]({google_maps_link})", 
                     parse_mode='Markdown', 

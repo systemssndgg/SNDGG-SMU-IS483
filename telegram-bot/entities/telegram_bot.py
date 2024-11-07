@@ -497,7 +497,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             context.user_data['closest_carparks'] = closest_three_carparks
 
             keyboard = [
-                [InlineKeyboardButton(carpark['CarparkName']['value'].title(), callback_data=f"carpark_{count}")]
+                [InlineKeyboardButton(carpark['carparkName']['value'].title(), callback_data=f"carpark_{count}")]
                 for count, carpark in enumerate(closest_three_carparks)
             ]
 
@@ -567,7 +567,7 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
                 next_best_carpark = find_next_best_carpark(context.user_data['closest_carparks'], selected_carpark)
 
                 if next_best_carpark:
-                    next_carpark_name = next_best_carpark['CarparkName']['value'].title()
+                    next_carpark_name = next_best_carpark['carparkName']['value'].title()
                     next_carpark_lat = next_best_carpark['location']['value']['coordinates'][1]
                     next_carpark_long = next_best_carpark['location']['value']['coordinates'][0]
 
@@ -653,7 +653,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 if distance < check_distance and area["forecast"]["value"] in rain_values:
                     rain_value = area["forecast"]["value"]
                     print("rain_value:", rain_value)
-            if current_carpark["Sheltered"]["value"] == False:    
+            if current_carpark["sheltered"]["value"] == False:    
                 new_carpark = find_closest_carpark(closest_three_carparks, destination_details['geometry']['location']['lat'], destination_details['geometry']['location']['lng'])
 
                 lat = new_carpark["location"]["value"]["coordinates"][1] 
@@ -669,8 +669,8 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 context.user_data['selected_carpark_lat'] = new_carpark['location']['value']['coordinates'][1]
                 context.user_data['selected_carpark_long'] = new_carpark['location']['value']['coordinates'][0]
                 context.user_data['selected_carpark'] = new_carpark
-                context.user_data['selected_carpark_name'] = new_carpark['CarparkName']['value'].title()
-                context.user_data['selected_carpark_available_lots'] = new_carpark['ParkingAvailability']['value']
+                context.user_data['selected_carpark_name'] = new_carpark['carparkName']['value'].title()
+                context.user_data['selected_carpark_available_lots'] = new_carpark['parkingAvailability']['value']
 
                 google_route_id = context.user_data.get('google_route_id')
 
@@ -691,7 +691,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     f"🌧️ *RAIN ALERT: TAP TO REROUTE TO SHELTERED CARPARK*\n\n"
                     f"🛣️ *Here is a new route to a sheltered carpark:*\n\n"
                     f"📍 Start: {user_address}\n"
-                    f"🅿️ Stop: {new_carpark['CarparkName']['value'].title()} (Carpark)\n"
+                    f"🅿️ Stop: {new_carpark['carparkName']['value'].title()} (Carpark)\n"
                     f"🏁 End: {destination_address}\n\n"
                     f"[Click here to view the route]({google_maps_link})", 
                     parse_mode='Markdown', 
@@ -852,9 +852,9 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     context.user_data['selected_carpark_lat'] = selected_carpark['location']['value']['coordinates'][1]
     context.user_data['selected_carpark_long'] = selected_carpark['location']['value']['coordinates'][0]
     context.user_data['selected_carpark'] = selected_carpark
-    context.user_data['selected_carpark_name'] = selected_carpark['CarparkName']['value'].title()
+    context.user_data['selected_carpark_name'] = selected_carpark['carparkName']['value'].title()
 
-    selected_carpark_name = selected_carpark['CarparkName']['value'].title()
+    selected_carpark_name = selected_carpark['carparkName']['value'].title()
     await query.message.reply_text(
         f"🅿️ You have selected *{selected_carpark_name}* as your carpark.",
         parse_mode="Markdown"
@@ -888,7 +888,7 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     google_route_id = await query.message.reply_text(
         f"🛣️ *Here is your route:*\n\n"
         f"📍 Start: {user_address}\n"
-        f"🅿️ Stop: {selected_carpark['CarparkName']['value'].title()} (Carpark)\n"
+        f"🅿️ Stop: {selected_carpark['carparkName']['value'].title()} (Carpark)\n"
         f"🏁 End: {destination_address}\n\n"
         f"[Click here to view the route]({google_maps_link})", 
         parse_mode='Markdown',
@@ -1007,11 +1007,11 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, sele
         lat = carpark_dict["location"]["value"]["coordinates"][1]
         long = carpark_dict["location"]["value"]["coordinates"][0]
         distance = geodesic((dest_lat, dest_long), (lat, long)).km
-        distance_dict[carpark_dict["CarparkName"]["value"]] = distance
+        distance_dict[carpark_dict["carparkName"]["value"]] = distance
         carpark_dict["distance"] = distance
-        if "Car" in carpark_dict["Pricing"]["value"] and carpark_dict["ParkingAvailability"]["value"] > 0:
+        if "Car" in carpark_dict["pricing"]["value"] and carpark_dict["parkingAvailability"]["value"] > 0:
             if selected_preference == "sheltered":
-                if carpark["Sheltered"]["value"] == True:
+                if carpark["sheltered"]["value"] == True:
                     if len(closest_three_carparks) < 3:
                         closest_three_carparks.append(carpark_dict)
                     else: 
@@ -1034,12 +1034,12 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, sele
                         closest_three_carparks.append(carpark_dict)
 
     # Sort the closest_three_carparks based on distance
-    closest_three_carparks.sort(key=lambda x: distance_dict[x["CarparkName"]["value"]])
+    closest_three_carparks.sort(key=lambda x: distance_dict[x["carparkName"]["value"]])
 
     # Add the sorted carparks to the final_three_carparks list
     final_three_carparks.extend(closest_three_carparks)
     # for i in final_three_carparks:
-    #     print("carparks:", i["CarparkName"]["value"], i["distance"])
+    #     print("carparks:", i["carparkName"]["value"], i["distance"])
 
     return final_three_carparks
     # return closest_three_carparks
@@ -1047,7 +1047,7 @@ def find_closest_three_carparks(nearest_carparks_list, dest_lat, dest_long, sele
 def find_closest_carpark(carparks_list, dest_lat, dest_long):
     in_list = False
     for carpark in carparks_list:
-        if carpark["Sheltered"]["value"] == True:
+        if carpark["sheltered"]["value"] == True:
             in_list = True
             return carpark
     
@@ -1060,9 +1060,9 @@ def find_closest_carpark(carparks_list, dest_lat, dest_long):
 
         for carpark in nearest_carparks:
             distance = geodesic((dest_lat, dest_long), (lat, long)).km
-            distance_dict[carpark["CarparkName"]["value"]] = distance
+            distance_dict[carpark["carparkName"]["value"]] = distance
             
-        distance_dict.sort(key=lambda x: distance_dict[x["CarparkName"]["value"]])
+        distance_dict.sort(key=lambda x: distance_dict[x["carparkName"]["value"]])
 
         # Add the sorted carparks to the final_three_carparks list
         selected_carpark.extend(closest_three_carparks)
@@ -1103,7 +1103,7 @@ def is_time_in_range(start_time, end_time, current_time):
         return current_time >= start or current_time <= end
 
 def find_rate_based_on_time(carpark, vehicle_type, current_time, today):
-    time_slots = carpark['Pricing']['value'][vehicle_type]['TimeSlots']
+    time_slots = carpark['pricing']['value'][vehicle_type]['TimeSlots']
 
     if 0 <= today <= 4:
         rate_type = "WeekdayRate"
@@ -1131,14 +1131,14 @@ def aggregate_message(closest_three_carparks, selected_preference):
     price_dict = {}
 
     for count, carpark in enumerate(closest_three_carparks, 1):
-        carpark_name = carpark['CarparkName']['value'].title()
-        if 'Pricing' in carpark and 'Car' in carpark['Pricing']["value"]:
+        carpark_name = carpark['carparkName']['value'].title()
+        if 'pricing' in carpark and 'Car' in carpark['pricing']["value"]:
         
             carparks_message += (
                     f"*{count}. {carpark_name}*\n"
-                    f"🅿️ *Available Lots:* {carpark['ParkingAvailability']['value']}\n"
+                    f"🅿️ *Available Lots:* {carpark['parkingAvailability']['value']}\n"
                     f"📏 *Distance:* {carpark['distance']:.2f} km\n"
-                    f"☂️ *Sheltered:* {'Yes' if carpark['Sheltered']['value'] else 'No'}\n"
+                    f"☂️ *Sheltered:* {'Yes' if carpark['sheltered']['value'] else 'No'}\n"
                 )
 
             if 0 <= today <= 4:  # Monday to Friday (Weekday)
@@ -1225,7 +1225,7 @@ def find_next_best_carpark(carparks, current_carpark):
         if carpark == current_carpark:
             continue
         
-        available_lots = carpark['ParkingAvailability']['value']
+        available_lots = carpark['parkingAvailability']['value']
         if available_lots > 10:
             distance = carpark['distance']  # Assuming you already calculated distances
 

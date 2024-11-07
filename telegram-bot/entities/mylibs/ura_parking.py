@@ -195,13 +195,13 @@ def get_ura_carparks(ura_token):
                     except:
                         print("Error: ", carpark["ppName"])
                         continue
-            entity.prop('Pricing', pricing)    
+            entity.prop('pricing', pricing)    
                     
         # for carpark in carpark_list["Result"]:            
         #     for entity in entity_list:
         #         # print(Fore.GREEN + str(entity))
         #         vehicle_type = carpark["vehCat"]
-        #         if entity["CarparkName"]["value"].strip() == carpark["ppName"].strip():
+        #         if entity["carparkName"]["value"].strip() == carpark["ppName"].strip():
         #             if all(carpark.get(rate_key) for rate_key in ["weekdayRate", "satdayRate", "sunPHRate", "sunPHMin"]):
         #                 time_slot = {
         #                     "WeekdayRate": {
@@ -223,7 +223,7 @@ def get_ura_carparks(ura_token):
         #                         "sunPHRate": carpark["sunPHRate"]
         #                     },
         #                 }
-        #                 entity["Pricing"]["value"][vehicle_type]["TimeSlots"].append(time_slot)
+        #                 entity["pricing"]["value"][vehicle_type]["TimeSlots"].append(time_slot)
 
         print("Total number of carparks: ", len(carpark_list["Result"]))
         print("Total entities created: ", len(entity_list), "\n")
