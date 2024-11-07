@@ -1059,7 +1059,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     if selected_filter == "minimum_carpark_avail":
         minimum_carpark_avail_message = await query.message.reply_text(
-            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than or equal to 1.",
+            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than or equal to 0.",
             parse_mode="Markdown",
             reply_markup=reply_markup
         )
@@ -1108,9 +1108,9 @@ async def handle_filter_numeric_input(update: Update, context: ContextTypes.DEFA
     try:
         user_input = int(user_input)
 
-        if selected_filter == "minimum_carpark_avail" and user_input < 1:
+        if selected_filter == "minimum_carpark_avail" and user_input < 0:
             await update.message.reply_text(
-                "❌ *Invalid input. Please enter a number greater than or equal to 1.*", parse_mode="Markdown"
+                "❌ *Invalid input. Please enter a number greater than or equal to 0.*", parse_mode="Markdown"
             )
             return FILTER_NUMERIC_INPUT
 
