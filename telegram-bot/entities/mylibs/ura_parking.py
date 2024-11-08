@@ -8,6 +8,7 @@ import entities.mylibs.SVY21 as SVY21
 
 import colorama
 from colorama import Fore, Back, Style
+import traceback
 colorama.init(autoreset=True)
 
 ACCESS_KEY = constants.URA_ACCESS_KEY
@@ -118,12 +119,15 @@ def get_ura_carparks(ura_token):
             for carpark in carpark_list["Result"]:
                 if entity["carparkName"]["value"].strip() == carpark["ppName"].strip():
                     try:
-                        weekdayRateFloat = float(carpark["weekdayRate"].replace("$", ""))
-                        weekdayMinFloat = float(carpark["weekdayMin"].replace(" mins", " "))
-                        satdayRateFloat = float(carpark["satdayRate"].replace("$", ""))
-                        satdayMinFloat = float(carpark["satdayMin"].replace(" mins", " "))
-                        sunPHRateFloat = float(carpark["sunPHRate"].replace("$", ""))
-                        sunPHMinFloat = float(carpark["sunPHMin"].replace(" mins", " "))
+                        if "weekdayRate" in carpark and "weekdayMin" in carpark:
+                            weekdayRateFloat = float(carpark["weekdayRate"].replace("$", ""))
+                            weekdayMinFloat = float(carpark["weekdayMin"].replace(" mins", " "))
+                        if "satdayRate" in carpark and "satdayMin" in carpark:
+                            satdayRateFloat = float(carpark["satdayRate"].replace("$", ""))
+                            satdayMinFloat = float(carpark["satdayMin"].replace(" mins", " "))
+                        if "sunPHRate" in carpark and "sunPHMin" in carpark:
+                            sunPHRateFloat = float(carpark["sunPHRate"].replace("$", ""))
+                            sunPHMinFloat = float(carpark["sunPHMin"].replace(" mins", " "))
                         
                         # Can't divide by 0 in Python, changing it to 1 has the same effect.
                         if weekdayMinFloat == 0:
@@ -192,38 +196,11 @@ def get_ura_carparks(ura_token):
                                 'endTime': carpark["endTime"],
                                 'ratePerHour': sunPHRatePerHour
                             })
-                    except:
-                        print("Error: ", carpark["ppName"])
+                    except Exception as e:
+                        print(f"Error processing carpark {carpark['ppName']}: {e}")
+                        traceback.print_exc()
                         continue
             entity.prop('pricing', pricing)    
-                    
-        # for carpark in carpark_list["Result"]:            
-        #     for entity in entity_list:
-        #         # print(Fore.GREEN + str(entity))
-        #         vehicle_type = carpark["vehCat"]
-        #         if entity["carparkName"]["value"].strip() == carpark["ppName"].strip():
-        #             if all(carpark.get(rate_key) for rate_key in ["weekdayRate", "satdayRate", "sunPHRate", "sunPHMin"]):
-        #                 time_slot = {
-        #                     "WeekdayRate": {
-        #                         "startTime": convert_to_24hr(carpark["startTime"]),
-        #                         "endTime": convert_to_24hr(carpark["endTime"]),
-        #                         "weekdayMin": carpark["weekdayMin"],
-        #                         "weekdayRate": carpark["weekdayRate"]
-        #                     },
-        #                     "SaturdayRate": {
-        #                         "startTime": convert_to_24hr(carpark["startTime"]),
-        #                         "endTime": convert_to_24hr(carpark["endTime"]),
-        #                         "satdayMin": carpark["satdayMin"],
-        #                         "satdayRate": carpark["satdayRate"]
-        #                     },
-        #                     "SundayPHRate": {
-        #                         "startTime": convert_to_24hr(carpark["startTime"]),
-        #                         "endTime": convert_to_24hr(carpark["endTime"]),
-        #                         "sunPHMin": carpark["sunPHMin"],
-        #                         "sunPHRate": carpark["sunPHRate"]
-        #                     },
-        #                 }
-        #                 entity["pricing"]["value"][vehicle_type]["TimeSlots"].append(time_slot)
 
         print("Total number of carparks: ", len(carpark_list["Result"]))
         print("Total entities created: ", len(entity_list), "\n")
