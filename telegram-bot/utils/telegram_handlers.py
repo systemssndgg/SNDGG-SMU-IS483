@@ -479,7 +479,7 @@ async def handle_hour(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
         if query.data == "default":
             context.user_data['hours'] = hours = DEFAULT_PARKING_HOURS
             await context.bot.send_message(
-                text=f"✅ *You have selected {hours} hours.*",
+                text=f"✅ *You have selected {hours} hour(s).*",
                 chat_id=query.message.chat_id,
                 parse_mode="Markdown"
             )
@@ -1044,6 +1044,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     selected_filter = query.data
     context.user_data['selected_filter'] = selected_filter
+    context.user_data["reply_markup_cleared"] = False
 
     await context.bot.edit_message_reply_markup(
         chat_id=update.effective_chat.id,
@@ -1059,7 +1060,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     if selected_filter == "minimum_carpark_avail":
         minimum_carpark_avail_message = await query.message.reply_text(
-            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than or equal to 0.",
+            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than 0.",
             parse_mode="Markdown",
             reply_markup=reply_markup
         )
@@ -1125,19 +1126,19 @@ async def handle_filter_numeric_input(update: Update, context: ContextTypes.DEFA
                 edit_user_filter(user_id, selected_filter, user_input)
             else:
                 store_user_filter(user_id, selected_filter, user_input)
-            
-            if context.user_data.get("minimum_carpark_avail_message_id"):
-                await context.bot.edit_message_reply_markup(
-                    chat_id=update.effective_chat.id,
-                    message_id=context.user_data['minimum_carpark_avail_message_id'],
-                    reply_markup=None
-                )
-            elif context.user_data.get("number_carpark_options_message_id"):
-                await context.bot.edit_message_reply_markup(
-                    chat_id=update.effective_chat.id,
-                    message_id=context.user_data['number_carpark_options_message_id'],
-                    reply_markup=None
-                )
+
+            message_id = context.user_data.get("minimum_carpark_avail_message_id") or \
+                         context.user_data.get("number_carpark_options_message_id")
+            if message_id:
+                try:
+                    await context.bot.edit_message_reply_markup(
+                        chat_id=update.effective_chat.id,
+                        message_id=message_id,
+                        reply_markup=None
+                    )
+                except BadRequest as e:
+                    if "Message is not modified" in str(e):
+                        print("No modifications needed for the reply markup.")
                 
             await update.message.reply_text("✅ *Your input has been recorded.*", parse_mode="Markdown")
         except Exception as e:
