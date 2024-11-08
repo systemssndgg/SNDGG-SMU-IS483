@@ -1,3 +1,0 @@
-from mylibs.commercial_carparks import get_commercial_carparks
-
-get_commercial_carparks
