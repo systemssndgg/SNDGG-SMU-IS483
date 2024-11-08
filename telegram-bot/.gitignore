@@ -1,0 +1,5 @@
+constants.py
+myenv
+__pycache__
+insightgrid-firestore.json
+ngsi-ld-systems.json

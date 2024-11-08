@@ -1,0 +1,4358 @@
+{
+	"info": {
+		"_postman_id": "690c503d-14f3-4c7d-9de2-e3e7a0af702c",
+		"name": "NGSI-LD Test Suite Localhost",
+		"description": "Sample operations to help understand the NGSI-LD API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6685473"
+	},
+	"item": [
+		{
+			"name": "Setting up context internally (Optional)",
+			"item": [
+				{
+					"name": "(1b) Adding link to a context",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"https://raw.githubusercontent.com/dsja612/ngsi-ld-deployment/master/datamodels/context.jsonld\",\r\n    \"https://raw.githubusercontent.com/dexter-lau-pmo/NGSI-LD-SG-Datamall/main/context/custom_context.json\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/jsonldContexts",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"jsonldContexts"
+							]
+						},
+						"description": "This request represents another way to add context files to the server. In this example, we use an existing context file (in .jsonld) instead of providing a JSON payload with @context."
+					},
+					"response": []
+				},
+				{
+					"name": "(1a) Adding a context, returns link to context file in header",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"@context\": {\r\n        \"Terms\": \"https://github.com/dsja612/ngsi-ld-deployment/blob/master/datamodels/terms.jsonld\",\r\n        \"CommandMessage\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/CommandMessage\",\r\n        \"CommandReturnMessage\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/CommandReturnMessage\",\r\n        \"StateMessage\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/StateMessage\",\r\n        \"StopCommandMessage\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/StopCommandMessage\",\r\n        \"StopCommandReturnMessage\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/StopCommandReturnMessage\",\r\n        \"accuracy\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/accuracy\",\r\n        \"altitude\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/altitude\",\r\n        \"battery\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/battery\",\r\n        \"command\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/command\",\r\n        \"commandTime\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/commandTime\",\r\n        \"covariance\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/covariance\",\r\n        \"current\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/current\",\r\n        \"destination\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/destination\",\r\n        \"errors\": \"ngsi-ld:errors\",\r\n        \"geographicPoint\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/geographicPoint\",\r\n        \"id\": \"@id\",\r\n        \"mapId\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/mapId\",\r\n        \"mode\": \"ngsi-ld:mode\",\r\n        \"ngsi-ld\": \"https://uri.etsi.org/ngsi-ld/\",\r\n        \"orientation2D\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/orientation2D\",\r\n        \"orientation3D\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/orientation3D\",\r\n        \"pitch\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/pitch\",\r\n        \"point2D\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/point2D\",\r\n        \"point3D\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/point3D\",\r\n        \"pose\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/pose\",\r\n        \"receivedCommand\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/receivedCommand\",\r\n        \"receivedStopCommand\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/receivedStopCommand\",\r\n        \"receivedTime\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/receivedTime\",\r\n        \"receivedWaypoints\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/receivedWaypoints\",\r\n        \"remainingPercentage\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/remainingPercentage\",\r\n        \"remainingTime\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/remainingTime\",\r\n        \"result\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/result\",\r\n        \"resultsOfStopCommand\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/resultsOfStopCommand\",\r\n        \"roll\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/roll\",\r\n        \"speed\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/speed\",\r\n        \"stopCommand\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/stopCommand\",\r\n        \"theta\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/theta\",\r\n        \"type\": \"@type\",\r\n        \"voltage\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/voltage\",\r\n        \"waypoints\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/waypoints\",\r\n        \"x\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/x\",\r\n        \"y\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/y\",\r\n        \"yaw\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/yaw\",\r\n        \"z\": \"https://smartdatamodels.org/dataModel.AutonomousMobileRobot/z\",\r\n        \"Camera\": \"https://smartdatamodels.org/dataModel.Device/Camera\",\r\n        \"Device\": \"https://smartdatamodels.org/dataModel.Device/Device\",\r\n        \"DeviceMeasurement\": \"https://smartdatamodels.org/dataModel.Device/DeviceMeasurement\",\r\n        \"DeviceModel\": \"https://smartdatamodels.org/dataModel.Device/DeviceModel\",\r\n        \"DeviceOperation\": \"https://smartdatamodels.org/dataModel.Device/DeviceOperation\",\r\n        \"PrivacyObject\": \"https://smartdatamodels.org/dataModel.Device/PrivacyObject\",\r\n        \"SmartMeteringObservation\": \"https://smartdatamodels.org/dataModel.Device/SmartMeteringObservation\",\r\n        \"address\": \"https://smartdatamodels.org/address\",\r\n        \"addressCountry\": \"https://smartdatamodels.org/addressCountry\",\r\n        \"addressLocality\": \"https://smartdatamodels.org/addressLocality\",\r\n        \"addressRegion\": \"https://smartdatamodels.org/addressRegion\",\r\n        \"addressedAt\": \"https://smartdatamodels.org/dataModel.Device/addressedAt\",\r\n        \"alternateName\": \"https://smartdatamodels.org/alternateName\",\r\n        \"annotatedMap\": \"https://smartdatamodels.org/dataModel.Device/annotatedMap\",\r\n        \"annotations\": \"https://smartdatamodels.org/annotations\",\r\n        \"areaServed\": \"https://smartdatamodels.org/areaServed\",\r\n        \"batteryLevel\": \"https://smartdatamodels.org/dataModel.Device/batteryLevel\",\r\n        \"bbox\": {\r\n            \"@container\": \"@list\",\r\n            \"@id\": \"geojson:bbox\"\r\n        },\r\n        \"brandName\": \"https://smartdatamodels.org/dataModel.Device/brandName\",\r\n        \"cameraName\": \"https://smartdatamodels.org/dataModel.Device/cameraName\",\r\n        \"cameraNum\": \"https://smartdatamodels.org/dataModel.Device/cameraNum\",\r\n        \"cameraOrientation\": \"https://smartdatamodels.org/dataModel.Device/cameraOrientation\",\r\n        \"cameraType\": \"https://smartdatamodels.org/dataModel.Device/cameraType\",\r\n        \"cameraUsage\": \"https://smartdatamodels.org/dataModel.Device/cameraUsage\",\r\n        \"category\": \"https://smartdatamodels.org/dataModel.Device/category\",\r\n        \"color\": \"https://smartdatamodels.org/color\",\r\n        \"comments\": \"https://smartdatamodels.org/dataModel.Device/comments\",\r\n        \"configuration\": \"https://smartdatamodels.org/dataModel.Device/configuration\",\r\n        \"controlledAsset\": \"https://smartdatamodels.org/dataModel.Device/controlledAsset\",\r\n        \"controlledProperty\": \"https://smartdatamodels.org/dataModel.Device/controlledProperty\",\r\n        \"coordinates\": {\r\n            \"@container\": \"@list\",\r\n            \"@id\": \"geojson:coordinates\"\r\n        },\r\n        \"crossborderTransfer\": \"https://smartdatamodels.org/dataModel.Device/crossborderTransfer\",\r\n        \"dataProvider\": \"https://smartdatamodels.org/dataProvider\",\r\n        \"dateCreated\": \"https://smartdatamodels.org/dateCreated\",\r\n        \"dateFirstUsed\": \"https://smartdatamodels.org/dataModel.Device/dateFirstUsed\",\r\n        \"dateInstalled\": \"https://smartdatamodels.org/dataModel.Device/dateInstalled\",\r\n        \"dateLastCalibration\": \"https://smartdatamodels.org/dataModel.Device/dateLastCalibration\",\r\n        \"dateLastValueReported\": \"https://smartdatamodels.org/dataModel.Device/dateLastValueReported\",\r\n        \"dateManufactured\": \"https://smartdatamodels.org/dataModel.Device/dateManufactured\",\r\n        \"dateModified\": \"https://smartdatamodels.org/dateModified\",\r\n        \"dateObserved\": \"https://smartdatamodels.org/dateObserved\",\r\n        \"depth\": \"https://smartdatamodels.org/dataModel.Device/depth\",\r\n        \"description\": \"http://purl.org/dc/terms/description\",\r\n        \"device\": \"https://smartdatamodels.org/dataModel.Device/device\",\r\n        \"deviceCategory\": \"https://smartdatamodels.org/dataModel.Device/deviceCategory\",\r\n        \"deviceClass\": \"https://smartdatamodels.org/dataModel.Device/deviceClass\",\r\n        \"deviceState\": \"https://smartdatamodels.org/dataModel.Device/deviceState\",\r\n        \"deviceType\": \"https://smartdatamodels.org/dataModel.Device/deviceType\",\r\n        \"direction\": \"https://smartdatamodels.org/dataModel.Device/direction\",\r\n        \"distance\": \"https://smartdatamodels.org/dataModel.Device/distance\",\r\n        \"district\": \"https://smartdatamodels.org/district\",\r\n        \"documentation\": \"https://smartdatamodels.org/dataModel.Device/documentation\",\r\n        \"dstAware\": \"https://smartdatamodels.org/dataModel.Device/dstAware\",\r\n        \"endDateTime\": \"https://smartdatamodels.org/dataModel.Device/endDateTime\",\r\n        \"endedAt\": \"https://smartdatamodels.org/dataModel.Device/endedAt\",\r\n        \"energyLimitationClass\": \"https://smartdatamodels.org/dataModel.Device/energyLimitationClass\",\r\n        \"entityVersion\": \"https://smartdatamodels.org/dataModel.Device/entityVersion\",\r\n        \"firmwareVersion\": \"https://smartdatamodels.org/dataModel.Device/firmwareVersion\",\r\n        \"floor\": \"https://smartdatamodels.org/dataModel.Device/floor\",\r\n        \"function\": \"https://smartdatamodels.org/dataModel.Device/function\",\r\n        \"hardwareVersion\": \"https://smartdatamodels.org/dataModel.Device/hardwareVersion\",\r\n        \"image\": \"https://smartdatamodels.org/image\",\r\n        \"imageSnapshot\": \"https://smartdatamodels.org/dataModel.Device/imageSnapshot\",\r\n        \"ipAddress\": \"https://smartdatamodels.org/dataModel.Device/ipAddress\",\r\n        \"isIndoor\": \"https://smartdatamodels.org/dataModel.Device/isIndoor\",\r\n        \"isPersonalData\": \"https://smartdatamodels.org/dataModel.Device/isPersonalData\",\r\n        \"legitimateInterest\": \"https://smartdatamodels.org/dataModel.Device/legitimateInterest\",\r\n        \"location\": \"ngsi-ld:location\",\r\n        \"macAddress\": \"https://smartdatamodels.org/dataModel.Device/macAddress\",\r\n        \"manufacturerName\": \"https://smartdatamodels.org/dataModel.Device/manufacturerName\",\r\n        \"mcc\": \"https://smartdatamodels.org/dataModel.Device/mcc\",\r\n        \"measurementType\": \"https://smartdatamodels.org/dataModel.Device/measurementType\",\r\n        \"mediaURL\": \"https://smartdatamodels.org/dataModel.Device/mediaURL\",\r\n        \"meterType\": \"https://smartdatamodels.org/dataModel.Device/meterType\",\r\n        \"mnc\": \"https://smartdatamodels.org/dataModel.Device/mnc\",\r\n        \"modelName\": \"https://smartdatamodels.org/dataModel.Device/modelName\",\r\n        \"name\": \"https://smartdatamodels.org/name\",\r\n        \"numValue\": \"https://smartdatamodels.org/dataModel.Device/numValue\",\r\n        \"offPeakConsumption\": \"https://smartdatamodels.org/dataModel.Device/offPeakConsumption\",\r\n        \"on\": \"https://smartdatamodels.org/dataModel.Device/on\",\r\n        \"operationType\": \"https://smartdatamodels.org/dataModel.Device/operationType\",\r\n        \"operator\": \"https://smartdatamodels.org/dataModel.Device/operator\",\r\n        \"osVersion\": \"https://smartdatamodels.org/dataModel.Device/osVersion\",\r\n        \"outlier\": \"https://smartdatamodels.org/dataModel.Device/outlier\",\r\n        \"owner\": \"https://smartdatamodels.org/owner\",\r\n        \"parameter\": \"https://smartdatamodels.org/dataModel.Device/parameter\",\r\n        \"peakConsumption\": \"https://smartdatamodels.org/dataModel.Device/peakConsumption\",\r\n        \"plannedEndAt\": \"https://smartdatamodels.org/dataModel.Device/plannedEndAt\",\r\n        \"plannedStartAt\": \"https://smartdatamodels.org/dataModel.Device/plannedStartAt\",\r\n        \"postOfficeBoxNumber\": \"https://smartdatamodels.org/postOfficeBoxNumber\",\r\n        \"postalCode\": \"https://smartdatamodels.org/postalCode\",\r\n        \"powerFactor\": \"https://smartdatamodels.org/dataModel.Device/powerFactor\",\r\n        \"provider\": \"https://smartdatamodels.org/dataModel.Device/provider\",\r\n        \"purpose\": \"https://smartdatamodels.org/dataModel.Device/purpose\",\r\n        \"recipientList\": \"https://smartdatamodels.org/dataModel.Device/recipientList\",\r\n        \"refDevice\": \"https://smartdatamodels.org/dataModel.Device/refDevice\",\r\n        \"refDeviceModel\": \"https://smartdatamodels.org/dataModel.Device/refDeviceModel\",\r\n        \"relativePosition\": \"https://smartdatamodels.org/dataModel.Device/relativePosition\",\r\n        \"reportedAt\": \"https://smartdatamodels.org/dataModel.Device/reportedAt\",\r\n        \"retentionPeriod\": \"https://smartdatamodels.org/dataModel.Device/retentionPeriod\",\r\n        \"rssi\": \"https://smartdatamodels.org/dataModel.Device/rssi\",\r\n        \"seeAlso\": \"https://smartdatamodels.org/seeAlso\",\r\n        \"serialNumber\": \"https://smartdatamodels.org/dataModel.Device/serialNumber\",\r\n        \"softwareVersion\": \"https://smartdatamodels.org/dataModel.Device/softwareVersion\",\r\n        \"source\": \"https://smartdatamodels.org/source\",\r\n        \"startDateTime\": \"https://smartdatamodels.org/dataModel.Device/startDateTime\",\r\n        \"startedAt\": \"https://smartdatamodels.org/dataModel.Device/startedAt\",\r\n        \"status\": \"ngsi-ld:status\",\r\n        \"streamName\": \"https://smartdatamodels.org/dataModel.Device/streamName\",\r\n        \"streamURL\": \"https://smartdatamodels.org/dataModel.Device/streamURL\",\r\n        \"streetAddress\": \"https://smartdatamodels.org/streetAddress\",\r\n        \"streetNr\": \"https://smartdatamodels.org/streetNr\",\r\n        \"supportedProtocol\": \"https://smartdatamodels.org/dataModel.Device/supportedProtocol\",\r\n        \"supportedUnits\": \"https://smartdatamodels.org/dataModel.Device/supportedUnits\",\r\n        \"textValue\": \"https://smartdatamodels.org/dataModel.Device/textValue\",\r\n        \"totalConsumption\": \"https://smartdatamodels.org/dataModel.Device/totalConsumption\",\r\n        \"unit\": \"https://smartdatamodels.org/dataModel.Device/unit\",\r\n        \"user\": \"https://smartdatamodels.org/dataModel.Device/user\",\r\n        \"value\": \"ngsi-ld:hasValue\",\r\n        \"humidity\": \"https://smartdatamodels.org/humidity\",\r\n        \"bearing\": \"https://smartdatamodels.org/bearing\",\r\n        \"pressure\": \"https://smartdatamodels.org/pressure\",\r\n        \"gyroscope\": \"https://placeholder.org/gyroscope\",\r\n        \"accelerometer\": \"https://placeholder.org/gyroscope\",\r\n        \"length\": \"https://qudt.org/vocab/quantitykind/Length\",\r\n        \"width\": \"https://qudt.org/vocab/quantitykind/Width\",\r\n        \"roomName\": \"Terms:roomName\",\r\n        \"locatedIn\": \"Terms:locatedIn\",\r\n        \"attachedTo\": \"Terms:attachedTo\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/jsonldContexts",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"jsonldContexts"
+							]
+						},
+						"description": "This request represents one of the ways to add a context file to the context broker. After adding it, the broker returns the link to the context file in the header.\n\nNote that the link might be broken depending on the deployment method. This example should return a link similar to this:\n\n> http://orion:1026/ngsi-ld/v1/jsonldContexts/c92fea6c-e1dd-11ee-9208-0242ac1a0005 \n  \n\nChange \"orion:1026\" to \"{{gateway}}/api/broker\" and you should be able to access the context file, hosted on Orion"
+					},
+					"response": []
+				},
+				{
+					"name": "(2) Retrieve contexts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "detail",
+								"value": "true",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/jsonldContexts",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"jsonldContexts"
+							]
+						},
+						"description": "Retrieve links to all context files in the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete context",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/jsonldContexts/4e145670-459b-11ef-aa83-0242ac120002",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"jsonldContexts",
+								"4e145670-459b-11ef-aa83-0242ac120002"
+							]
+						},
+						"description": "Delete a particular context file from the context broker."
+					},
+					"response": []
+				}
+			],
+			"description": "To better utilize the NGSI-LD API, we first have to upload our own context file. These context files help us to define shared vocabulary in our data model. Hence, we map terms we use in entity creation to their actual meanings in an ontology.\n\nThis ensures that when data is exchanged between different systems, the meaning of these terms is understood consistently by all parties.\n\nNOTE: We are using our own context server hosted at [http://34.126.76.13](http://34.126.76.13) for the rest of the tutorial.\n\n### Adapted from:\n\n[https://ngsi-ld-tutorials.readthedocs.io/en/latest/working-with-@context.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/working-with-%40context.html)"
+		},
+		{
+			"name": "Creating a Room entity",
+			"item": [
+				{
+					"name": "Room that directly get's data from a temperature sensor",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"@context\": \"{{context-ld}}\",\r\n  \"id\": \"urn:ngsi-ld:Room:Room555\",\r\n  \"type\": \"Room\",\r\n  \"roomName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Special Pantry\"\r\n  },\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [103.85004829669677, 1.2915542764390127]\r\n    }\r\n  },\r\n  \"length\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 30,\r\n    \"unitCode\": \"MTR\",\r\n    \"unitSymbol\": {\r\n        \"type\": \"Property\",\r\n        \"value\": \"m\"\r\n    }\r\n  },\r\n  \"width\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 30,\r\n    \"unitCode\": \"MTR\",\r\n    \"unitSymbol\": {\r\n        \"type\": \"Property\",\r\n        \"value\": \"m\"\r\n    }\r\n  }\r\n\r\n    \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							]
+						},
+						"description": "Create Room that directly get's data from a temperature sensor, without temperature sensor entity"
+					},
+					"response": []
+				},
+				{
+					"name": "(2) View all Room entities",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=Room",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Room"
+								}
+							]
+						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "(1b) Create a Room Entity (Key-Value Pairs)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:Room:Room002\",\r\n  \"type\": \"Room\",\r\n  \"roomName\": \"SNDGO Storeroom\",\r\n  \"location\": {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [103.85013613903543, 1.2913310392625017]\r\n  },\r\n  \"length\": {\r\n    \"value\": 20,\r\n    \"unitCode\": \"MTR\",\r\n    \"unitSymbol\": {\r\n        \"type\": \"Property\",\r\n        \"value\": \"m\"\r\n    }\r\n  },\r\n  \"width\": {\r\n    \"value\": 20,\r\n    \"unitCode\": \"MTR\",\r\n    \"unitSymbol\": {\r\n        \"type\": \"Property\",\r\n        \"value\": \"m\"\r\n    }\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							]
+						},
+						"description": "This request adds a Room entity using a payload in the key-value format.\n\nNote that all attributes of an entity will default to being of type \"Property\" unless explicitly stated."
+					},
+					"response": []
+				},
+				{
+					"name": "Deleting an entity - Room that directly gets data from sensor",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Room:Room555",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Room:Room555"
+							]
+						},
+						"description": "Delete a created entity by specifying the id"
+					},
+					"response": []
+				},
+				{
+					"name": "(1a) Create a Room Entity (Normalized)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"@context\": \"{{context-ld}}\",\r\n  \"id\": \"urn:ngsi-ld:Room:Room001\",\r\n  \"type\": \"Room\",\r\n  \"roomName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Pantry\"\r\n  },\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [103.85004829669677, 1.2915542764390127]\r\n    }\r\n  },\r\n  \"length\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 30,\r\n    \"unitCode\": \"MTR\",\r\n    \"unitSymbol\": {\r\n        \"type\": \"Property\",\r\n        \"value\": \"m\"\r\n    }\r\n  },\r\n  \"width\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 30,\r\n    \"unitCode\": \"MTR\",\r\n    \"unitSymbol\": {\r\n        \"type\": \"Property\",\r\n        \"value\": \"m\"\r\n    }\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							]
+						},
+						"description": "This request adds a Room entity using a payload in the normalized-json format. This is the most explicit way of creating an entity, through explicitly stating the type of each attribute."
+					},
+					"response": []
+				},
+				{
+					"name": "Deleting an entity",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Room:Room001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Room:Room001"
+							]
+						},
+						"description": "Delete a created entity by specifying the id"
+					},
+					"response": []
+				}
+			],
+			"description": "To start off, we first create a Room entity. In this example, a Room entity is an enclosed space that sensors, robots or cameras can be located in.\n\nEach entity has a unique ID. Hence, its not possible to create two entities with the same ID, even with different properties and etc.\n\n### Adapted from:\n\n1. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/ngsi-ld-operations.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/ngsi-ld-operations.html)\n2. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/concise.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/concise.html)"
+		},
+		{
+			"name": "Provisioning devices to JSON IOT Agent",
+			"item": [
+				{
+					"name": "Add another attribute to special room",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"devices\": [\r\n    {\r\n      \"device_id\": \"EnvironmentalSensor556\",\r\n      \"entity_name\": \"urn:ngsi-ld:Room:Room555\",\r\n      \"entity_type\": \"Room\",\r\n      \"attributes\": [\r\n        {\r\n          \"name\": \"temperature\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"CEL\"\r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"°C\"\r\n              }\r\n          }\r\n        }],\r\n      \"protocol\": \"JSON\",\r\n      \"transport\": \"MQTT\",\r\n      \"timezone\": \"Asia/Kuala_Lumpur\"\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices"
+							]
+						},
+						"description": "This request provisions an environmental sensor that records multiple measurements. It not only updates the \"urn:ngsi-ld:Device:EnvironmentalSensor001\" entity, but also the \"urn:ngsi-ld:Room:Room001\" entity due to this part of the payload under \"static_attributes\":\n\n``` json\n        {\n          \"name\": \"locatedIn\",\n          \"type\": \"Relationship\",\n          \"value\": \"urn:ngsi-ld:Room:Room001\",\n          \"link\": {\n            \"attributes\": [\"temperature\"],\n            \"name\": \"providedBy\",\n            \"type\": \"Room\"\n          }\n        },\n\n ```\n\nThis essentially tells the IOT agent to also upsert just the \"temperature\" attribute to the parent entity (urn:ngsi-ld:Room:Room001). The temperature attribute in the parent entity will also have a \"providedBy\" relationship pointing to the sensor, hence establishing a two-way relationship."
+					},
+					"response": []
+				},
+				{
+					"name": "(5) List all provisioned devices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices"
+							]
+						},
+						"description": "This example lists all provisioned devices by making a GET request to the `/iot/devices` endpoint.\n\nThe response includes all the commands and attributes mappings associated with all devices"
+					},
+					"response": []
+				},
+				{
+					"name": "(4) Provisioning a Robot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"devices\": [\r\n    {\r\n      \"device_id\": \"Robot001\",\r\n      \"entity_name\": \"urn:ngsi-ld:Robot:Robot001\",\r\n      \"entity_type\": \"Robot\",\r\n      \"attributes\": [\r\n        {\r\n          \"name\": \"x\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"y\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"command\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"status\",\r\n          \"type\": \"Property\"\r\n        }\r\n      ],\r\n      \"static_attributes\": [\r\n        {\r\n          \"name\": \"robotName\",\r\n          \"type\": \"Text\",\r\n          \"value\": \"Robot001\"\r\n        },\r\n        {\r\n          \"name\": \"robotType\",\r\n          \"type\": \"Text\",\r\n          \"value\": \"PatrolRobot\"\r\n        },\r\n        {\r\n          \"name\": \"locatedIn\",\r\n          \"type\": \"Relationship\",\r\n          \"value\": \"urn:ngsi-ld:Room:Room001\"\r\n        }\r\n      ],\r\n      \"commands\": [ \r\n        {\r\n          \"name\": \"x1\",\r\n          \"type\": \"command\"\r\n        },\r\n        {\r\n          \"name\": \"x2\",\r\n          \"type\": \"command\"\r\n        },\r\n        {\r\n          \"name\": \"y1\",\r\n          \"type\": \"command\"\r\n        },\r\n        {\r\n          \"name\": \"y2\",\r\n          \"type\": \"command\"\r\n        },\r\n        {\r\n          \"name\": \"names\",\r\n          \"type\": \"command\"\r\n        }\r\n       ],\r\n      \"protocol\": \"PDI-IoTA-JSON\",\r\n      \"transport\": \"MQTT\",\r\n      \"timezone\": \"Asia/Kuala_Lumpur\"\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices"
+							]
+						},
+						"description": "This request provisions a robot that can take receive commands."
+					},
+					"response": []
+				},
+				{
+					"name": "(3) Provisioning a Camera",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"devices\": [\r\n    {\r\n      \"device_id\": \"Camera001\",\r\n      \"entity_name\": \"urn:ngsi-ld:Camera:Camera001\",\r\n      \"entity_type\": \"Camera\",\r\n      \"attributes\": [\r\n        {\r\n          \"name\": \"on\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"mediaURL\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"startDateTime\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"confidence\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"P1\" \r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"%\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"names\",\r\n          \"type\": \"Property\"\r\n        }\r\n      ],\r\n      \"static_attributes\": [\r\n        {\r\n          \"name\": \"cameraName\",\r\n          \"type\": \"Text\",\r\n          \"value\": \"Camera001\"\r\n        },\r\n        {\r\n          \"name\": \"cameraOrientation\",\r\n          \"type\": \"Text\",\r\n          \"value\": \"top-down\"\r\n        },\r\n        {\r\n          \"name\": \"cameraType\",\r\n          \"type\": \"Text\",\r\n          \"value\": \"Fixed\"\r\n        },\r\n        {\r\n          \"name\": \"cameraUsage\",\r\n          \"type\": \"Text\",\r\n          \"value\": \"Surveillance\"\r\n        },\r\n        {\r\n          \"name\": \"locatedIn\",\r\n          \"type\": \"Relationship\",\r\n          \"value\": \"urn:ngsi-ld:Room:Room001\"\r\n        }\r\n      ],\r\n      \"protocol\": \"JSON\",\r\n      \"transport\": \"MQTT\",\r\n      \"timezone\": \"Asia/Kuala_Lumpur\"\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices"
+							]
+						},
+						"description": "This request provisions a camera device."
+					},
+					"response": []
+				},
+				{
+					"name": "(2) Provisioning an EnvironmentalSensor of type Device",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"devices\": [\r\n    {\r\n      \"device_id\": \"EnvironmentalSensor001\",\r\n      \"entity_name\": \"urn:ngsi-ld:Device:EnvironmentalSensor001\",\r\n      \"entity_type\": \"Device\",\r\n      \"attributes\": [\r\n        {\r\n          \"name\": \"temperature\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"CEL\"\r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"°C\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"humidity\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"P1\" \r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"%RH\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"bearing\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"D76\" \r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"Gs\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"pressure\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"P82\" \r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"hPA\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"gyroscope\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"accelerometer\",\r\n          \"type\": \"Property\"\r\n        }\r\n      ],\r\n      \"static_attributes\": [\r\n        {\r\n          \"name\": \"locatedIn\",\r\n          \"type\": \"Relationship\",\r\n          \"value\": \"urn:ngsi-ld:Room:Room001\",\r\n          \"link\": {\r\n            \"attributes\": [\"temperature\"],\r\n            \"name\": \"providedBy\",\r\n            \"type\": \"Room\"\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"attachedTo\",\r\n          \"type\": \"Relationship\",\r\n          \"value\": \"urn:ngsi-ld:Camera:Camera001\"\r\n        },\r\n        {\r\n          \"name\": \"deviceType\",\r\n          \"type\": \"Property\",\r\n          \"value\": \"EnvironmentalSensor\"\r\n        }\r\n      ],\r\n      \"commands\": [ \r\n        {\r\n          \"name\": \"t1\",\r\n          \"type\": \"command\"\r\n        }\r\n      ],\r\n      \"protocol\": \"PDI-IoTA-JSON\",\r\n      \"transport\": \"MQTT\",\r\n      \"timezone\": \"Asia/Kuala_Lumpur\"\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices"
+							]
+						},
+						"description": "This request provisions an environmental sensor that records multiple measurements. It not only updates the \"urn:ngsi-ld:Device:EnvironmentalSensor001\" entity, but also the \"urn:ngsi-ld:Room:Room001\" entity due to this part of the payload under \"static_attributes\":\n\n``` json\n        {\n          \"name\": \"locatedIn\",\n          \"type\": \"Relationship\",\n          \"value\": \"urn:ngsi-ld:Room:Room001\",\n          \"link\": {\n            \"attributes\": [\"temperature\"],\n            \"name\": \"providedBy\",\n            \"type\": \"Room\"\n          }\n        },\n\n ```\n\nThis essentially tells the IOT agent to also upsert just the \"temperature\" attribute to the parent entity (urn:ngsi-ld:Room:Room001). The temperature attribute in the parent entity will also have a \"providedBy\" relationship pointing to the sensor, hence establishing a two-way relationship."
+					},
+					"response": []
+				},
+				{
+					"name": "(2) Provisioning an EnvironmentalSensor of type Device Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"devices\": [\r\n    {\r\n      \"device_id\": \"EnvironmentalSensor002\",\r\n      \"entity_name\": \"urn:ngsi-ld:Device:EnvironmentalSensor002\",\r\n      \"entity_type\": \"Device\",\r\n      \"attributes\": [\r\n        {\r\n          \"name\": \"temperature\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"CEL\"\r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"°C\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"humidity\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"P1\" \r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"%RH\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"bearing\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"D76\" \r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"Gs\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"pressure\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"P82\" \r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"hPA\"\r\n              }\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"gyroscope\",\r\n          \"type\": \"Property\"\r\n        },\r\n        {\r\n          \"name\": \"accelerometer\",\r\n          \"type\": \"Property\"\r\n        }\r\n      ],\r\n      \"static_attributes\": [\r\n        {\r\n          \"name\": \"locatedIn\",\r\n          \"type\": \"Relationship\",\r\n          \"value\": \"urn:ngsi-ld:Room:Room001\",\r\n          \"link\": {\r\n            \"attributes\": [\"temperature\"],\r\n            \"name\": \"providedBy\",\r\n            \"type\": \"Room\"\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"attachedTo\",\r\n          \"type\": \"Relationship\",\r\n          \"value\": \"urn:ngsi-ld:Camera:Camera001\"\r\n        },\r\n        {\r\n          \"name\": \"deviceType\",\r\n          \"type\": \"Property\",\r\n          \"value\": \"EnvironmentalSensor\"\r\n        }\r\n      ],\r\n      \"commands\": [ \r\n        {\r\n          \"name\": \"x1\",\r\n          \"type\": \"command\"\r\n        }\r\n      ],\r\n      \"protocol\": \"JSON\",\r\n      \"transport\": \"MQTT\",\r\n      \"timezone\": \"Asia/Kuala_Lumpur\"\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices"
+							]
+						},
+						"description": "This request provisions an environmental sensor that records multiple measurements. It not only updates the \"urn:ngsi-ld:Device:EnvironmentalSensor001\" entity, but also the \"urn:ngsi-ld:Room:Room001\" entity due to this part of the payload under \"static_attributes\":\n\n``` json\n        {\n          \"name\": \"locatedIn\",\n          \"type\": \"Relationship\",\n          \"value\": \"urn:ngsi-ld:Room:Room001\",\n          \"link\": {\n            \"attributes\": [\"temperature\"],\n            \"name\": \"providedBy\",\n            \"type\": \"Room\"\n          }\n        },\n\n ```\n\nThis essentially tells the IOT agent to also upsert just the \"temperature\" attribute to the parent entity (urn:ngsi-ld:Room:Room001). The temperature attribute in the parent entity will also have a \"providedBy\" relationship pointing to the sensor, hence establishing a two-way relationship."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete provisioned Camera",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices/Camera001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices",
+								"Camera001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete provisioned EnvironmentalSensor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices/EnvironmentalSensor001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices",
+								"EnvironmentalSensor001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Room that directly get's data from a temperature sensor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"devices\": [\r\n    {\r\n      \"device_id\": \"EnvironmentalSensor555\",\r\n      \"entity_name\": \"urn:ngsi-ld:Room:Room555\",\r\n      \"entity_type\": \"Room\",\r\n      \"attributes\": [\r\n        {\r\n          \"name\": \"temperature\",\r\n          \"type\": \"Property\",\r\n          \"metadata\": {\r\n              \"unitCode\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"CEL\"\r\n              },\r\n              \"unitSymbol\": {\r\n                \"type\": \"Text\",\r\n                \"value\": \"°C\"\r\n              }\r\n          }\r\n        }],\r\n      \"protocol\": \"JSON\",\r\n      \"transport\": \"MQTT\",\r\n      \"timezone\": \"Asia/Kuala_Lumpur\"\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices"
+							]
+						},
+						"description": "This request provisions an environmental sensor that records multiple measurements. It not only updates the \"urn:ngsi-ld:Device:EnvironmentalSensor001\" entity, but also the \"urn:ngsi-ld:Room:Room001\" entity due to this part of the payload under \"static_attributes\":\n\n``` json\n        {\n          \"name\": \"locatedIn\",\n          \"type\": \"Relationship\",\n          \"value\": \"urn:ngsi-ld:Room:Room001\",\n          \"link\": {\n            \"attributes\": [\"temperature\"],\n            \"name\": \"providedBy\",\n            \"type\": \"Room\"\n          }\n        },\n\n ```\n\nThis essentially tells the IOT agent to also upsert just the \"temperature\" attribute to the parent entity (urn:ngsi-ld:Room:Room001). The temperature attribute in the parent entity will also have a \"providedBy\" relationship pointing to the sensor, hence establishing a two-way relationship."
+					},
+					"response": []
+				},
+				{
+					"name": "(1) Check if the IOT Agent is running",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/about",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"about"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete provisioned Robot",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices/Robot001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices",
+								"Robot001"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "For this collection, we are using the JSON IoT agent that supports HTTP, AMQP, and MQTT. Our devices are using MQTT to communicate with IOT agent, which converts measures from devices to NGSI-LD compliant format.\n\nIf our device is using HTTP to communicate, we need to:\n\n(1) provide an additional \"endpoint\" attribute with a link to send a POST request to\n\n(2) change \"transport\" from \"MQTT\" to \"HTTP\"\n\nTo start sending measures from sensors/devices to IOT agents, we first need to provision devices to the IOT agent that we set up. Once the device is provisioned, the IOT agent can start receving measurements from the devices. Each time a measurement is received, the IOT agent will upsert (update if already exists, else insert) the entity to the context broker.\n\n## Example\n\nThe syntax for provisioning devices to the JSON IOT Agent is different from the entity creation syntax for NGSI-LD context brokers. We will use the Robot provisioning payload as an example here:\n\n``` json\n{\n  \"devices\": [\n    {\n      \"device_id\": \"Robot001\",\n      \"entity_name\": \"urn:ngsi-ld:Robot:Robot001\",\n      \"entity_type\": \"Robot\",\n      \"attributes\": [\n        {\n          \"name\": \"x\",\n          \"type\": \"Property\"\n        },\n        {\n          \"name\": \"y\",\n          \"type\": \"Property\"\n        },\n        {\n          \"name\": \"command\",\n          \"type\": \"Property\"\n        },\n        {\n          \"name\": \"status\",\n          \"type\": \"Property\"\n        }\n      ],\n      \"static_attributes\": [\n        {\n          \"name\": \"robotName\",\n          \"type\": \"Text\",\n          \"value\": \"Robot001\"\n        },\n        {\n          \"name\": \"robotType\",\n          \"type\": \"Text\",\n          \"value\": \"PatrolRobot\"\n        },\n        {\n          \"name\": \"locatedIn\",\n          \"type\": \"Relationship\",\n          \"value\": \"urn:ngsi-ld:Room:Room001\"\n        }\n      ],\n      \"commands\": [ \n        {\n          \"name\": \"x1\",\n          \"type\": \"command\"\n        },\n        {\n          \"name\": \"x2\",\n          \"type\": \"command\"\n        },\n        {\n          \"name\": \"y1\",\n          \"type\": \"command\"\n        },\n        {\n          \"name\": \"y2\",\n          \"type\": \"command\"\n        },\n        {\n          \"name\": \"names\",\n          \"type\": \"command\"\n        }\n       ],\n      \"protocol\": \"PDI-IoTA-JSON\",\n      \"transport\": \"MQTT\",\n      \"timezone\": \"Asia/Kuala_Lumpur\"\n    }\n  ]\n}\n\n ```\n\n\"device_id\": The name of the device registered in the IOT agent\n\n\"entity_name\": The entity that this devices updates in the context broker.\n\n\"entity_type\": The entity type that this devices updates in the context broker.\n\n\"attributes\": The measures that the device would send to the IOT Agent.\n\n\"static_attributes\": The attributes of the device. These are usually attributes of the device that doesn't change regularly, or is not a measure sent by the device.\n\n\"commands\": These are downlink attributes to be sent to the devices from the IOT agent or the context broker.\n\n### Adapted from:\n\n1. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/iot-agent-json.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/iot-agent-json.html)\n2. [https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual.html](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual.html)"
+		},
+		{
+			"name": "Updating values to IOT agents using POST requests",
+			"item": [
+				{
+					"name": "(2) Updating EnvironmentalSensor through HTTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "link",
+								"value": "<http://localhost:1026/ngsi-ld/v1/jsonldContexts/b813cc1a-ac92-11ee-8358-0242ac120004>;rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"temperature\": 55,\r\n    \"pressure\": 55,\r\n    \"humidity\": 66,\r\n    \"bearing\": 123\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/update/?i=EnvironmentalSensor001&k=1234",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"update",
+								""
+							],
+							"query": [
+								{
+									"key": "i",
+									"value": "EnvironmentalSensor001"
+								},
+								{
+									"key": "k",
+									"value": "1234"
+								}
+							]
+						},
+						"description": "This request sends a temperature update to the IOT agent for the EnvironmentalSensor001 device, allowing the IOT agent to send the update to the context broker.\n\nFor this endpoint, we require 2 query parameters:\n\ni: The device ID.\n\nk: The device's API key, which has \"1234\" as the default value. This can be changed in the device provisioning portion."
+					},
+					"response": []
+				},
+				{
+					"name": "(2) Updating EnvironmentalSensor through HTTP Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "link",
+								"value": "<http://localhost:1026/ngsi-ld/v1/jsonldContexts/b813cc1a-ac92-11ee-8358-0242ac120004>;rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"temperature\": 30,\r\n    \"pressure\": 55,\r\n    \"humidity\": 66,\r\n    \"bearing\": 123\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/update/?i=EnvironmentalSensor002&k=1234",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"update",
+								""
+							],
+							"query": [
+								{
+									"key": "i",
+									"value": "EnvironmentalSensor002"
+								},
+								{
+									"key": "k",
+									"value": "1234"
+								}
+							]
+						},
+						"description": "This request sends a temperature update to the IOT agent for the EnvironmentalSensor001 device, allowing the IOT agent to send the update to the context broker.\n\nFor this endpoint, we require 2 query parameters:\n\ni: The device ID.\n\nk: The device's API key, which has \"1234\" as the default value. This can be changed in the device provisioning portion."
+					},
+					"response": []
+				},
+				{
+					"name": "(5) View Camera updates",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Camera:Camera001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Camera:Camera001"
+							]
+						},
+						"description": "View updates to the related entity in the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "(4) Updating Robot through HTTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "link",
+								"value": "<http://localhost:1026/ngsi-ld/v1/jsonldContexts/b813cc1a-ac92-11ee-8358-0242ac120004>;rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"x\": 10,\r\n    \"y\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/update/?i=Robot001&k=1234",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"update",
+								""
+							],
+							"query": [
+								{
+									"key": "i",
+									"value": "Robot001"
+								},
+								{
+									"key": "k",
+									"value": "1234"
+								}
+							]
+						},
+						"description": "This request sends multiple measures to the IOT agent for the Robot001 device, allowing the IOT agent to send the update to the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "(5) View Robot updates",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								""
+							]
+						},
+						"description": "View updates to the related entity in the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "(1) Patching Camera data in IOT Agent",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"static_attributes\": [\n    {\n        \"name\": \"cameraName\",\n        \"type\": \"Text\",\n        \"value\": \"Camera001\"\n    },\n    {\n        \"name\": \"cameraOrientation\",\n        \"type\": \"Text\",\n        \"value\": \"Wall-mounted\"\n    },\n    {\n        \"name\": \"cameraType\",\n        \"type\": \"Text\",\n        \"value\": \"Fixed\"\n    },\n    {\n        \"name\": \"cameraUsage\",\n        \"type\": \"Text\",\n        \"value\": \"Human Traffic Monitoring\"\n    },\n    {\n        \"name\": \"locatedIn\",\n        \"type\": \"Relationship\",\n        \"value\": \"urn:ngsi-ld:Room:Room001\"\n    },\n    {\n        \"name\": \"attachedTo\",\n        \"type\": \"Relationship\",\n        \"value\": \"urn:ngsi-ld:Robot:Robot001\"\n    }\n    ]\n}\n"
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/provision/devices/Camera001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"provision",
+								"devices",
+								"Camera001"
+							]
+						},
+						"description": "This request is an example of patching Camera001's static attributes."
+					},
+					"response": []
+				},
+				{
+					"name": "(5) View EnvironmentalSensor updates",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Device:EnvironmentalSensor001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Device:EnvironmentalSensor001"
+							]
+						},
+						"description": "View updates to the related entity in the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "(3) Updating Camera through HTTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "fiware-service",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "link",
+								"value": "<http://localhost:1026/ngsi-ld/v1/jsonldContexts/b813cc1a-ac92-11ee-8358-0242ac120004>;rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"names\": [\r\n        \"Dylan\",\r\n        \"Youwei\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/iot/update/?i=Camera001&k=1234",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"iot",
+								"update",
+								""
+							],
+							"query": [
+								{
+									"key": "i",
+									"value": "Camera001"
+								},
+								{
+									"key": "k",
+									"value": "1234"
+								}
+							]
+						},
+						"description": "This request sends an array of names to the IOT agent for the Camera001 device, allowing the IOT agent to send the update to the context broker."
+					},
+					"response": []
+				}
+			],
+			"description": "The endpoints in this folder are related to updating/sending measurements of values from the sensor to the IOT agent.\n\nEven though our devices are using MQTT for transport, we can still invoke the HTTP endpoint of the IOT agent meant for receiving measurements from IOT devices.\n\n### Adapted from:\n\n1. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/iot-agent-json.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/iot-agent-json.html)\n2. [https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual.html](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual.html)"
+		},
+		{
+			"name": "Deleting Entities",
+			"item": [
+				{
+					"name": "IOT Agent",
+					"item": [
+						{
+							"name": "Delete provisioned Robot",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "fiware-service",
+										"value": "openiot",
+										"type": "text"
+									},
+									{
+										"key": "fiware-servicepath",
+										"value": "/",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway}}/api/iot/provision/devices/Robot001",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"iot",
+										"provision",
+										"devices",
+										"Robot001"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete provisioned EnvironmentalSensor",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "fiware-service",
+										"value": "openiot",
+										"type": "text"
+									},
+									{
+										"key": "fiware-servicepath",
+										"value": "/",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway}}/api/iot/provision/devices/urn:ngsi-ld:Device:EnvironmentalSensor001",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"iot",
+										"provision",
+										"devices",
+										"urn:ngsi-ld:Device:EnvironmentalSensor001"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete provisioned Camera",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "fiware-service",
+										"value": "openiot",
+										"type": "text"
+									},
+									{
+										"key": "fiware-servicepath",
+										"value": "/",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway}}/api/iot/provision/devices/Camera001",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"iot",
+										"provision",
+										"devices",
+										"Camera001"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Sample HTTP requests for deleting entities in the IOT agent"
+				},
+				{
+					"name": "Context Broker",
+					"item": [
+						{
+							"name": "Delete Room",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "NGSILD-Tenant",
+										"value": "openiot",
+										"type": "text"
+									},
+									{
+										"key": "fiware-servicepath",
+										"value": "/",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Room:Room001",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"broker",
+										"ngsi-ld",
+										"v1",
+										"entities",
+										"urn:ngsi-ld:Room:Room001"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Robot",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "NGSILD-Tenant",
+										"value": "openiot",
+										"type": "text"
+									},
+									{
+										"key": "fiware-servicepath",
+										"value": "/",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"broker",
+										"ngsi-ld",
+										"v1",
+										"entities",
+										"urn:ngsi-ld:Robot:Robot001",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete EnvironmentalSensor",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "NGSILD-Tenant",
+										"value": "openiot",
+										"type": "text"
+									},
+									{
+										"key": "fiware-servicepath",
+										"value": "/",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Device:EnvironmentalSensor001",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"broker",
+										"ngsi-ld",
+										"v1",
+										"entities",
+										"urn:ngsi-ld:Device:EnvironmentalSensor001"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Camera",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "NGSILD-Tenant",
+										"value": "openiot",
+										"type": "text"
+									},
+									{
+										"key": "fiware-servicepath",
+										"value": "/",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Camera:Camera001/",
+									"host": [
+										"{{gateway}}"
+									],
+									"path": [
+										"api",
+										"broker",
+										"ngsi-ld",
+										"v1",
+										"entities",
+										"urn:ngsi-ld:Camera:Camera001",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Sample HTTP requests for deleting entities in the Context Broker"
+				}
+			],
+			"description": "Sample HTTP requests for deleting entities.\n\n### Adapted from:\n\n1. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/ngsi-ld-operations.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/ngsi-ld-operations.html)"
+		},
+		{
+			"name": "Querying Context Broker",
+			"item": [
+				{
+					"name": "Find all entities in Room002",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?q=locatedIn==%22urn:ngsi-ld:Room:Room002%22",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "locatedIn==%22urn:ngsi-ld:Room:Room002%22"
+								}
+							]
+						},
+						"description": "Here, the q parameter is used to find all entities that are located in room 2."
+					},
+					"response": []
+				},
+				{
+					"name": "Find temperature from entities located in room 1",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?q=locatedIn==%22urn:ngsi-ld:Room:Room001%22&attrs=temperature",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "locatedIn==%22urn:ngsi-ld:Room:Room001%22"
+								},
+								{
+									"key": "attrs",
+									"value": "temperature"
+								},
+								{
+									"key": "type",
+									"value": "Device",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This request gets all entities located in room 1 that have the \"temperature\" property. Even though there are also robots and cameras in room 1, those entities are not included as they lack the \"temperature\" property."
+					},
+					"response": []
+				},
+				{
+					"name": "Find temperature from entities located in room 1 Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?q=temperature>25;locatedIn==%22urn:ngsi-ld:Room:Room001%22",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Device",
+									"disabled": true
+								},
+								{
+									"key": "q",
+									"value": "temperature>25;locatedIn==%22urn:ngsi-ld:Room:Room001%22"
+								}
+							]
+						},
+						"description": "This request gets all entities located in room 1 that have the \"temperature\" property. Even though there are also robots and cameras in room 1, those entities are not included as they lack the \"temperature\" property."
+					},
+					"response": []
+				},
+				{
+					"name": "Find Humidity from entities located in room 1",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?q=locatedIn==%22urn:ngsi-ld:Room:Room001%22&attrs=humidity",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "locatedIn==%22urn:ngsi-ld:Room:Room001%22"
+								},
+								{
+									"key": "type",
+									"value": "Device",
+									"disabled": true
+								},
+								{
+									"key": "attrs",
+									"value": "humidity"
+								}
+							]
+						},
+						"description": "This request gets all entities located in room 1 that have the \"temperature\" property. Even though there are also robots and cameras in room 1, those entities are not included as they lack the \"temperature\" property."
+					},
+					"response": []
+				},
+				{
+					"name": "Find all entities of type Room",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?type=Room",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Room"
+								},
+								{
+									"key": "options",
+									"value": "keyValues",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Gets all entities of type Room from the context broker. Try executing the query with options enabled to see how the response is compressed."
+					},
+					"response": []
+				},
+				{
+					"name": "Find all entities of type Camera",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?type=Camera",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Camera"
+								}
+							]
+						},
+						"description": "Gets all entities of type Camera from the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "Query Temporal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/temporal/entities/urn:ngsi-ld:Device:EnvironmentalSensor001?lastN=1&attrs=temperature,humidity,pressure,bearing",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"temporal",
+								"entities",
+								"urn:ngsi-ld:Device:EnvironmentalSensor001"
+							],
+							"query": [
+								{
+									"key": "lastN",
+									"value": "1"
+								},
+								{
+									"key": "attrs",
+									"value": "temperature,humidity,pressure,bearing"
+								}
+							]
+						},
+						"description": "Gets all entities of type Device from the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "Find all entities of type Device",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?type=Device",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Device"
+								}
+							]
+						},
+						"description": "Gets all entities of type Device from the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "Find all entities in Room001",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?q=locatedIn==%22urn:ngsi-ld:Room:Room001%22",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "locatedIn==%22urn:ngsi-ld:Room:Room001%22"
+								}
+							]
+						},
+						"description": "Here, the q parameter is used to find all entities that are located in room 1."
+					},
+					"response": []
+				},
+				{
+					"name": "Query Room001 only",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Room:Room001?options=concise",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Room:Room001"
+							],
+							"query": [
+								{
+									"key": "options",
+									"value": "concise"
+								}
+							]
+						},
+						"description": "This request gets only 1 entity (Room001). It also uses the concise option to get a more concise response."
+					},
+					"response": []
+				},
+				{
+					"name": "Find all entities of type Robot",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities?type=Robot",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Robot"
+								}
+							]
+						},
+						"description": "Gets all entities of type Robot from the context broker."
+					},
+					"response": []
+				}
+			],
+			"description": "The requests in this folder showcases multiple ways to execute queries from a context broker. There are two main ways to query a context broker:\n\n1. By entity ID: `{broker}/ngsi-ld/v1/entities/{entity id}`\n2. Using query parameters: `{broker}/ngsi-ld/v1/entities/{query parameters}`\n    \n\nThe query can be further customised using query parameters:\n\n- `attrs` : Specifies the attributes to be included in the response. Will not return entities that doesn't contain this attribute.\n- `options` : Specifies options for the request. Options include:\n    - `sysAttrs` : Includes system attributes `createdAt` and `modifiedAt`\n    - `keyValues` : Returns the payload in a `key:value` pair format, removing irrelevant properties-of-properties (i.e., modifiedAt) from `Property` or `Relationship` attributes\n    - `concise` : Similar to `keyValues`, but also includes properties-of-properties. Ironically, it is less concise than keyValues\n- `q` : Perform a filter on entities using operators (i.e., `<`, `>`, `==`)\n- `id` : A list of entity IDs\n    \n\n### Adapted from:\n\n1. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/ngsi-ld-operations.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/ngsi-ld-operations.html)\n2. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/concise.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/concise.html)"
+		},
+		{
+			"name": "Send commands to Robot",
+			"item": [
+				{
+					"name": "Send command from broker (x2)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \" \"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/x2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"x2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send command from broker (get temp)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \" \"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Device:EnvironmentalSensor001/attrs/t1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Device:EnvironmentalSensor001",
+								"attrs",
+								"t1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send command from broker (y1)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \" \"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send command from broker (y2)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \" \"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Context Source Registration",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/csourceRegistrations/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"csourceRegistrations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Context Source Registration Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"device_id\": \"EnvironmentalSensor001\",\r\n        \"service\": \"openiot\",\r\n        \"service_path\": \"/\",\r\n        \"entity_name\": \"urn:ngsi-ld:Device:EnvironmentalSensor001\",\r\n        \"entity_type\": \"Device\",\r\n        \"transport\": \"MQTT\",\r\n        \"endpoint\": \"http://iot-agent:4041\",\r\n        \"contextSourceInfo\": [\r\n            {\r\n                \"key\": \"jsonldContext\",\r\n                \"value\": \"http://ld-context:80/context.jsonld\"\r\n            }\r\n        ],\r\n        \"attributes\": [\r\n            {\r\n                \"object_id\": \"temperature\",\r\n                \"name\": \"temperature\",\r\n                \"type\": \"Property\",\r\n                \"metadata\": {\r\n                    \"unitCode\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"CEL\"\r\n                    },\r\n                    \"unitSymbol\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"°C\"\r\n                    }\r\n                }\r\n            },\r\n            {\r\n                \"object_id\": \"humidity\",\r\n                \"name\": \"humidity\",\r\n                \"type\": \"Property\",\r\n                \"metadata\": {\r\n                    \"unitCode\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"P1\"\r\n                    },\r\n                    \"unitSymbol\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"%RH\"\r\n                    }\r\n                }\r\n            },\r\n            {\r\n                \"object_id\": \"bearing\",\r\n                \"name\": \"bearing\",\r\n                \"type\": \"Property\",\r\n                \"metadata\": {\r\n                    \"unitCode\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"D76\"\r\n                    },\r\n                    \"unitSymbol\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"Gs\"\r\n                    }\r\n                }\r\n            },\r\n            {\r\n                \"object_id\": \"pressure\",\r\n                \"name\": \"pressure\",\r\n                \"type\": \"Property\",\r\n                \"metadata\": {\r\n                    \"unitCode\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"P82\"\r\n                    },\r\n                    \"unitSymbol\": {\r\n                        \"type\": \"Text\",\r\n                        \"value\": \"hPA\"\r\n                    }\r\n                }\r\n            },\r\n            {\r\n                \"object_id\": \"gyroscope\",\r\n                \"name\": \"gyroscope\",\r\n                \"type\": \"Property\"\r\n            },\r\n            {\r\n                \"object_id\": \"accelerometer\",\r\n                \"name\": \"accelerometer\",\r\n                \"type\": \"Property\"\r\n            }\r\n        ],\r\n        \"lazy\": [],\r\n        \"commands\": [\r\n            {\r\n                \"object_id\": \"t1\",\r\n                \"name\": \"t1\",\r\n                \"type\": \"command\"\r\n            }\r\n        ],\r\n        \"static_attributes\": [\r\n            {\r\n                \"name\": \"locatedIn\",\r\n                \"type\": \"Relationship\",\r\n                \"value\": \"urn:ngsi-ld:Room:Room001\",\r\n                \"link\": {\r\n                    \"attributes\": [\r\n                        \"temperature\"\r\n                    ],\r\n                    \"name\": \"providedBy\",\r\n                    \"type\": \"Room\"\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"attachedTo\",\r\n                \"type\": \"Relationship\",\r\n                \"value\": \"urn:ngsi-ld:Camera:Camera001\"\r\n            },\r\n            {\r\n                \"name\": \"deviceType\",\r\n                \"type\": \"Property\",\r\n                \"value\": \"EnvironmentalSensor\"\r\n            }\r\n        ],\r\n        \"protocol\": \"JSON\"\r\n    }"
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send command from broker (Get temp)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"20\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/x1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"x1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send command from broker (names)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": [\"Dylan\"]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/names",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"names"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send command from broker auto",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": [\"Dylan\"]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/auto",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"auto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send command from broker Stop robot",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": [\"Dylan\"]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/stop",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"stop"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Camera up",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"up\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Camera down",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"down\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Camera left",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"left\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Camera right",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"right\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Camera reset",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"reset\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Camera Auto",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"auto\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Motor forward",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"forward\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Motor backward",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"backward\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Motor left",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"left\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Motor right",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"right\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Motor stop",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"stop\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Motor auto",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"auto\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "snapshot",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n        \"type\": \"Property\",\r\n        \"value\": \"snapshot\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:Robot:Robot001/attrs/y2",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:Robot:Robot001",
+								"attrs",
+								"y2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Do check out the nodered flow equivalent of this section if possible, as this section would require you to send MQTT messages which isn't doable in POSTman. If not:\n\n1. Install mosquitto_pub on your PC\n2. After sending a command, execute this line:\n    \n\nmosquitto_pub -t /1234/Robot001/cmdexe -h 35.198.213.246 -p 1883 -m '{\"x1\": \"OK\"}'\n\nwhere x1 is the command you executed, and \"OK\" is the command execution status to pass to the broker.\n\n### Adapted from:\n\n1. [https://ngsi-ld-tutorials.readthedocs.io/en/latest/iot-agent-json.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/iot-agent-json.html)\n2. [https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual.html](https://fiware-iotagent-json.readthedocs.io/en/latest/usermanual.html)"
+		},
+		{
+			"name": "Subscriptions",
+			"item": [
+				{
+					"name": "Subscribe to temperature in Room001 falling below 15, retrieve temperature data",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Subscribe to temperature going above 45\",\r\n  \"type\": \"Subscription\",\r\n  \"entities\": [{\"type\": \"Device\"}],\r\n  \"watchedAttributes\": [\"temperature\"],\r\n  \"q\": \"temperature>35;locatedIn==%22urn:ngsi-ld:Room:Room001%22\",\r\n  \"notification\": {\r\n    \"format\": \"keyValues\",\r\n    \"attributes\": [\"temperature\"],\r\n    \"endpoint\": {\r\n      \"uri\": \"https://asia-southeast1-composite-silo-413107.cloudfunctions.net/temperature_update\",\r\n      \"accept\": \"application/json\"\r\n    }\r\n  },\r\n  \"@context\": \"{{context-ld}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/subscriptions",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"subscriptions"
+							]
+						},
+						"description": "This query is similar to the previous one, but it uses the `q` parameter to add two conditions:\n\n1. The entity's temperature must be >35\n2. The entity must be located in `urn:ngsi-ld:Room:Room001`\n    \n\nThe `q` parameter supports equality and comparison operators (`>`, `<`, `=` )\n\nThe endpoint sends a `POST` request to a google cloud URL, which activates a serverless function that sends a message to this telegram channel ([https://t.me/ngsildsmartupdates](https://t.me/ngsildsmartupdates))"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all subscriptions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/subscriptions/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"subscriptions",
+								""
+							]
+						},
+						"description": "Get all subscriptions that are in the context broker."
+					},
+					"response": []
+				},
+				{
+					"name": "Deleting a subscription",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/subscriptions/urn:ngsi-ld:subscription:1396a2b2-e04e-11ee-966b-0242ac1a0005",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"subscriptions",
+								"urn:ngsi-ld:subscription:1396a2b2-e04e-11ee-966b-0242ac1a0005"
+							]
+						},
+						"description": "Delete a subscription in the context broker using the subscription's ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Subscribe to changes in Temperature from any Device",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Subscribe to changes in Temperature\",\r\n  \"type\": \"Subscription\",\r\n  \"entities\": [{\"type\": \"Device\"}],\r\n  \"watchedAttributes\": [\"temperature\"],\r\n  \"notification\": {\r\n    \"format\": \"keyValues\",\r\n    \"endpoint\": {\r\n      \"uri\": \"http://testurl.com/v1/save\",\r\n      \"accept\": \"application/json\"\r\n    }\r\n  },\r\n  \"@context\": \"{{context-ld}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/subscriptions",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"subscriptions"
+							]
+						},
+						"description": "This request creates a subscription that subscribes to changes in temperature from all entities of type Device. Essentially, any time a Device's temperature is updated, a POST request would be sent to the endpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Subscribe to names being spotted by camera",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Subscribe to names being spotted by camera\",\r\n  \"type\": \"Subscription\",\r\n  \"entities\": [{\"type\": \"Camera\"}],\r\n  \"watchedAttributes\": [\"names\"],\r\n  \"notification\": {\r\n    \"format\": \"keyValues\",\r\n    \"attributes\": [\"names\", \"locatedIn\"],\r\n    \"endpoint\": {\r\n      \"uri\": \"https://asia-southeast1-composite-silo-413107.cloudfunctions.net/forward_names\",\r\n      \"accept\": \"application/json\"\r\n    }\r\n  },\r\n  \"@context\": \"{{context-ld}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/subscriptions",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"subscriptions"
+							]
+						},
+						"description": "This subscription sends a notification each time the `names` property is updated. It then sends the `names` and `locatedIn` properties to a google cloud URL, which invokes a command to all Robots that are located in the same room as the camera."
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"data\": [\r\n    {\r\n      \"temperature\": 30.2\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://asia-southeast1-composite-silo-413107.cloudfunctions.net/temperature_update",
+							"protocol": "https",
+							"host": [
+								"asia-southeast1-composite-silo-413107",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"temperature_update"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Subscriptions provide a way for users to subscribe to updates to context data in the context broker. Once the condition for a subscription is met, the context broker would send requested data to the given endpoint in the subscription through a POST request.\n\nNOTE: The `http` prefix is mandatory for endpoints supplied to the subscription.\n\n### Adapted from:\n\n[https://ngsi-ld-tutorials.readthedocs.io/en/latest/subscriptions.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/subscriptions.html)"
+		},
+		{
+			"name": "Temporal API",
+			"item": [
+				{
+					"name": "Get last 5 updates to temperature from EnvironmentalSensor001",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/temporal/entities/urn:ngsi-ld:Device:EnvironmentalSensor001?lastN=5&attrs=temperature&options=temporalValues",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"temporal",
+								"entities",
+								"urn:ngsi-ld:Device:EnvironmentalSensor001"
+							],
+							"query": [
+								{
+									"key": "lastN",
+									"value": "5"
+								},
+								{
+									"key": "attrs",
+									"value": "temperature"
+								},
+								{
+									"key": "options",
+									"value": "temporalValues"
+								}
+							]
+						},
+						"description": "This request returns the last 5 updates to the `temperature` attribute of EnvironmentalSensor001. As lastN is provided, we do not require a `timerel` parameter."
+					},
+					"response": []
+				},
+				{
+					"name": "Get names of persons previously spotted in Room001",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');\r",
+									"\r",
+									"pm.environment.set('currentDateTime', moment().toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/temporal/entities/?type=Camera&attrs=names&q=locatedIn==%22urn:ngsi-ld:Room:Room001%22&timerel=before&timeAt={{currentDateTime}}&options=count&id=urn:ngsi-ld:Camera:Camera001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"temporal",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Camera"
+								},
+								{
+									"key": "attrs",
+									"value": "names"
+								},
+								{
+									"key": "q",
+									"value": "locatedIn==%22urn:ngsi-ld:Room:Room001%22"
+								},
+								{
+									"key": "timerel",
+									"value": "before"
+								},
+								{
+									"key": "timeAt",
+									"value": "{{currentDateTime}}"
+								},
+								{
+									"key": "options",
+									"value": "count"
+								},
+								{
+									"key": "id",
+									"value": "urn:ngsi-ld:Camera:Camera001"
+								}
+							]
+						},
+						"description": "This query gets all names spotted by cameras in Room001. It does so by finding all updates that are before the current date and time (generated using Postman's pre-request script function.\n\nThe response header would also return a count of 1 (as there is only 1 camera entity in Room001)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get last 5 updates to EnvironmentalSensor001",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "Origin",
+								"value": "http://postman.com/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/temporal/entities/urn:ngsi-ld:Device:EnvironmentalSensor001?lastN=5",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"temporal",
+								"entities",
+								"urn:ngsi-ld:Device:EnvironmentalSensor001"
+							],
+							"query": [
+								{
+									"key": "lastN",
+									"value": "5"
+								}
+							]
+						},
+						"description": "This request returns the last 5 updates to each attribute of EnvironmentalSensor001. As lastN is provided, we do not require a `timerel` parameter.\n\nNote that the payload for this request is quite large! Using extra parameters for the temporal API to reduce the size of data transfer is highly encouraged."
+					},
+					"response": []
+				},
+				{
+					"name": "Get updatesfrom camera after 4pm",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "Origin",
+								"value": "http://postman.com/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/temporal/entities?type=Camera&timeproperty=observedAt&timerel=after&timeAt=2024-04-02T14:00:00.000Z&options=temporalValues&id=urn%3Angsi-ld%3ACamera%3ACamera001",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"temporal",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Camera"
+								},
+								{
+									"key": "timeproperty",
+									"value": "observedAt"
+								},
+								{
+									"key": "timerel",
+									"value": "after"
+								},
+								{
+									"key": "timeAt",
+									"value": "2024-04-02T14:00:00.000Z"
+								},
+								{
+									"key": "options",
+									"value": "temporalValues"
+								},
+								{
+									"key": "id",
+									"value": "urn%3Angsi-ld%3ACamera%3ACamera001"
+								}
+							]
+						},
+						"description": "This request returns the last 5 updates to each attribute of EnvironmentalSensor001. As lastN is provided, we do not require a `timerel` parameter.\n\nNote that the payload for this request is quite large! Using extra parameters for the temporal API to reduce the size of data transfer is highly encouraged."
+					},
+					"response": []
+				},
+				{
+					"name": "Test",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "Origin",
+								"value": "http://postman.com/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://35.240.151.148/api/temporal/entities?type=Robot&timeproperty=observedAt&timerel=before&timeAt=2024-05-04T17:00:00.000Z&options=temporalValues&id=urn:ngsi-ld:Robot:Robot001&attrs=imagepath&lastN=5",
+							"protocol": "http",
+							"host": [
+								"35",
+								"240",
+								"151",
+								"148"
+							],
+							"path": [
+								"api",
+								"temporal",
+								"entities"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Robot"
+								},
+								{
+									"key": "timeproperty",
+									"value": "observedAt"
+								},
+								{
+									"key": "timerel",
+									"value": "before"
+								},
+								{
+									"key": "timeAt",
+									"value": "2024-05-04T17:00:00.000Z"
+								},
+								{
+									"key": "options",
+									"value": "temporalValues"
+								},
+								{
+									"key": "id",
+									"value": "urn:ngsi-ld:Robot:Robot001"
+								},
+								{
+									"key": "attrs",
+									"value": "imagepath"
+								},
+								{
+									"key": "lastN",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "The context broker API usually only returns the current state of the entities. Hence, all context brokers would have a temporal API (be it as an extra component or built-in) to query for historical data.\n\n## Parameters\n\n### Time Parameters\n\nAll temporal queries requires a time parameter. There are two main types of time parameters:\n\n1. lastN : returns the last N updates\n2. timerel : `before` or `after` a certain timestamp (in ISO 8601 format. I.e, `2024-03-15T07:55:27.390Z`). The timestamp is provided using `timeAt` .\n    \n\n### Other Parameters\n\n- `attrs` : Specifies the attributes to be included in the response. Will not return entities that doesn't contain this attribute.\n- `options` : Specifies options for the request. Options include:\n    - `sysAttrs` : Includes system attributes `createdAt` and `modifiedAt`\n    - `temporalValues`: Each attribute is reduced to a series of tuples - one value and one timestamp for each entry.\n    - `count` : Returns the number of entities contained in the response payload through the headers.\n- `q` : Perform a filter on entities using operators (i.e., `<`, `>`, `==`)\n- `id` : A list of entity IDs that should be included in the query.\n    \n\n### Adapted From:\n\n[https://ngsi-ld-tutorials.readthedocs.io/en/latest/short-term-history.html](https://ngsi-ld-tutorials.readthedocs.io/en/latest/short-term-history.html)"
+		},
+		{
+			"name": "LTA Data mall",
+			"item": [
+				{
+					"name": "Create a bus stop",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"urn:ngsi-ld:BusStop:rn:ngsi-ld:Busstop:BusStop01012\",\r\n  \"type\": \"BusStop\",\r\n  \"@context\": [\r\n    \"http://34.126.76.13/context.jsonld\"\r\n  ],\r\n  \"location\": {\r\n    \"type\": \"GeoProperty\",\r\n    \"value\": {\r\n      \"type\": \"Point\",\r\n      \"coordinates\": [\r\n        103.852536,\r\n        1.296848\r\n      ]\r\n    }\r\n  },\r\n  \"BusStopCode\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"01012\"\r\n  },\r\n  \"RoadName\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Victoria St\"\r\n  },\r\n  \"Description\": {\r\n    \"type\": \"Property\",\r\n    \"value\": \"Hotel Grand Pacific\"\r\n  },\r\n  \"Latitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 1.29684825487647\r\n  },\r\n  \"Longitude\": {\r\n    \"type\": \"Property\",\r\n    \"value\": 103.85253591654006\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							]
+						},
+						"description": "This request adds a Room entity using a payload in the normalized-json format. This is the most explicit way of creating an entity, through explicitly stating the type of each attribute."
+					},
+					"response": []
+				},
+				{
+					"name": "View all bus stops",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Fiware-Service",
+								"value": "example",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=BusStop",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "BusStop"
+								}
+							]
+						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "View all carparks",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Fiware-Service",
+								"value": "example",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=Carpark",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Carpark"
+								}
+							]
+						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "Geoquery carparks",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Fiware-Service",
+								"value": "example",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=Carpark&geometry=Point&georel=near%3BmaxDistance==800&coordinates=%5B103.83359,1.3071%5D",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Carpark"
+								},
+								{
+									"key": "geometry",
+									"value": "Point"
+								},
+								{
+									"key": "georel",
+									"value": "near%3BmaxDistance==800"
+								},
+								{
+									"key": "coordinates",
+									"value": "%5B103.83359,1.3071%5D"
+								}
+							]
+						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "COunt bus stops",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Fiware-Service",
+								"value": "example",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=BusStop&limit=0&count=true",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "BusStop"
+								},
+								{
+									"key": "limit",
+									"value": "0"
+								},
+								{
+									"key": "count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "VIew all taxi fleets",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							},
+							{
+								"key": "Link",
+								"value": "<{{context-ld}}>; rel=\"http://www.w3.org/ns/json-ld#context\"; type=\"application/ld+json\"",
+								"type": "text"
+							},
+							{
+								"key": "Fiware-Service",
+								"value": "example",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/?type=TaxiFleet",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "TaxiFleet"
+								}
+							]
+						},
+						"description": "View the created entities (which are of type Room)"
+					},
+					"response": []
+				},
+				{
+					"name": "Deleting an bus stop",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:BusStop:BusStop01012",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:BusStop:BusStop01012"
+							]
+						},
+						"description": "Delete a created entity by specifying the id"
+					},
+					"response": []
+				},
+				{
+					"name": "Deleting a Taxi fleet",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gateway}}/api/broker/ngsi-ld/v1/entities/urn:ngsi-ld:TaxiFleet:AvaliableTaxiFleet",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"api",
+								"broker",
+								"ngsi-ld",
+								"v1",
+								"entities",
+								"urn:ngsi-ld:TaxiFleet:AvaliableTaxiFleet"
+							]
+						},
+						"description": "Delete a created entity by specifying the id"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test image AI",
+			"item": [
+				{
+					"name": "Validate",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/ld+json",
+								"type": "text"
+							},
+							{
+								"key": "NGSILD-Tenant",
+								"value": "openiot",
+								"type": "text"
+							},
+							{
+								"key": "fiware-servicepath",
+								"value": "/",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"images\": [\r\n        [\"url\": \"https://storage.googleapis.com/ngsi-ld/snapshots/2024-06-06%2015_24_50.mp4\",\"date\": \"2024-06-06T07:26:13.533Z\"],\r\n        [\"url\":\"https://storage.googleapis.com/ngsi-ld/snapshots/2024-06-06%2014_58_40.mp4\",\"date\": \"2024-06-06T07:00:03.792Z\"]\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://35.187.246.9:5000/validate",
+							"protocol": "http",
+							"host": [
+								"35",
+								"187",
+								"246",
+								"9"
+							],
+							"port": "5000",
+							"path": [
+								"validate"
+							]
+						},
+						"description": "This request adds a Room entity using a payload in the normalized-json format. This is the most explicit way of creating an entity, through explicitly stating the type of each attribute."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "context-ld",
+			"value": "http://34.126.76.13/context.jsonld",
+			"disabled": true
+		},
+		{
+			"key": "gateway",
+			"value": "http://34.87.161.144",
+			"disabled": true
+		},
+		{
+			"key": "gateway",
+			"value": "http://localhost"
+		},
+		{
+			"key": "gateway",
+			"value": "http://34.143.201.28",
+			"disabled": true
+		},
+		{
+			"key": "gateway",
+			"value": "http://35.240.151.148",
+			"disabled": true
+		},
+		{
+			"key": "gateway",
+			"value": "http://localhost:8026",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "context-ld",
+			"value": "https://raw.githubusercontent.com/dexter-lau-pmo/ngsi-ld/main/datamodels/context.jsonld",
+			"type": "string"
+		}
+	]
+}
