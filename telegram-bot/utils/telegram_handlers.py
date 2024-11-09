@@ -671,7 +671,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 remove_missing_lots=remove_missing_avail
             )
 
-            carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference, ideal_num_carparks=num_cp_return)
+            carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference, ideal_num_carparks=num_cp_return, num_hrs=num_hours_parked)
 
             carpark_options_message_id = await context.bot.send_message(
                 chat_id=update.effective_chat.id,

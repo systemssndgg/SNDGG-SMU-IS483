@@ -250,7 +250,7 @@ def aggregate_message(closest_three_carparks, selected_preference, live_location
     return carparks_message
 
 
-def aggregate_message_new(carparks_list: list, selected_preference: list, ideal_num_carparks: int = 3):
+def aggregate_message_new(carparks_list: list, selected_preference: list, ideal_num_carparks: int = 3, num_hrs: int = 2):
     '''
     INPUT PARAMETERS:
 
@@ -331,7 +331,7 @@ def aggregate_message_new(carparks_list: list, selected_preference: list, ideal_
         }
 
         # (1) Fill price info (cheapest)
-        pref_msg_map[cp_id]['cheapest'] = get_price_str(cp)
+        pref_msg_map[cp_id]['cheapest'] = get_price_str(cp, num_hrs=num_hrs)
 
         # (2) Fill travel time info (fastest)
         pref_msg_map[cp_id]['fastest'] = f"🏎️ *Drive:* {get_time_string(cp['drive_time'])}\n"
@@ -686,7 +686,10 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
             time_based = day_price_info['timeBased']
 
             for time_slot in time_based:
-                if time_slot['startTime'] <= current_time <= time_slot['endTime']:
+                start_time = convert_time_to_int(time_slot['startTime'])
+                end_time = convert_time_to_int(time_slot['endTime'])
+
+                if start_time <= convert_time_to_int(current_time) <= end_time:
                     rate_per_hour = time_slot['ratePerHour']
                     break
 
@@ -708,7 +711,10 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
             total_price += 0.0
 
         if rate_per_hour != None:
-            total_price += rate_per_hour * (num_hrs-1)
+            if first_hour_rate_price != None:
+                total_price += rate_per_hour * (num_hrs-1)
+            else:
+                total_price += rate_per_hour * num_hrs
         else:
             total_price += 0.0
         
@@ -771,8 +777,23 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
         # If no rate is found, return -1.0
         return -1.0
 
+def convert_time_to_int(time_str):
+    '''
+    time_str input possibilities: "hh:mm", "hh:mm AM", "hh:mm PM"
+    '''
 
-def get_price_str(carpark, vehicle_type='Car'):
+    if (len(time_str) == 5):
+        return int(time_str[:2] + time_str[3:])
+    
+    time_str = time_str.split(" ")
+
+    if (time_str[1] == "AM"):
+        return int(time_str[0][:2] + time_str[0][3:])
+    else:
+        return int(time_str[0][:2] + time_str[0][3:]) + 1200
+    
+
+def get_price_str(carpark, vehicle_type='Car', num_hrs=2):
     '''
     Returns the pricing info of carpark as a string
     '''
@@ -824,6 +845,12 @@ def get_price_str(carpark, vehicle_type='Car'):
                 
             elif rate_str == "Same as Saturday":
                 rate_str = sat_str
+
+        if rate_str == None:
+            price_per_hr = find_price_per_hr(carpark, num_hrs, vehicle_type)
+
+            if (price_per_hr >= 0):
+                rate_str = f"${price_per_hr:.2f} per hour"
 
         if rate_str == None:
             return no_price_info
