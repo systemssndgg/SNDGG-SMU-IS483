@@ -434,6 +434,9 @@ async def store_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     query = update.callback_query
     await query.answer()
 
+    if query.data == "end":
+        return await end(update, context)
+
     if query.data == "confirm_preference_yes":
         user_id = update.effective_user.id
         preference_list = context.user_data.get('preference_list')
@@ -821,6 +824,7 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """End the session and provide a restart button."""
     # context.user_data.clear()
+    context.user_data['preference_list'] = []
     context.user_data['in_session'] = False
 
     if update.callback_query:
