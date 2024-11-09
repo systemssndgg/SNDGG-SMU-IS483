@@ -3,17 +3,29 @@ from entities.mylibs.traffic_advisories import get_traffic_advisories
 from entities.mylibs.ngsi_ld import create_entities_in_broker
 from entities.mylibs.weather import get_two_hour_weather, get_weather_observed
 from entities.mylibs.commercial_carparks import create_commercial_carparks
-from entities.mylibs.ngsi_ld import create_entities_in_broker
+from entities.mylibs.hdb_carparks import create_hdb_carparks
+
 from colorama import Fore
 
 
 def import_Carpark_entity():
     token = get_ura_token()['Result']
-    print("Token ", token)
+
+    # URA Carparks
+    print(Fore.MAGENTA + "\nPushing URA carparks to broker...")
     carpark_list = get_ura_carparks(token)
-    print(Fore.MAGENTA + "\nPushing Carpark to broker...")
     create_entities_in_broker(carpark_list)
-    create_commercial_carparks() # create_entities_in_broker for Commercial carpark
+
+    # Commercial Carparks
+    print(Fore.MAGENTA + "\nPushing commerical carparks to broker...")
+    comm_carparks = create_commercial_carparks()
+    create_entities_in_broker(comm_carparks)
+
+    # HDB Carparks
+    print(Fore.MAGENTA + "\nPushing HDB carparks to broker...")
+    hdb_carparks = create_hdb_carparks()
+    create_entities_in_broker(hdb_carparks)
+
 
 
 def import_TrafficAdvisories_entity():
