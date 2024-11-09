@@ -151,13 +151,17 @@ def get_ura_carparks(ura_token):
                         else:
                             sunPHRatePerHour = sunPHRateFloat / sunPHMinFloat * 60
 
+                        # Convert startTime and endTime to a 24-hour format
+                        startTime = convert_to_24hr(carpark["startTime"])
+                        endTime = convert_to_24hr(carpark["endTime"])
+
                         # Check if then entity already has a populated pricing dictionary
                         if not pricing["rates"]:
                             pricing["rates"]["weekday"] = {
                                 'timeBased': [
                                     {
-                                    'startTime': carpark["startTime"],
-                                    'endTime': carpark["endTime"],
+                                    'startTime': startTime,
+                                    'endTime': endTime,
                                     'ratePerHour': weekdayRatePerHour
                                     }
                                 ]
@@ -165,8 +169,8 @@ def get_ura_carparks(ura_token):
                             pricing["rates"]["saturday"] = {
                                 'timeBased': [
                                     {
-                                    'startTime': carpark["startTime"],
-                                    'endTime': carpark["endTime"],
+                                    'startTime': startTime,
+                                    'endTime': endTime,
                                     'ratePerHour': satdayRatePerHour
                                     }
                                 ]
@@ -174,26 +178,26 @@ def get_ura_carparks(ura_token):
                             pricing["rates"]["sundayPublicHoliday"] = {
                                 'timeBased': [
                                     {
-                                    'startTime': carpark["startTime"],
-                                    'endTime': carpark["endTime"],
+                                    'startTime': startTime,
+                                    'endTime': endTime,
                                     'ratePerHour': sunPHRatePerHour
                                     }
                                 ]
                             }
                         else:
                             pricing["rates"]["weekday"]["timeBased"].append({
-                                'startTime': carpark["startTime"],
-                                'endTime': carpark["endTime"],
+                                'startTime': startTime,
+                                'endTime': endTime,
                                 'ratePerHour': weekdayRatePerHour
                             })
                             pricing["rates"]["saturday"]["timeBased"].append({
-                                'startTime': carpark["startTime"],
-                                'endTime': carpark["endTime"],
+                                'startTime': startTime,
+                                'endTime': endTime,
                                 'ratePerHour': satdayRatePerHour
                             })
                             pricing["rates"]["sundayPublicHoliday"]["timeBased"].append({
-                                'startTime': carpark["startTime"],
-                                'endTime': carpark["endTime"],
+                                'startTime': startTime,
+                                'endTime': endTime,
                                 'ratePerHour': sunPHRatePerHour
                             })
                     except Exception as e:
@@ -223,5 +227,5 @@ def get_season_carpark(ura_token):
         return None
 
 def convert_to_24hr(time):
-    return datetime.strptime(time, "%I.%M %p").strftime("%H%M")
+    return datetime.strptime(time, "%I.%M %p").strftime("%H:%M")
 

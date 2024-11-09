@@ -1,4 +1,4 @@
-import mylibs.constants as constants 
+import entities.mylibs.constants as constants 
 from landtransportsg import Traffic
 import requests
 from openai import OpenAI
