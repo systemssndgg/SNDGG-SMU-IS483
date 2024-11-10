@@ -55,7 +55,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle destination input and return a list of suggestions"""
-    
     # Logging setup
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
@@ -482,7 +481,7 @@ async def handle_hour(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
         if query.data == "default":
             context.user_data['hours'] = hours = DEFAULT_PARKING_HOURS
             await context.bot.send_message(
-                text=f"✅ *You have selected {hours} hour(s).*",
+                text=f"✅ *You have selected {hours} hour(s)*",
                 chat_id=query.message.chat_id,
                 parse_mode="Markdown"
             )
@@ -595,6 +594,12 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     if context.user_data.get('carpark_list_sent'):
         logger.info("Carpark list has already been sent. Skipping...")
         return LIVE_LOCATION
+
+    loading_message = await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="🔄 *Fetching carpark options nearby. Please wait...*",
+        parse_mode="Markdown"
+    )
     
     destination_lat = context.user_data.get('destination_lat')
     destination_long = context.user_data.get('destination_long')
@@ -676,10 +681,12 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
             carparks_message = aggregate_message_new(closest_three_carparks, user_selected_preference, ideal_num_carparks=num_cp_return, num_hrs=num_hours_parked)
 
-            carpark_options_message_id = await context.bot.send_message(
+            carpark_options_message_id = await context.bot.edit_message_text(
                 chat_id=update.effective_chat.id,
+                message_id=loading_message.message_id,
                 text=carparks_message,
-                parse_mode='Markdown')
+                parse_mode='Markdown'
+            )
 
             context.user_data['carpark_options_message_id'] = carpark_options_message_id.message_id
 
@@ -823,10 +830,6 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """End the session and provide a restart button."""
-    # context.user_data.clear()
-    context.user_data['preference_list'] = []
-    context.user_data['in_session'] = False
-
     if update.callback_query:
         query = update.callback_query
         try:
@@ -844,7 +847,10 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
         except BadRequest as e:
             print(f"Failed to delete message: {e}")
-            
+        
+        context.user_data.clear()
+        context.user_data['preference_list'] = []
+        context.user_data['in_session'] = False    
     
     return ConversationHandler.END
 
