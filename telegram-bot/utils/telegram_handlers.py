@@ -553,6 +553,16 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the live location input and find nearest carpark based on destination"""
     
+    if context.user_data.get('share_live_location_message_id'):
+        share_live_location_message_id = context.user_data.get('share_live_location_message_id')
+        try:
+            await context.bot.delete_message(
+                chat_id=update.effective_chat.id,
+                message_id=share_live_location_message_id
+            )
+        except BadRequest as e:
+            print(f"Failed to delete share live location message: {e}")
+
     # Logging setup
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
@@ -579,10 +589,28 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         return await end(update, context)
     # Handle both regular and live location updates
     if update.message and update.message.location:
-        live_location = (update.message.location.latitude, update.message.location.longitude)
-        context.user_data['live_location'] = live_location
-        context.user_data['live_location_message_id'] = update.message.message_id
-        print(Fore.BLUE + f"Received initial live location: Latitude {live_location[0]}, Longitude {live_location[1]}")
+        if update.message.location.live_period:
+            live_location = (update.message.location.latitude, update.message.location.longitude)
+            context.user_data['live_location'] = live_location
+            context.user_data['live_location_message_id'] = update.message.message_id
+            print(Fore.BLUE + f"Received initial live location: Latitude {live_location[0]}, Longitude {live_location[1]}")
+        else:
+            keyboard = [
+                [InlineKeyboardButton("🛑 End Session", callback_data="end")]
+            ]
+
+            reply_markup = InlineKeyboardMarkup(keyboard)
+
+            share_live_location_message = await update.message.reply_text(
+                text="⚠️ *Please share your live location to proceed with route monitoring.*\n\n"
+                "📎 Paper Clip > Location > Share Live Location > Select ‘for 1 hour’",
+                parse_mode="Markdown",
+                reply_markup=reply_markup
+            )
+
+            context.user_data['share_live_location_message_id'] = share_live_location_message.message_id
+            return LIVE_LOCATION
+
     elif update.edited_message and update.edited_message.location:
         live_location = (update.edited_message.location.latitude, update.edited_message.location.longitude)
         context.user_data['live_location'] = live_location
@@ -594,6 +622,16 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     if context.user_data.get('carpark_list_sent'):
         logger.info("Carpark list has already been sent. Skipping...")
         return LIVE_LOCATION
+
+    if context.user_data.get('share_live_location_message_id'):
+        share_live_location_message_id = context.user_data.get('share_live_location_message_id')
+        try:
+            await context.bot.delete_message(
+                chat_id=update.effective_chat.id,
+                message_id=share_live_location_message_id
+            )
+        except BadRequest as e:
+            print(f"Failed to delete share live location message: {e}")
 
     loading_message = await context.bot.send_message(
         chat_id=update.effective_chat.id,
@@ -981,7 +1019,7 @@ async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                         message_id=menu_preference_message_id
                     )
                 except BadRequest as e:
-                    logger.error(f"Failed to delete preference message: {e}")
+                    print(f"Failed to delete preference message: {e}")
             return await edit_preference(update, context)
 
     elif query.data == "end":
