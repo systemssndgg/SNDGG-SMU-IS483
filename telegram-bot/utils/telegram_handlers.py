@@ -1130,7 +1130,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     if selected_filter == "minimum_carpark_avail":
         minimum_carpark_avail_message = await query.message.reply_text(
-            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a number greater than 0.",
+            "🅿️ *Please enter the minimum carpark availability.*\n\n⚠️ Enter a positive number (0 or greater).",
             parse_mode="Markdown",
             reply_markup=reply_markup
         )
