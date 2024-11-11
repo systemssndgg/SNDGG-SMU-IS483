@@ -643,12 +643,34 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     destination_long = context.user_data.get('destination_long')
     if destination_lat and destination_long:
         global geoquery_nearest_carparks
-        geoquery_nearest_carparks = geoquery_ngsi_point(
-            input_type="Carpark",
-            maxDistance=3000,
-            lat=destination_lat,
-            long=destination_long
-        )
+
+        min_search_radius = 500
+        max_search_radius = 3000
+        search_interval = 500
+
+        cur_radius = min_search_radius
+        geoquery_nearest_carparks = []
+        cp_ids = set()
+
+        # Continue to search for carparks until we have at least 20 carparks or we reach the max search radius
+        while len(geoquery_nearest_carparks) < 20 and cur_radius <= max_search_radius:
+            new_geo_cps = geoquery_ngsi_point(
+                input_type="Carpark",
+                maxDistance=cur_radius,
+                lat=destination_lat,
+                long=destination_long
+            )
+
+            print(Fore.GREEN + f"Number of carparks found within {cur_radius}m: {len(new_geo_cps)}")
+
+            # Add only the new carparks to the list
+            for cp in new_geo_cps:
+                if cp['id'] not in cp_ids:
+                    geoquery_nearest_carparks.append(cp)
+                    cp_ids.add(cp['id'])
+
+            cur_radius += search_interval
+
 
         if len(geoquery_nearest_carparks) == 0:
             await context.bot.send_message(chat_id=update.effective_chat.id, text="🚫 Sorry! No nearby carparks found.")
@@ -690,7 +712,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 'available_lots': 'available_lots'
             }
            
-            scoringWeights = [0.4, 0.25, 0.2, 0.1, 0.05] # In order of importance (1st = most important)
+            scoringWeights = [0.4, 0.35, 0.15, 0.05, 0.05] # In order of importance (1st = most important)
 
             for i in range(len(user_selected_preference)):
                 user_pref_str = user_selected_preference[i]
