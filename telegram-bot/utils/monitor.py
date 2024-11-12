@@ -326,7 +326,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
 
                 sent_new = True
                 break
-            else:
+            elif current_carpark["sheltered"]["value"] == True and area["forecast"]["value"] in rain_values:
                 rain_value = area["forecast"]["value"]
                 await context.bot.send_message(
                     chat_id=update.effective_chat.id, 
