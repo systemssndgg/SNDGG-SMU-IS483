@@ -209,30 +209,30 @@ async def monitor_live_location_changes(update: Update, context: ContextTypes.DE
 async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, current_carpark, closest_three_carparks, user_address, destination_address, geoquery_nearest_carparks, live_location, user_preference, destination):
     rain_values = ["Light Rain" , "Moderate Rain" , "Heavy Rain" , "Passing Showers" , "Light Showers" , "Showers", "Heavy Showers", "Thundery Showers", "Heavy Thundery Showers", "Heavy Thundery Showers with Gusty Winds"]
 
-    # weather = [
-    #     {
-    #         "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-10-08T12:23:56_2024-10-08T14:23:56",
-    #         "type": "WeatherForecast",
-    #         "Area": {
-    #             "type": "Property",
-    #             "value": "Bedok"
-    #         },
-    #         "forecast": {
-    #             "type": "Property",
-    #             "value": "Heavy Rain"
-    #         },
-    #         "location": {
-    #             "type": "GeoProperty",
-    #             "value": {
-    #                 "type": "Point",
-    #                 "coordinates": [
-    #                     103.924,
-    #                     1.321
-    #                 ]
-    #             }
-    #         }
-    #     }
-    #     ]
+    weather = [
+        {
+            "id": "urn:ngsi-ld:WeatherForecast:Bedok-WeatherForecast-2024-11-05T09:52:38_2024-11-05T11:52:38",
+            "type": "WeatherForecast",
+            "Area": {
+                "type": "Property",
+                "value": "Bedok"
+            },
+            "forecast": {
+                "type": "Property",
+                "value": "Light Showers"
+            },
+            "location": {
+                "type": "GeoProperty",
+                "value": {
+                    "type": "Point",
+                    "coordinates": [
+                        103.924,
+                        1.321
+                    ]
+                }
+            }
+        }
+    ]
     
     weather = retrieve_ngsi_type(
         input_type="WeatherForecast")
@@ -262,7 +262,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                 if distance < check_distance and area["forecast"]["value"] in rain_values:
                     rain_value = area["forecast"]["value"]
                     print("rain_value:", rain_value)
-            if current_carpark["sheltered"]["value"] == False:    
+            if current_carpark["sheltered"]["value"] == False and rain_value in rain_values:    
                 live_location = (context.user_data.get('live_location')[0], context.user_data.get('live_location')[1]) 
                 destination = (context.user_data.get('destination_lat'), context.user_data.get('destination_long'))
                 user_preference = context.user_data.get('user_preference')
@@ -271,7 +271,6 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
                     
                 
                 if new_carpark == []:
-                    rain_value = area["forecast"]["value"]
                     await context.bot.send_message(
                     chat_id=update.effective_chat.id, 
                     text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 
@@ -326,8 +325,7 @@ async def monitor_weather(update: Update, context: ContextTypes.DEFAULT_TYPE, cu
 
                 sent_new = True
                 break
-            elif current_carpark["sheltered"]["value"] == True and area["forecast"]["value"] in rain_values:
-                rain_value = area["forecast"]["value"]
+            elif current_carpark["sheltered"]["value"] == True and rain_value in rain_values:
                 await context.bot.send_message(
                     chat_id=update.effective_chat.id, 
                     text=f"🌦️ *Weather Update:* There is an ongoing {rain_value} happening around your destination. Drive safely and remember to grab an umbrella!", 
