@@ -4,6 +4,7 @@ from entities.mylibs.ngsi_ld import create_entities_in_broker
 from entities.mylibs.weather import get_two_hour_weather, get_weather_observed
 from entities.mylibs.commercial_carparks import create_commercial_carparks
 from entities.mylibs.hdb_carparks import create_hdb_carparks
+from entities.mylibs.one_motoring_carparks import create_one_motoring_carparks
 
 from colorama import Fore
 
@@ -25,6 +26,11 @@ def import_Carpark_entity():
     print(Fore.MAGENTA + "\nPushing HDB carparks to broker...")
     hdb_carparks = create_hdb_carparks()
     create_entities_in_broker(hdb_carparks)
+
+    # OneMotoring Carparks
+    print(Fore.MAGENTA + "\nPushing OneMotoring carparks to broker...")
+    om_carparks = create_one_motoring_carparks()
+    create_entities_in_broker(om_carparks)
 
 
 
