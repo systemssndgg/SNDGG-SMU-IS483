@@ -14,9 +14,9 @@ from ngsildclient import Client, Entity, SmartDataModels
 from datetime import datetime
 import pandas as pd
 
-client = OpenAI(
-    api_key = constants.OPENAPI_KEY
-)
+# client = OpenAI(
+#     api_key = constants.OPENAPI_KEY
+# )
 
 API_KEY = constants.LTA_API_KEY
 ctx = constants.ctx
@@ -435,8 +435,8 @@ def create_one_motoring_carparks():
     else:
         try:
             # Open the Excel file
-            file_path = os.path.join(os.path.dirname(__file__), 'FormattedOneMotoring.xlsx')
-            wb = openpyxl.load_workbook(file_path)
+            # file_path = os.path.join(os.path.dirname(__file__), 'FormattedOneMotoring.xlsx')
+            wb = openpyxl.load_workbook("entities/mylibs/FormattedOneMotoring.xlsx")
             ws = wb.active
 
             # Initialize the carpark rates dictionary
@@ -495,8 +495,8 @@ def create_one_motoring_carparks():
         # Fetch carpark coordinates using Geocoding API
         # Coordinates have been previously fetched and stored in om_carpark_coordinates.xlsx
         coordinates = "-"
-        coord_path = os.path.join(os.path.dirname(__file__), 'om_carpark_coordinates.xlsx')
-        workbook = openpyxl.load_workbook(coord_path)
+        # coord_path = os.path.join(os.path.dirname(__file__), 'om_carpark_coordinates.xlsx')
+        workbook = openpyxl.load_workbook('entities/mylibs/om_carpark_coordinates.xlsx')
         sheet = workbook.active
         data = [row for row in sheet.iter_rows(values_only=True)]
         # carpark name is the first column, latitude is the second column, longitude is the third column
