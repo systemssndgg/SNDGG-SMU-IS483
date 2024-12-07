@@ -384,6 +384,21 @@ def fetch_carpark_rates(carpark_name, file_path='one_motoring.xlsx'): #'entities
 
 # Helper function to create a carpark entity
 def create_entity(carpark_name="-", e_id="-", coordinates="-", sheltered="-", parking_capacity="-", available_lots="-", pricing="-"):
+    '''
+    Inputs:
+        carpark_name : str : The name of the carpark
+        e_id : str : The entity ID of the carpark
+        coordinates : tuple : The coordinates of the carpark in the format (latitude, longitude)
+        sheltered : bool : Whether the carpark is sheltered or not
+        parking_capacity : int : The total number of parking lots in the carpark
+        available_lots : int : The number of available parking lots in the carpark
+        pricing : dict : The pricing information for the carpark
+    Outputs:
+        entity : Entity : The entity object created for the carpark
+        
+    Description:
+        This function creates an entity object for a carpark with the given parameters. If any of the parameters are missing, the key will not exist.
+        '''
     entity = Entity("Carpark", e_id, ctx=ctx)
 
     # Set properties
@@ -488,9 +503,9 @@ def create_one_motoring_carparks():
     # General case for other carparks
     id = 1
     for carpark_name, carpark_data in formatted_carpark_rates.items():
+        # Create the entity ID (e.g., OM1, OM2, ...)
         e_id = "OM" + str(id)
         id += 1
-        entity = Entity("Carpark", e_id, ctx=ctx)
 
         # Fetch carpark coordinates using Geocoding API
         # Coordinates have been previously fetched and stored in om_carpark_coordinates.xlsx
@@ -526,8 +541,10 @@ def create_one_motoring_carparks():
                 print(f"An error occurred: {e}")
                 coordinates = "-"
         
-        # Fetch carpark availability
         # No availability can be discerned
+
+        # Assume all of them are sheltered
+        sheltered = True
 
         # Add the formatted rates to the pricing dictionary
         pricing = {}
@@ -538,7 +555,7 @@ def create_one_motoring_carparks():
         pricing['sundayPHStr'] = clean_text(raw_rates['SundayPHStr'])
 
         # Create and store the entity
-        entity = create_entity(carpark_name=carpark_name, e_id=e_id, coordinates=coordinates, pricing=pricing)
+        entity = create_entity(carpark_name=carpark_name, e_id=e_id, sheltered=sheltered, coordinates=coordinates, pricing=pricing)
         entity_dict[e_id] = entity
     
     # try:
