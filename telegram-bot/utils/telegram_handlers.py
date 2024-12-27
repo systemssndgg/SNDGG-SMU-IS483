@@ -2,7 +2,7 @@ import sys
 print(sys.version)
 
 import constants as constants
-from utils.context_broker import geoquery_ngsi_point
+from utils.context_broker import geoquery_ngsi_point, add_subscription
 
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -15,7 +15,6 @@ from utils.helper_functions import aggregate_message_new, get_top_carparks, remo
 from utils.context_broker import geoquery_ngsi_point
 from utils.google_maps import get_autocomplete_place, get_details_place, generate_static_map_url, get_address_from_coordinates, get_route_duration
 from utils.firestore import check_user_exists, get_user_preference, store_user_preference, edit_user_preference, store_user_filter, get_user_filter, edit_user_filter, does_key_exist
-
 import asyncio
 
 import colorama
@@ -28,13 +27,23 @@ DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENC
 # Store user data
 user_data = {}
 
+def add_all_subscriptions(update: Update, selected_carpark):
+    add_subscription(
+        description="Check Carpark Availability",
+        entity_list=[{"id": selected_carpark["id"], "type": "Carpark"}],
+        attributes=["parkingAvailability"],
+        condition="parkingAvailability<10",
+        chat_id=update.effective_chat.id,
+    )
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Send a welcome message and ask for user's destination."""
     context.user_data['in_session'] = True
     keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    if update.message: 
+    if update.message:
         message = await update.message.reply_text(
          "👋 *Welcome!* Where would you like to go today?\n\n"
          "Please type your destination.",
@@ -49,7 +58,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
            "👋 *Welcome!* Where would you like to go today?\n\n""Please type your destination.",
            parse_mode='Markdown',
            reply_markup=reply_markup
-    ) 
+    )
 
     return DESTINATION
 
@@ -72,7 +81,7 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 )
             except BadRequest as e:
                 print(f"Failed to delete message: {e}")
-        
+
         if rejected_destination_id:
             try:
                 await context.bot.edit_message_reply_markup(
@@ -82,7 +91,7 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 )
             except BadRequest as e:
                 print(f"Failed to delete message: {e}")
-            
+
         user_input = update.message.text
         loading_message = await update.message.reply_text("🔄 Fetching suggestions for your destination...")
         context.user_data['destination_data'] = {}
@@ -93,7 +102,7 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             short_id = f"dest_{index}"
             context.user_data['destination_data'][short_id] = suggestion['place_id']
             keyboard.append([InlineKeyboardButton(suggestion['description'], callback_data=short_id)])
-        
+
         keyboard.append([InlineKeyboardButton("🔍 Search another destination", callback_data="search_again")])
 
         keyboard.append([InlineKeyboardButton("🛑 End Session", callback_data="end")])
@@ -103,7 +112,7 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         destinations = await context.bot.edit_message_text(
             chat_id=update.effective_chat.id,
             message_id=loading_message.message_id,
-            text="🌐 *Please select your destination below:*", 
+            text="🌐 *Please select your destination below:*",
             reply_markup=reply_markup,
             parse_mode="Markdown"
         )
@@ -111,6 +120,8 @@ async def get_destination(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         context.user_data['destinations_id'] = destinations.message_id
 
         return DESTINATION
+
+
 
 async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the selected destination, search another destination, or cancel"""
@@ -141,7 +152,7 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
         keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
-    
+
         retry_message = await query.edit_message_text(
             "🔄 *Let's try again.* Where would you like to go?\n\n"
             "Please type your destination.",parse_mode="Markdown",
@@ -152,7 +163,7 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['retry_message_edited_status'] = False
 
         return DESTINATION
-    
+
     if destination_id == "end":
         return await end(update, context)
 
@@ -201,7 +212,7 @@ async def destination_selected(update: Update, context: ContextTypes.DEFAULT_TYP
                 reply_markup=reply_markup,
                 parse_mode="Markdown"
                 )
-            
+
             context.user_data['confirm_destination_message'] = confirm_destination_message.message_id
 
             return USER_PREFERENCE
@@ -254,7 +265,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     )
                 except BadRequest as e:
                     logger.error(f"Failed to delete static map message: {e}")
-            
+
 
             rejected_destination = await query.edit_message_text(
                 "❌ *Destination rejected.* Let's search again. Where would you like to go?\n\n"
@@ -266,7 +277,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             context.user_data['rejected_destination_id'] = rejected_destination.message_id
 
             return DESTINATION
-        
+
         user_id = update.effective_user.id
         if does_key_exist(user_id, 'preference'):
             # Runs if user exists in Firestore AND if preference is stored
@@ -286,8 +297,8 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             context.user_data['preference_list'] = stored_preference
 
             preference_text = "\n".join(
-                        [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else 
-                        f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(stored_preference) - 1 else 
+                        [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else
+                        f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(stored_preference) - 1 else
                         f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)}"
                         for i, pref in enumerate(stored_preference)]
                     )
@@ -297,7 +308,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                         parse_mode='Markdown'
                     )
             return await hour(update, context)
-        
+
         if query.data == "confirm_yes" or query.data == "reset":
             if query.data == "reset":
                 context.user_data['preference_list'] = []
@@ -315,7 +326,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                             chat_id=query.message.chat_id,
                             message_id=first_preference_message_id
                         )
-                
+
             context.user_data["confirm_destination"] = query.data
             print("Asking for User Preference.")
             confirm_destination_message_id = context.user_data.get('confirm_destination_message')
@@ -336,7 +347,7 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             context.user_data['first_preference_message_id'] = first_preference_message.message_id
 
             return USER_PREFERENCE
-        
+
         elif query.data in ["cheapest", "fastest", "sheltered", "shortest_walking_distance"]:
             # Keep track of user's preference
             if query.data not in preference_list:
@@ -355,9 +366,9 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                     reply_markup=InlineKeyboardMarkup(new_keyboard)
                 )
                 context.user_data['preference_message_id'] = preference_message.message_id
-                
+
                 return USER_PREFERENCE
-            
+
             else:
                 # Automatically append the last preference button to the list
                 if len(new_keyboard) == 2:
@@ -368,8 +379,8 @@ async def user_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
                 # Send the final preferences summary
                 preference_text = "\n".join(
-                    [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else 
-                    f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(preference_list) - 1 else 
+                    [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else
+                    f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(preference_list) - 1 else
                     f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)}"
                     for i, pref in enumerate(preference_list)]
                 )
@@ -412,13 +423,13 @@ async def confirm_preference(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """Store the user's preference in Firestore."""
     query = update.callback_query
     await query.answer()
-    
+
     keyboard = [
         [InlineKeyboardButton("✅ Yes", callback_data="confirm_preference_yes"), InlineKeyboardButton("❌ No", callback_data="confirm_preference_no")],
         [InlineKeyboardButton("🛑 End Session", callback_data="end")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
+
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="💡 *Store Your Preference?*\n\nWould you like me to save this preference for future sessions?",
@@ -446,7 +457,7 @@ async def store_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await query.edit_message_text("❌ *Your preference has not been saved.*", parse_mode="Markdown")
     return await hour(update, context)
 
-DEFAULT_PARKING_HOURS = 1 
+DEFAULT_PARKING_HOURS = 1
 async def hour(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Ask user for the number of hours they plan to park for."""
     query = update.callback_query
@@ -532,7 +543,7 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
     print("Confirm destination", context.user_data.get("confirm_destination"))
     print(f"User has chosen his preferences {preference_list}")
     print("Asking for live location.")
-    
+
     keyboard = [[InlineKeyboardButton("🛑 End Session", callback_data="end")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -548,11 +559,11 @@ async def confirm_destination(update: Update, context: ContextTypes.DEFAULT_TYPE
     context.user_data['confirm_destination_message_id'] = confirm_destination.message_id
     context.user_data['confirm_destination_edited_status'] = False
 
-    return LIVE_LOCATION 
+    return LIVE_LOCATION
 
 async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle the live location input and find nearest carpark based on destination"""
-    
+
     if context.user_data.get('share_live_location_message_id'):
         share_live_location_message_id = context.user_data.get('share_live_location_message_id')
         try:
@@ -576,7 +587,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 message_id=confirm_destination_message_id,
             )
             context.user_data['confirm_destination_edited_status'] = True
-    
+
     query = update.callback_query
     if query and query.data == "end":
         static_map_message_id = context.user_data.get('static_map_message_id')
@@ -638,7 +649,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         text="🔄 *Fetching carpark options nearby. Please wait...*",
         parse_mode="Markdown"
     )
-    
+
     destination_lat = context.user_data.get('destination_lat')
     destination_long = context.user_data.get('destination_long')
     if destination_lat and destination_long:
@@ -696,7 +707,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 num_cp_return = get_user_filter(user_id, 'number_carpark_options')
             if (does_key_exist(user_id, 'min_avail_lots')):
                 min_avail_lots = get_user_filter(user_id, 'min_avail_lots')
-            
+
             num_hours_parked = context.user_data.get('hours')
 
             # Add available_lots to the user preference list as least preference (last item)
@@ -711,7 +722,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 'sheltered': 'is_sheltered',
                 'available_lots': 'available_lots'
             }
-           
+
             scoringWeights = [0.4, 0.35, 0.15, 0.05, 0.05] # In order of importance (1st = most important)
 
             for i in range(len(user_selected_preference)):
@@ -720,7 +731,7 @@ async def live_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
                 attr_weight = scoringWeights[i]
 
                 user_pref[attr_name] = attr_weight
-            
+
             # [END] ========================================================================================================
 
             global closest_three_carparks
@@ -817,7 +828,7 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             )
         except BadRequest as e:
             logger.error(f"Failed to delete carpark options message: {e}")
-    
+
     carpark_select_message_id = context.user_data.get('carpark_select_message_id')
     if carpark_select_message_id:
         await context.bot.delete_message(
@@ -846,13 +857,13 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     if not live_location:
         await query.message.reply_text("⚠️ Error: Couldn't retrieve your live location.")
         return ConversationHandler.END
-    
+
     global user_address
     global destination_address
 
     user_address = get_address_from_coordinates(live_location[0], live_location[1])
     destination_address = context.user_data.get('destination_address')
-    
+
     carpark_lat = selected_carpark['location']['value']['coordinates'][1]
     carpark_long = selected_carpark['location']['value']['coordinates'][0]
     destination_lat = context.user_data.get('destination_lat')
@@ -872,20 +883,21 @@ async def carpark_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         f"📍 Start: {user_address}\n"
         f"🅿️ Stop: {selected_carpark['carparkName']['value'].title()} (Carpark)\n"
         f"🏁 End: {destination_address}\n\n"
-        f"[Click here to view the route]({google_maps_link})", 
+        f"[Click here to view the route]({google_maps_link})",
         parse_mode='Markdown',
-        reply_markup=reply_markup, 
+        reply_markup=reply_markup,
         disable_web_page_preview=True
     )
 
     context.user_data['google_route_id'] = google_route_id.message_id
-    
+
     # global current_carpark
     # current_carpark = selected_carpark
 
     # asyncio.create_task(monitor_carpark_availability(update, context, selected_carpark))
+    add_all_subscriptions(update=update, selected_carpark=selected_carpark)
     asyncio.create_task(monitor_all(update, context, selected_carpark, closest_three_carparks, destination_details, user_address, destination_address, geoquery_nearest_carparks, live_location, context.user_data['preference_list'], (destination_lat, destination_long)))
-    
+
     return LIVE_LOCATION
 
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -901,17 +913,17 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                         chat_id=update.effective_chat.id,
                         message_id=context.user_data['live_location_message_id']
                     )
-        
+
                 await query.edit_message_text(
                     "👋 *Goodbye!* I look forward to assisting you again.\n\nTo start a new session, please enter /start or press the menu button on the left.", parse_mode="Markdown", reply_markup=None)
 
         except BadRequest as e:
             print(f"Failed to delete message: {e}")
-        
+
         context.user_data.clear()
         context.user_data['preference_list'] = []
-        context.user_data['in_session'] = False    
-    
+        context.user_data['in_session'] = False
+
     return ConversationHandler.END
 
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -929,7 +941,7 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         ),
         parse_mode="Markdown"
     )
-        
+
 async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Ask the user to set their preference."""
     query = update.callback_query
@@ -990,7 +1002,7 @@ async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context.user_data['menu_first_preference_message_id'] = first_preference_message.message_id
 
         return PREFERENCE
-        
+
     elif query.data in ["cheapest", "fastest", "sheltered", "shortest_walking_distance"]:
         # Keep track of user's preference
         if query.data not in menu_preference_list:
@@ -1009,9 +1021,9 @@ async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 reply_markup=InlineKeyboardMarkup(new_keyboard)
             )
             context.user_data['menu_preference_message_id'] = preference_message.message_id
-            
+
             return PREFERENCE
-            
+
         else:
             # Automatically append the last preference button to the list
             if len(new_keyboard) == 2:
@@ -1022,8 +1034,8 @@ async def preference(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
             # Send the final preferences summary
             preference_text = "\n".join(
-                [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else 
-                f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(menu_preference_list) - 1 else 
+                [f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Most Important)" if i == 0 else
+                f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)} (Least Important)" if i == len(menu_preference_list) - 1 else
                 f"{next(button.text for row in keyboard for button in row if button.callback_data == pref)}"
                 for i, pref in enumerate(menu_preference_list)]
             )
@@ -1059,7 +1071,7 @@ async def edit_preference(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     print(context.user_data.get('menu_preference_list'))
     preference_list = context.user_data.get('menu_preference_list')
     print(f"Editing user preference for user {user_id}")
-    
+
     user_id = update.effective_user.id
     if check_user_exists(user_id):
         edit_user_preference(user_id, preference_list)
@@ -1167,7 +1179,7 @@ async def handle_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         )
     elif selected_filter == "end":
         return await end(update, context)
-    
+
     return CONFIRM_FILTER
 
 async def handle_filter_numeric_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -1209,7 +1221,7 @@ async def handle_filter_numeric_input(update: Update, context: ContextTypes.DEFA
                 except BadRequest as e:
                     if "Message is not modified" in str(e):
                         print("No modifications needed for the reply markup.")
-                
+
             await update.message.reply_text("✅ *Your input has been recorded.*", parse_mode="Markdown")
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -1244,12 +1256,12 @@ async def confirm_filter(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             store_user_filter(user_id, selected_filter, filter_value)
 
         await query.edit_message_text(text="✅ *Your filter has been updated.*", parse_mode="Markdown")
-        
+
     except Exception as e:
         print(f"An error occurred: {e}")
         await query.edit_message_text(text="❌ An error occurred while updating your filter.", parse_mode="Markdown")
         return ConversationHandler.END
-    
+
     return ConversationHandler.END
 
 async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -1273,11 +1285,11 @@ async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context.user_data['edit_settings_message'] = False
 
         return SETTINGS
-    
+
 async def handle_settings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
     await query.answer()
-    
+
     if query.data == "preference":
         try:
             return await preference(update, context)
