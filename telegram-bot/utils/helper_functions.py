@@ -661,12 +661,13 @@ def find_price_per_hr(carpark, num_hrs, vehicle_type='Car'):
             day_type = "sundayPublicHoliday"
         
         day_price_info = carpark['pricing']['value']['rates'].get(day_type, None)
-        
+
+
         if day_price_info is None: #If no price
             # Handle the case where the key doesn't exist
             print(f"Key '{day_type}' not found in rates")
             return -1 #Treat as no price
-            
+
         # (3) Find the entry_fee based on the current time and day (entry_fee_price)
         entry_fee_price = None
 

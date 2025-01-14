@@ -3,7 +3,7 @@ print(sys.version)
 import threading
 from flask import Flask
 import asyncio
-
+import os
 import constants
 
 from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, ConversationHandler, MessageHandler, filters
@@ -11,6 +11,10 @@ from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandle
 # import functions
 from utils.telegram_handlers import start, get_destination, destination_selected, user_preference, store_preference, confirm_destination, preference, live_location, carpark_selected, info, settings, handle_settings, handle_filter, confirm_filter, handle_filter_numeric_input, hour, handle_hour, end
 from utils.helper_functions import update_context_broker
+
+#Set paths
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
 
 # State definitions
 DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER, FILTER_NUMERIC_INPUT, HOUR_NUMERIC_INPUT = range(13)

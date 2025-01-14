@@ -1,7 +1,17 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-cred = credentials.Certificate("utils/ngsi-ld-systems.json")
+import os
+
+def get_abs_path(relative_path):
+    """Get the absolute path relative to the main script directory."""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, ".."))  # Adjust as needed for project structure
+    return os.path.join(project_root, relative_path)
+
+#cred = credentials.Certificate("utils/ngsi-ld-systems.json")
+
+cred = credentials.Certificate(get_abs_path("utils/ngsi-ld-systems.json"))
 app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
