@@ -1008,9 +1008,9 @@ async def update_context_broker():
     try:
         print("Updating context broker...")
         # Create threads for each repeated function call
-        carpark_thread = threading.Thread(target=repeated_function_calls, args=(import_Carpark_entity, 300, stop_event)) 
+        carpark_thread = threading.Thread(target=repeated_function_calls, args=(import_Carpark_entity, 180, stop_event)) 
         weather_thread = threading.Thread(target=repeated_function_calls, args=(import_WeatherForecast_entity, 7200, stop_event)) 
-        traffic_thread = threading.Thread(target=repeated_function_calls, args=(import_TrafficAdvisories_entity, 120, stop_event)) 
+        traffic_thread = threading.Thread(target=repeated_function_calls, args=(import_TrafficAdvisories_entity, 180, stop_event)) 
 
         # Start the threads
         carpark_thread.start()

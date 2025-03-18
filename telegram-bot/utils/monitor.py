@@ -44,8 +44,8 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
         distance_to_destination = geodesic(live_location, (destination_lat, destination_long)).km
 
         # Debugging: print distance calculation
-        print(Fore.RED + f"Distance from carpark: {distance_to_carpark:.2f} km")
-        print(Fore.RED + f"Distance from destination: {distance_to_destination:.2f} km")
+        #print(Fore.RED + f"Distance from carpark: {distance_to_carpark:.2f} km")
+        #print(Fore.RED + f"Distance from destination: {distance_to_destination:.2f} km")
 
         # Check if the user has reached the destination
         if distance_to_carpark <= 0.1:
@@ -108,7 +108,7 @@ async def monitor_carpark_availability(update: Update, context: ContextTypes.DEF
 
 
 async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Monitor traffic advisories along the route."""
+    #"""Monitor traffic advisories along the route."""
     chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
 
     # traffic_advisories = [
@@ -168,7 +168,7 @@ async def monitor_traffic_advisories(update: Update, context: ContextTypes.DEFAU
                 advisory_long = advisory_coordinates[0]
                 distance_to_advisory = geodesic(live_location, (advisory_lat, advisory_long)).km
 
-                print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")        
+                #print(Fore.RED + f"Distance to advisory: {distance_to_advisory:.2f} km")        
                 
                 for word in keywords:
                     if is_word_present(advisory_message, word):
