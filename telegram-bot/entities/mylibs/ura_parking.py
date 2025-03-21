@@ -12,10 +12,10 @@ import traceback
 colorama.init(autoreset=True)
 
 ACCESS_KEY = constants.URA_ACCESS_KEY
-TOKEN_URL = "https://www.ura.gov.sg/uraDataService/insertNewToken.action"
-CARPARK_URL = "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Car_Park_Details"
-SEASON_CARPARK_URL = "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Season_Car_Park_Details"
-CARPARK_AVAILABILITY_URL = "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Car_Park_Availability"
+TOKEN_URL = "https://eservice.ura.gov.sg/uraDataService/insertNewToken/v1"
+CARPARK_URL = "https://eservice.ura.gov.sg/uraDataService/invokeUraDS/v1?service=Car_Park_Details"
+SEASON_CARPARK_URL = "https://eservice.ura.gov.sg/uraDataService/invokeUraDS/v1?service=Season_Car_Park_Details"
+CARPARK_AVAILABILITY_URL = "https://eservice.ura.gov.sg/uraDataService/invokeUraDS/v1?service=Car_Park_Availability"
 
 ctx = constants.ctx
 broker_url = constants.broker_url
@@ -75,20 +75,20 @@ def get_ura_carparks(ura_token):
             # Check if carpark name is unique, if yes, create a new entity
             if carpark["ppName"].strip() not in unique_carparkNames:
                 unique_carparkNames.append(carpark["ppName"].strip())
-                
+
                 # Set entity properties
                 entity = Entity("Carpark", id, ctx=ctx)
 
                 # Set carpark name
                 entity.prop("carparkName", carpark["ppName"])
-                
+
                 # Set location using coordinates
                 if carpark["geometries"]:
                     svy21_geocoordinates = carpark["geometries"][0]["coordinates"].split(",")
                     latlon_geocoordinates = svy21_converter.computeLatLon(float(svy21_geocoordinates[1]), float(svy21_geocoordinates[0]))
                     if len(latlon_geocoordinates) > 1:
                         entity.gprop("location", (float(latlon_geocoordinates[0]), float(latlon_geocoordinates[1])))
-                
+
                 # Parking capcacity
                 if carpark["parkCapacity"]:
                     if carpark["parkCapacity"] != "0":
@@ -105,7 +105,7 @@ def get_ura_carparks(ura_token):
                     if carpark["ppCode"] == carpark_availability["carparkNo"] and carpark_availability["lotType"] == "C":
                         entity.prop("parkingAvailability", int(carpark_availability["lotsAvailable"]))
                         break
-                
+
                 # Append to entity_list
                 entity_list.append(entity)
 
@@ -128,7 +128,7 @@ def get_ura_carparks(ura_token):
                         if "sunPHRate" in carpark and "sunPHMin" in carpark:
                             sunPHRateFloat = float(carpark["sunPHRate"].replace("$", ""))
                             sunPHMinFloat = float(carpark["sunPHMin"].replace(" mins", " "))
-                        
+
                         # Can't divide by 0 in Python, changing it to 1 has the same effect.
                         if weekdayMinFloat == 0:
                             weekdayMinFloat = 1
@@ -204,12 +204,12 @@ def get_ura_carparks(ura_token):
                         print(f"Error processing carpark {carpark['ppName']}: {e}")
                         traceback.print_exc()
                         continue
-            entity.prop('pricing', pricing)    
+            entity.prop('pricing', pricing)
 
         print("Total number of carparks: ", len(carpark_list["Result"]))
         print("Total entities created: ", len(entity_list), "\n")
-        
-        return entity_list 
+
+        return entity_list
     else:
         return None
 
