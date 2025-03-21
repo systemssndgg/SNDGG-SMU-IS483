@@ -14,7 +14,7 @@ colorama.init(autoreset=True)
 ACCESS_KEY = constants.URA_ACCESS_KEY
 TOKEN_URL = "https://eservice.ura.gov.sg/uraDataService/insertNewToken/v1"
 CARPARK_URL = "https://eservice.ura.gov.sg/uraDataService/invokeUraDS/v1?service=Car_Park_Details"
-SEASON_CARPARK_URL = "https://eservice.ura.gov.sg/uraDataService/invokeUraDS/v1?service=Car_Park_Details"
+SEASON_CARPARK_URL = "https://eservice.ura.gov.sg/uraDataService/invokeUraDS/v1?service=Season_Car_Park_Details"
 CARPARK_AVAILABILITY_URL = "https://eservice.ura.gov.sg/uraDataService/invokeUraDS/v1?service=Car_Park_Availability"
 
 ctx = constants.ctx
