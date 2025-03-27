@@ -28,8 +28,9 @@ def home():
 def run_flask():
     app.run(host="0.0.0.0", port=8080)
 
-def run_update_context_broker():
-    asyncio.run(update_context_broker())
+#### Moved t o main_update_context_broker.py
+#def run_update_context_broker():
+#    asyncio.run(update_context_broker())
 
 def main() -> None:
     """Run the Telegram bot."""
@@ -100,8 +101,9 @@ def main() -> None:
     flask_thread = threading.Thread(target=run_flask)
     flask_thread.start()
 
-    update_thread = threading.Thread(target=run_update_context_broker)
-    update_thread.start()
+    ### Moved updater to seperate python file -> main_update_context_broker.py
+    #update_thread = threading.Thread(target=run_update_context_broker)
+    #update_thread.start()
 
     application.run_polling()
 

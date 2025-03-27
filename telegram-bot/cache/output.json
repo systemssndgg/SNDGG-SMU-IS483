@@ -1,129 +1,24 @@
 [
   {
-    "id": "urn:ngsi-ld:Carpark:ANCHORVALESTREETA0054",
+    "id": "urn:ngsi-ld:Carpark:BRIGHTONCRESCENTB0100",
     "type": "Carpark",
     "carparkName": {
       "type": "Property",
-      "value": "ANCHORVALE STREET "
+      "value": "BRIGHTON CRESCENT "
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.886181,
-          1.397576
+          103.871118,
+          1.362906
         ]
       }
     },
     "parkingCapacity": {
       "type": "Property",
-      "value": 62
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": false
-    },
-    "pricing": {
-      "type": "Property",
-      "value": {
-        "rates": {
-          "weekday": {
-            "timeBased": [
-              {
-                "startTime": "07:00",
-                "endTime": "17:00",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "17:00",
-                "endTime": "22:30",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "22:30",
-                "endTime": "07:00",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "22:30",
-                "endTime": "07:00",
-                "ratePerHour": 0.588235
-              }
-            ]
-          },
-          "saturday": {
-            "timeBased": [
-              {
-                "startTime": "07:00",
-                "endTime": "17:00",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "17:00",
-                "endTime": "22:30",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "22:30",
-                "endTime": "07:00",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "22:30",
-                "endTime": "07:00",
-                "ratePerHour": 0.588235
-              }
-            ]
-          },
-          "sundayPublicHoliday": {
-            "timeBased": [
-              {
-                "startTime": "07:00",
-                "endTime": "17:00",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "17:00",
-                "endTime": "22:30",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "22:30",
-                "endTime": "07:00",
-                "ratePerHour": 1.2
-              },
-              {
-                "startTime": "22:30",
-                "endTime": "07:00",
-                "ratePerHour": 0.588235
-              }
-            ]
-          }
-        }
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:SERVICEROADOFFTEBINGLANES0162",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "SERVICE ROAD OFF TEBING LANE"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.916643,
-          1.393223
-        ]
-      }
-    },
-    "parkingCapacity": {
-      "type": "Property",
-      "value": 22
+      "value": 11
     },
     "sheltered": {
       "type": "Property",
@@ -154,6 +49,846 @@
                 "startTime": "22:00",
                 "endTime": "07:00",
                 "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BACKLANEOFFFARLEIGHAVENUEBL192",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "BACKLANE OFF FARLEIGH AVENUE"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.865375,
+          1.36427
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 15
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:BACKLANEOFFSERANGOONGARDENWAYBL193",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "BACKLANE OFF SERANGOON GARDEN WAY"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.865344,
+          1.363663
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 8
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:FARLEIGHAVENUEF0030",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "FARLEIGH AVENUE "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.865372,
+          1.364704
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 23
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:FARLEIGHAVENUEOFFSTREETF0031",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "FARLEIGH AVENUE OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.865684,
+          1.364174
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 44
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:KENSINGTONPARKROADOFFSTREETK0032",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "KENSINGTON PARK ROAD OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.866492,
+          1.365957
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 30
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:KENSINGTONPARKROADSERVICEROADK0051",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "KENSINGTON PARK ROAD SERVICE ROAD"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.86619,
+          1.36489
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 30
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:KOVANROADK0064",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "KOVAN ROAD "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.883096,
+          1.360119
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 50
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
               }
             ]
           },
@@ -210,19 +945,788 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:TEBINGLANET0145",
+    "id": "urn:ngsi-ld:Carpark:MAJUAVENUEM0038",
     "type": "Carpark",
     "carparkName": {
       "type": "Property",
-      "value": "TEBING LANE "
+      "value": "MAJU AVENUE "
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.915673,
-          1.392607
+          103.865634,
+          1.365026
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 43
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:MAJUAVENUESERVICEROADM0039",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "MAJU AVENUE SERVICE ROAD"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.865535,
+          1.365301
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 3
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:PENSHURSTPLACEP0049",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "PENSHURST PLACE "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.864656,
+          1.3638
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 8
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:SERANGOONGARDENMARKETOFFSTREETS0055",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "SERANGOON GARDEN MARKET OFF STREET"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.866326,
+          1.362799
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 105
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "parkingAvailability": {
+      "type": "Property",
+      "value": 63
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "14:00",
+                "ratePerHour": 1.5
+              },
+              {
+                "startTime": "14:00",
+                "endTime": "22:30",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 0.588235
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "22:30",
+                "ratePerHour": 0.041935
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 0.076471
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "14:00",
+                "ratePerHour": 1.5
+              },
+              {
+                "startTime": "14:00",
+                "endTime": "22:30",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 0.588235
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "22:30",
+                "ratePerHour": 0.041935
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 0.076471
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "14:00",
+                "ratePerHour": 1.5
+              },
+              {
+                "startTime": "14:00",
+                "endTime": "22:30",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 0.588235
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "22:30",
+                "ratePerHour": 0.041935
+              },
+              {
+                "startTime": "22:30",
+                "endTime": "07:00",
+                "ratePerHour": 0.076471
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:SERANGOONGARDENWAYS0063",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "SERANGOON GARDEN WAY "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.864394,
+          1.364421
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 5
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:SERANGOONGARDENWAYSERVICEROADS0064",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "SERANGOON GARDEN WAY SERVICE ROAD"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.865455,
+          1.363689
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 84
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:SANDOWNPLACES0065",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "SANDOWN PLACE "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.864853,
+          1.36528
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 4
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:SIMONROADSERVICEROADS0070",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "SIMON ROAD SERVICE ROAD"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.885796,
+          1.361771
         ]
       }
     },
@@ -259,6 +1763,21 @@
                 "startTime": "22:00",
                 "endTime": "07:00",
                 "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
               }
             ]
           },
@@ -278,6 +1797,21 @@
                 "startTime": "17:00",
                 "endTime": "22:00",
                 "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
               },
               {
                 "startTime": "22:00",
@@ -307,6 +1841,21 @@
                 "startTime": "22:00",
                 "endTime": "07:00",
                 "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
               }
             ]
           }
@@ -315,259 +1864,29 @@
     }
   },
   {
-    "id": "urn:ngsi-ld:Carpark:P1",
+    "id": "urn:ngsi-ld:Carpark:SERVICEROADOFFJALANSELASEHS0167",
     "type": "Carpark",
     "carparkName": {
       "type": "Property",
-      "value": "BLK 196 PUNGGOL FIELD"
+      "value": "SERVICE ROAD OFF JALAN SELASEH"
     },
     "location": {
       "type": "GeoProperty",
       "value": {
         "type": "Point",
         "coordinates": [
-          103.907024,
-          1.399337
+          103.873054,
+          1.38565
         ]
       }
     },
-    "parkingAvailability": {
+    "parkingCapacity": {
       "type": "Property",
-      "value": 233
+      "value": 29
     },
     "sheltered": {
       "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P2",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 199 PUNGGOL FIELD"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.906029,
-          1.400105
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 203
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P3",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 101 PUNGGOL FIELD"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.905774,
-          1.398457
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 513
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P4",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 105 EDGEFIELD PLAINS"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.905623,
-          1.397227
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 289
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P5",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 107 PUNGGOL FIELD"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.907642,
-          1.396878
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 385
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P6",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 109 PUNGGOL FIELD"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.909462,
-          1.395369
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 410
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P7",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 119 EDGEFIELD PLAINS"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.90647,
-          1.395428
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 695
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P8",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 126 EDGEDALE PLAINS"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.910914,
-          1.394228
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 304
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:P9",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "BLK 128 PUNGGOL FIELD WALK"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.912537,
-          1.392924
-        ]
-      }
-    },
-    "parkingAvailability": {
-      "type": "Property",
-      "value": 306
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:OM75",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "Compass One"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.89505,
-          1.392006
-        ]
-      }
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
+      "value": false
     },
     "pricing": {
       "type": "Property",
@@ -577,227 +1896,447 @@
             "timeBased": [
               {
                 "startTime": "07:00",
-                "endTime": "23:00",
-                "ratePerHour": 1.5
-              }
-            ],
-            "firstHourRate": 1.5,
-            "maxDailyFee": 0
-          },
-          "saturday": {
-            "timeBased": [
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
               {
                 "startTime": "07:00",
-                "endTime": "23:00",
-                "ratePerHour": 1.5
-              }
-            ],
-            "firstHourRate": 1.5,
-            "maxDailyFee": 0
-          },
-          "sunday_public_holiday": {
-            "timeBased": [
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
               {
-                "startTime": "07:00",
-                "endTime": "23:00",
-                "ratePerHour": 1.5
-              }
-            ],
-            "firstHourRate": 1.5,
-            "maxDailyFee": 0
-          }
-        },
-        "weekdayStr": "Daily (7am-11pm): $1.50 for 1st hr; $0.80 for sub 30mins period.; -",
-        "saturdayStr": "-",
-        "sundayPHStr": "-"
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:OM80",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "Hougang Green Shopping Mall"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.888071,
-          1.37956
-        ]
-      }
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    },
-    "pricing": {
-      "type": "Property",
-      "value": {
-        "rates": {
-          "weekday": {
-            "timeBased": [
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
               {
-                "startTime": "07:00",
-                "endTime": "16:59",
-                "ratePerHour": 1.3
-              }
-            ],
-            "flatEntryFee": {
-              "startTime": "00:00",
-              "endTime": "06:59",
-              "fee": 5
-            },
-            "firstHourRate": 3,
-            "maxDailyFee": 5
-          },
-          "saturday": {
-            "timeBased": [],
-            "flatEntryFee": {
-              "startTime": "00:00",
-              "endTime": "06:59",
-              "fee": 5
-            },
-            "maxDailyFee": 5
-          },
-          "sunday_public_holiday": {
-            "timeBased": [],
-            "flatEntryFee": {
-              "startTime": "00:00",
-              "endTime": "06:59",
-              "fee": 5
-            },
-            "maxDailyFee": 5
-          }
-        },
-        "weekdayStr": "7am-4.59pm: $1.30 for 1st hr; $0.70 for next sub. 30min.; 5pm-11.59pm: $3 per entry; 12am-6.59am the following day: $5 per entry.",
-        "saturdayStr": "Same as weekdays",
-        "sundayPHStr": "7am-11.59pm: $3 per entry; 12am-6.59am the following day: $5 per entry."
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:OM92",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "Rivervale Mall"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.904446,
-          1.392262
-        ]
-      }
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    },
-    "pricing": {
-      "type": "Property",
-      "value": {
-        "rates": {
-          "weekday": {
-            "timeBased": [
-              {
-                "startTime": "00:00",
-                "endTime": "23:59",
-                "ratePerHour": 1.28
-              }
-            ],
-            "firstHourRate": 1.28
-          },
-          "saturday": {
-            "timeBased": [
-              {
-                "startTime": "00:00",
-                "endTime": "23:59",
-                "ratePerHour": 1.28
-              }
-            ],
-            "firstHourRate": 1.28
-          },
-          "sunday_public_holiday": {
-            "timeBased": [
-              {
-                "startTime": "00:00",
-                "endTime": "23:59",
-                "ratePerHour": 1.28
-              }
-            ],
-            "firstHourRate": 1.28
-          }
-        },
-        "weekdayStr": "Daily: $1.28 for 1st hr, $0.64 for sub. 30 mins or part thereof.; -",
-        "saturdayStr": "-",
-        "sundayPHStr": "-"
-      }
-    }
-  },
-  {
-    "id": "urn:ngsi-ld:Carpark:OM104",
-    "type": "Carpark",
-    "carparkName": {
-      "type": "Property",
-      "value": "Waterway Point"
-    },
-    "location": {
-      "type": "GeoProperty",
-      "value": {
-        "type": "Point",
-        "coordinates": [
-          103.902085,
-          1.406441
-        ]
-      }
-    },
-    "sheltered": {
-      "type": "Property",
-      "value": true
-    },
-    "pricing": {
-      "type": "Property",
-      "value": {
-        "rates": {
-          "weekday": {
-            "timeBased": [
-              {
-                "startTime": "06:00",
-                "endTime": "05:59",
-                "ratePerHour": 1.5
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
               }
             ]
           },
           "saturday": {
             "timeBased": [
               {
-                "startTime": "06:00",
-                "endTime": "05:59",
-                "ratePerHour": 1.6
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
               }
             ]
           },
-          "sunday_public_holiday": {
+          "sundayPublicHoliday": {
             "timeBased": [
               {
-                "startTime": "06:00",
-                "endTime": "05:59",
-                "ratePerHour": 1.6
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
               }
             ]
           }
-        },
-        "weekdayStr": "6am-5.59am: $1.50 for 1st hr; $0.80 for sub.   hr or part thereof.; -",
-        "saturdayStr": "6am-5.59am: $1.60 for 1st hr; $0.80 for sub.   hr or part thereof.",
-        "sundayPHStr": "Same as Saturday"
+        }
       }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:SERVICEROADOFFJALANKELULUTS0168",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "SERVICE ROAD OFF JALAN KELULUT"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.875843,
+          1.383228
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 27
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:UPPERSERANGOONROADU0031",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "UPPER SERANGOON ROAD "
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.888187,
+          1.36292
+        ]
+      }
+    },
+    "parkingCapacity": {
+      "type": "Property",
+      "value": 13
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": false
+    },
+    "pricing": {
+      "type": "Property",
+      "value": {
+        "rates": {
+          "weekday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "saturday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          },
+          "sundayPublicHoliday": {
+            "timeBased": [
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "17:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "17:00",
+                "endTime": "22:00",
+                "ratePerHour": 1.2
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "07:00",
+                "endTime": "08:30",
+                "ratePerHour": 0
+              },
+              {
+                "startTime": "08:30",
+                "endTime": "22:00",
+                "ratePerHour": 0.048148
+              },
+              {
+                "startTime": "22:00",
+                "endTime": "07:00",
+                "ratePerHour": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "urn:ngsi-ld:Carpark:A43",
+    "type": "Carpark",
+    "carparkName": {
+      "type": "Property",
+      "value": "BLK 457/458/460 ANG MO KIO STREET 44"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          103.859267,
+          1.365997
+        ]
+      }
+    },
+    "parkingAvailability": {
+      "type": "Property",
+      "value": 71
+    },
+    "sheltered": {
+      "type": "Property",
+      "value": true
     }
   }
 ]

@@ -10,42 +10,63 @@ from colorama import Fore
 
 
 def import_Carpark_entity():
-    token = get_ura_token()['Result']
+    try:
+        token = get_ura_token()['Result']
+    except Exception as e:
+        print(Fore.RED + f"Error getting URA token: {e}")
+        return
 
-    # URA Carparks
-    print(Fore.MAGENTA + "\nPushing URA carparks to broker...")
-    carpark_list = get_ura_carparks(token)
-    create_entities_in_broker(carpark_list)
+    try:
+        # URA Carparks
+        print(Fore.MAGENTA + "\nPushing URA carparks to broker...")
+        carpark_list = get_ura_carparks(token)
+        create_entities_in_broker(carpark_list)
+    except Exception as e:
+        print(Fore.RED + f"Error pushing URA carparks: {e}")
+    
+    try:
+        # Commercial Carparks
+        print(Fore.MAGENTA + "\nPushing commercial carparks to broker...")
+        comm_carparks = create_commercial_carparks()
+        create_entities_in_broker(comm_carparks)
+    except Exception as e:
+        print(Fore.RED + f"Error pushing commercial carparks: {e}")
 
-    # Commercial Carparks
-    print(Fore.MAGENTA + "\nPushing commerical carparks to broker...")
-    comm_carparks = create_commercial_carparks()
-    create_entities_in_broker(comm_carparks)
+    try:
+        # HDB Carparks
+        print(Fore.MAGENTA + "\nPushing HDB carparks to broker...")
+        hdb_carparks = create_hdb_carparks()
+        create_entities_in_broker(hdb_carparks)
+    except Exception as e:
+        print(Fore.RED + f"Error pushing HDB carparks: {e}")
 
-    # HDB Carparks
-    print(Fore.MAGENTA + "\nPushing HDB carparks to broker...")
-    hdb_carparks = create_hdb_carparks()
-    create_entities_in_broker(hdb_carparks)
-
-    # OneMotoring Carparks
-    print(Fore.MAGENTA + "\nPushing OneMotoring carparks to broker...")
-    om_carparks = create_one_motoring_carparks()
-    create_entities_in_broker(om_carparks)
-
+    try:
+        # OneMotoring Carparks
+        print(Fore.MAGENTA + "\nPushing OneMotoring carparks to broker...")
+        om_carparks = create_one_motoring_carparks()
+        create_entities_in_broker(om_carparks)
+    except Exception as e:
+        print(Fore.RED + f"Error pushing OneMotoring carparks: {e}")
 
 
 def import_TrafficAdvisories_entity():
-    traffic_advisories_list = get_traffic_advisories()
-    print(Fore.MAGENTA + "\nPushing TrafficAdvisories to broker...")
-    create_entities_in_broker(traffic_advisories_list)
+    try:
+        traffic_advisories_list = get_traffic_advisories()
+        print(Fore.MAGENTA + "\nPushing TrafficAdvisories to broker...")
+        create_entities_in_broker(traffic_advisories_list)
+    except Exception as e:
+        print(Fore.RED + f"Error pushing Traffic Advisories: {e}")
 
 
 def import_WeatherForecast_entity():
-    forecast_list = get_two_hour_weather()
-    observed_list = get_weather_observed()
-    print(Fore.MAGENTA + "\nPushing WeatherForecast to broker...", "\n")
-    create_entities_in_broker(forecast_list)
-    create_entities_in_broker(observed_list)
+    try:
+        forecast_list = get_two_hour_weather()
+        observed_list = get_weather_observed()
+        print(Fore.MAGENTA + "\nPushing WeatherForecast to broker...", "\n")
+        create_entities_in_broker(forecast_list)
+        create_entities_in_broker(observed_list)
+    except Exception as e:
+        print(Fore.RED + f"Error pushing Weather Forecast: {e}")
 
 
 if __name__ == "__main__":
@@ -55,5 +76,5 @@ if __name__ == "__main__":
         import_Carpark_entity()
         print(Fore.MAGENTA + "\nCompleted importing entities.")
     except Exception as e:
-        print(f"Error: {e}")
+        print(Fore.RED + f"Error during the import process: {e}")
         print("\nFailed to import entities.")
