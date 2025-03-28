@@ -24,7 +24,7 @@ Carpark
 - Region (From LTA)
 - Location - Gprop
 - Price (Pending Terrence)
-- ParkingAvalibility - From SDM 
+- ParkingAvalibility - From SDM
 - ParkingChargeType - From SDM (Pending Terrence)
 - ParkingMaxAvalibility - From SDM (Info not avaliable)
 - DataSource - From SDM
@@ -50,14 +50,14 @@ def create_entities_in_broker(entities, batch_size=100):
         for i in range(0, len(entities), batch_size):
             chunk = entities[i:i+batch_size]  # Get a chunk of the specified batch size
             ret = client.upsert(chunk)  # Upsert the chunk
-            
+
             if ret:
                 count += len(ret.success)
                 if len(ret.errors)>0:
                     warnings.warn("Some entities have failed to upload")
                     failed += len(ret.errors)
                     #print(ret.errors)
-                
+
         print("Uploaded: ", count)
         print("Failed: ", failed)
         return (failed>0)
@@ -219,6 +219,42 @@ def delete_all_type(type):
             print("\n")
         else:
             print("Skipping - no entities to delete\n")
+
+def add_subscription(description: str, entity_list: list, attributes: list, condition: str, chat_id: str):
+    # Construct the subscription payload
+    flask_url = constants.flask_url
+    NOTIFICATION_URL = f"{flask_url}/notifications/{chat_id}"
+    payload = {
+        "type": "Subscription",
+        "description": description,
+        "entities": entity_list, #[{"id": "urn:ngsi-ld:Carpark:001", "type": "Carpark"}]
+        "watchedAttributes": attributes, #[ParkingAvailability]
+        "q": condition, # ParkingAvailability<10
+        "isActive": True,
+        "notification": {
+            "format": "normalized",
+            "endpoint": {
+                "uri": NOTIFICATION_URL,
+                "accept": "application/ld+json"
+            }
+        },
+        "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+    }
+
+    # Send the POST request to create the subscription
+    headers = {
+        "Content-Type": "application/ld+json",
+        "NGSILD-Tenant": constants.broker_tenant  # Specify the tenant
+    }
+
+    response = requests.post(broker_url, data=json.dumps(payload), headers=headers)
+
+    # Check the response
+    if response.status_code == 201:
+        print("Subscription created successfully")
+    else:
+        print(f"Failed to create subscription: {response.status_code}")
+        print(response.json())
 
 
 """

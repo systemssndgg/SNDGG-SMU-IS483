@@ -1,12 +1,13 @@
 import sys
 print(sys.version)
 import threading
-from flask import Flask
+from flask import Flask, request
 import asyncio
 import os
 import constants
 
 from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, ConversationHandler, MessageHandler, filters
+from telegram import Bot
 
 # import functions
 from utils.telegram_handlers import start, get_destination, destination_selected, user_preference, store_preference, confirm_destination, preference, live_location, carpark_selected, info, settings, handle_settings, handle_filter, confirm_filter, handle_filter_numeric_input, hour, handle_hour, end
@@ -20,13 +21,27 @@ os.chdir(script_dir)
 DESTINATION, CHECK_USER_PREFERENCE, USER_PREFERENCE, STORE_PREFERENCE, PREFERENCE, CONFIRM_DESTINATION, LIVE_LOCATION, INFO, SETTINGS, FILTER, CONFIRM_FILTER, FILTER_NUMERIC_INPUT, HOUR_NUMERIC_INPUT = range(13)
 
 app = Flask(__name__)
+bot = Bot(constants.TELEGRAM_BOT_KEY)
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
+async def send_telegram_message(chat_id, message):
+    await bot.send_message(chat_id, message)
+
+@app.route('/notifications/<chat_id>', methods=['POST'])
+def notifications(chat_id):
+    # Handle the notification here
+    data = request.json
+    print("Notification received for chat ", chat_id)
+    print("Payload: ", data)
+    asyncio.run(send_telegram_message(chat_id, f"Notification received for {chat_id}"))
+    # Process the data as needed
+    return "Notification received", 200
+
 def run_flask():
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8081)
 
 #### Moved t o main_update_context_broker.py
 #def run_update_context_broker():
@@ -35,9 +50,9 @@ def run_flask():
 def main() -> None:
     """Run the Telegram bot."""
     application = ApplicationBuilder().token(constants.TELEGRAM_BOT_KEY).write_timeout(120).read_timeout(120).build()
-    
+
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start), CommandHandler('info', info), CommandHandler('settings', settings)], 
+        entry_points=[CommandHandler('start', start), CommandHandler('info', info), CommandHandler('settings', settings)],
         states={
             DESTINATION: [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, get_destination),
@@ -97,7 +112,7 @@ def main() -> None:
     )
 
     application.add_handler(conv_handler)
-    
+
     flask_thread = threading.Thread(target=run_flask)
     flask_thread.start()
 
