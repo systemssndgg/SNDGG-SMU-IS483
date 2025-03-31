@@ -1,3 +1,4 @@
 *.pyc
 /telegram-bot/cache
 telegram-bot/cache/output.json
+telegram-bot/cache/output.json

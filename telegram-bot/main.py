@@ -98,8 +98,9 @@ def main() -> None:
 
     application.add_handler(conv_handler)
     
-    flask_thread = threading.Thread(target=run_flask)
-    flask_thread.start()
+    #Removed flask
+    #flask_thread = threading.Thread(target=run_flask)
+    #flask_thread.start()
 
     ### Moved updater to seperate python file -> main_update_context_broker.py
     #update_thread = threading.Thread(target=run_update_context_broker)
